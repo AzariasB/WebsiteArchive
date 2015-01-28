@@ -1,0 +1,55 @@
+{
+    "explications": {
+        "lejeu": {
+            "button": "Le jeu",
+            "text": ["Pour apprendre le morse de 'A' à zéro",
+                "Tapez la touche correspondante au morse affiché. Pour les chiffres, utilisez maj+ le chiffre.",
+                "Fonctionne aussi avec le pavé numérique",
+                "Pour les ponctuations telles que '.' ou '/' : appuyez sur maj+touche.",
+                "A tout moment du jeu vous pouvez mettre le jeu en pause pour vour reposer un peu :).",
+                "Mais pour éviter de 'tricher' le code affiché est effacé, ainsi vous ne pouvez pas chercher pendant que l'heure ne tourne pas ! (You fool !)",
+                "Un système simple de score a été mis en place pour vous encourager à faire un sans-faute.",
+                "Dans une prochaine version, le score sera calculé en fonction de vos choix, et un tableau des score sera établi.",
+                "Le jeu est compatible avec tout les navigateurs. Cependant, le javascript n'a pas été optimisé et en fonction de votre navigateur,",
+                "il pourrai s'exécuter plus ou moins rapidement"
+            ]
+        },
+        "histoire": {
+            "button": "Histoire",
+            "text": ["On parle de l'alphabet morse ou de code morse.",
+                "D'après wikipédia, l'alphabet morse est un code permettant de transmettre un texte à l’aide de séries d’impulsions courtes et longues, qu’elles soient produites par des signes, une lumière ou un geste.",
+                "Dans notre cas, il s'agit de signes visuels, je pourrais mettre en place un système sonore mais connaître l'écriture c'est déjà bien.",
+                "Le morse a été inventé par Samuel Morse. Ou par son assistant  : Alfred Vail.",
+                "Le but était de communiquer par télégraphie (en quelque sorte, l'ancêtre du téléphone)",
+                "Vous connaissez peut être le message de détresse international en morse SOS => .../---/...",
+                "Ce qui fait que vous connaissez deux lettres : le S et le O",
+                "Nokia(c) utilise aussi le morse sans que vous vous en rendiez compte :",
+                "Lors de la récéption d'un SMS, le portable sonne/vibre trois fois de façon courte, deux fois de façon prolongé, puis trois fois de façon courte",
+                "Cela correspond au morse de 'SMS' ! Rien que ça !",
+                "L'avantage du morse est sa facilité d'uilisation : il ne s'agit que de deux 'caractères'",
+                "Pour les signaux sonores, lumineux, il suffit de changer la durée d'émission pour un ti(signal cours) ou un ta(signal long)",
+                "Mais vous pouvez 'chiffrer' vous-même le morse d'un commun acoord avec une personne pour communiquer",
+                "par exemple : A=ti et B=ta, vous aurez un message avec plein de A et de B...incompréhensible pour un non-averti",
+                "décodable pour vous",
+                "Un fait intéressant à propos du morse : il s'agit d'un des premiers algorithme de compression !",
+                "Par exemple, le e a été codé de manière volontaire en 'ti', qui est le caractère le plus cours en morse",
+                "Donc le plus rapide à envoyer !",
+                "Les caractères les plus courant sont les plus rapides à envoyer (A,S,I,E,...)",
+                "et les moins courants sont plus long (J,G,W,...)",
+                "Donc merci Samuel d'avoir inventé la compression ! :)"
+            ]
+        },
+        "a_propos": {
+            "button": "A propos",
+            "text": ["Ce jeu a été développé avec AngularJs et jQuery.",
+                "Normalment compatible avec tout les navigateurs digne de ce nom",
+                "N'hésitez pas à me contacter si vous trouvez des bugs, des erreures ou des incohérences dans le jeu ou sur la page.",
+                "Version du jeu : 1.1",
+                "Date de création : 25 janvier 2015",
+                "Dernière modification : 25 janvier 2015",
+                "Auteur : Azarias",
+                "Cette version est stable mais à besoin d'encore beaucoup d'améilorations"
+            ]
+        }
+    }
+}

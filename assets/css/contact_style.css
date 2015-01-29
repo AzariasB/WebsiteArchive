@@ -9,6 +9,13 @@ header,footer{
     display: block;
 }
 
+div.container-fluid{
+    height: 80vh;
+    padding-bottom: 15px;
+    padding-top: 15px;
+    overflow-y: scroll;
+}
+
 footer{
     border-top: 1px solid white;
 }
@@ -22,7 +29,11 @@ header{
     height: 150px;
 }
 
-input:not([type=submit]):not([type=file]),textarea{
+textarea.form-control{
+    resize: none;
+}
+
+input:not([type=submit]):not([type=file]),textarea.form-control{
     font-weight: bold;
     transition: all 0.3s ease;
     -o-transition: all 0.3s ease;
@@ -35,7 +46,7 @@ input:not([type=submit]):not([type=file]):focus {
     font-weight: bold;
 }
 
-input:not([type=submit]):not([type=file]):hover,textarea:hover{
+input:not([type=submit]):not([type=file]):hover,textarea.form-control:hover{
     background-color: transparent;
     color: #0f0f0f;
 }

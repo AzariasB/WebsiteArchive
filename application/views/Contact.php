@@ -44,7 +44,7 @@ N'oubliez pas de laisser des coordonnées valide pour que je puisse vous reconta
             <div class="row">
                 <label for="message" class="col-sm-2 col-sm-offset-1 col-xs-offset-0 col-xs-2">Votre message</label>
                 <div class="col-sm-6 col-xs-10">
-                    <textarea class="form-control" rows="7" name="message" maxlength="500" id="message" required="" ><?php echo set_value('message'); ?>s</textarea>
+                    <textarea class="form-control" rows="7" name="message" maxlength="500" id="message" required="" ><?php echo set_value('message'); ?></textarea>
                 </div>
             </div>
             <br/>

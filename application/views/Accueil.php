@@ -6,29 +6,18 @@
     $multiS_back = ' data-ms-exit-animation = "right" data-ms-enter-animation = "left" data-ms-horizontal-distance = "1000" href = "javascript:void(0)" ';
     $screens = array(
         'accueil' => array(
-            'Timelapses' => array('Cible' => 'timelapses'),
             'Projets personnels' => array('Cible' => 'projet_perso'),
-//            'Projets scolaires' => array('Cible' => 'projet_scol'),
+            'Projets scolaires' => array('Cible' => 'projet_scol'),
         ),
         'projet_scol' => array(
 //            'Echecs' => array('Cible' => 'retour_scol'),
+            'CowGow' => array('Lien' => site_url('Projets_scolaires/CowGow')),
 //            'GameJam' => array('Cible' => 'retour_scol'),
-//            'CowGow' => array('Cible' => 'retour_scol'),
             'Retour' => array('Cible_retour' => 'accueil')
         ),
-        'retour_scol'=> array(
+        'retour_scol' => array(
             'En cours' => array('Cible_retour' => 'projet_scol'),
             'Retour' => array('Cible_retour' => 'projet_scol')
-        ),
-        'timelapses' => array(
-            'Nature' => array('Cible' => 'retour_timelapse'),
-            'Urbain' => array('Cible' => 'retour_timelapse'),
-            'Autre' => array('Cible' => 'retour_timelapse'),
-            'Retour' => array('Cible_retour' => 'accueil')
-        ),
-        'retour_timelapse' => array(
-            'En cours...' => array('Cible_retour' => 'timelapses'),
-            'Retour' => array('Cible_retour' => 'timelapses')
         ),
         'projet_perso' => array(
             'Semaphore' => array('Cible' => 'semaphore'),
@@ -42,13 +31,13 @@
         ),
         'morse' => array(
 //            'Apprendre le morse' => array('Cible' => 'retour_morse'),
-            'Decodage' => array('Lien' => site_url('Morse/entrainement')),
+            'Decodage' => array('Lien' => site_url('Projets_perso/Morse_decodage')),
 //            'Codage' => array('Cible' => 'retour_morse'),
             'Retour' => array('Cible_retour' => 'projet_perso')
         ),
         'semaphore' => array(
 //            'Apprendre' => array('Cible' => 'retour_sem'),
-            'Decodage' => array('Lien' => site_url('Semaphore/entrainement')),
+            'Decodage' => array('Lien' => "#"),
 //            'Codage' => array('Cible' => 'retour_semaphore'),
             'Retour' => array('Cible_retour' => 'projet_perso')
         ),

@@ -1,0 +1,50 @@
+/* 
+    Created on : 29 janv. 2015, 14:35:59
+    Author     : Azarias
+*/
+
+p{
+    color: black;
+    padding: 10px;
+    display: inline-block;
+    background-color: rgba(255,255,255,0.5);
+    font-size: 16px;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    border: 2px solid white;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -moz-box-shadow: 0px 0px 10px 2px #ffffff;
+    -webkit-box-shadow: 0px 0px 10px 2px #ffffff;
+    -o-box-shadow: 0px 0px 10px 2px #ffffff;
+    box-shadow: 0px 0px 10px 2px #ffffff;
+}
+
+a{
+    color: #002166;
+}
+
+a:focus{
+    color: white;
+    text-decoration: none;
+}
+
+a:hover{
+    color: blue;
+    text-decoration: none;
+}
+
+img{
+    cursor: pointer;
+    display: inline-block;
+    width: 350px;
+}
+
+.wrap-left{
+    float: left;
+    margin-right: 5px;
+}
+
+.wrap-right{
+    float: right;
+}

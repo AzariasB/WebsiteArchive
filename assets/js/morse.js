@@ -54,7 +54,6 @@ morse.controller('ScoreBoard', function($scope, $timeout) {
 
 
     this.getkey = function() {
-        console.log('Coucou');
         try {
             if (this.paused !== 1) {
                 var r_ans = this.answer;
@@ -338,7 +337,6 @@ morse.controller('Explications', function() {
     };
 
     this.change_button = function(quebouton) {
-        console.log('Bouton =>',quebouton);
         var exp = this.explications;
         for(var m_ex in exp){
             if(exp[m_ex].button_name === quebouton){

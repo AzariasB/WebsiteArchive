@@ -40,6 +40,15 @@ footer{
     color :black;
 }
 
+#myModal{
+    color: black;
+}
+
 .Blanc{
     color :white;
+}
+
+pre{
+    font-size: 1.2em;
+    font-family: "Helvetica",sans-serif;
 }

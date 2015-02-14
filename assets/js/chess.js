@@ -1,3 +1,4 @@
+var chess = angular.module('chess', []);
 var W = "Blanc";
 var B = "Noir";
 var PIECES = ['roi', 'reine', 'tour', 'fou', 'cavalier', 'pion'];
@@ -82,9 +83,9 @@ $(function () {
                 $(this).empty();
                 $(this).append(ui.draggable);
                 $(this).show();
-                if(current_player === W){
+                if (current_player === W) {
                     changeCurrentColor(B);
-                }else{
+                } else {
                     changeCurrentColor(W);
                 }
             } else {
@@ -177,17 +178,24 @@ $(function () {
     }
 
     function movePion(father, pion) {
-        var newpos = pion.position();
-
-        if ((pion.attr("data-color") === W && (newpos.top < 0 || newpos.top > 90)) //Un pion blanc ne peux pas avancer de deux cases
-                || (pion.attr("data-color") === B && (newpos.top > 0 || newpos.top < -90)) // Un pion noir ne peux pas 'reculer' de deux cases (du point de vue du blanc)
-                || !isEmpty(father)
-                || diagonal_move(father, pion, 1) && same_color(father.children(), pion)
-                ) {//Ne peut pas se déplacer à gauche ou à droite, ne peut pas manger qqun en face de lui
-            return false;
-        } else {
+        var newPos = pion.position();
+        if (
+                (
+                        (pion.attr("data-color") === W
+                                && (newPos.top > 0 && newPos.top < 90 || (start_div >= 8 && start_div <= 15 && newPos.top > 0 && newPos.top < 150 && !collision(VERTICAL,DOWN_RIGHT,father) )))
+                        || (pion.attr("data-color") === B
+                                && (newPos.top < 0 && newPos.top > -90 || (start_div >= 48 && start_div <= 55 && newPos.top < 0 && newPos.top > -150 && !collision(VERTICAL,UP_LEFT,father) )))
+                        )
+                && (
+                        (isEmpty(father) && !moveLeft(pion) && !moveRight(pion))
+                        || (!isEmpty(father) && diagonal_move(father, pion, 1) && !same_color(father.children(), pion))
+                        )
+                ) {
             return true;
+        } else {
+            return false;
         }
+
     }
 
     function moveTour(father, tour) {
@@ -244,6 +252,13 @@ $(function () {
         }
     }
 
+/**
+ * 
+ * @param {constante} v_ou_h Vertical or horizontal move
+ * @param {constante} sens LEFT_UP or DOWN_RIGHT way
+ * @param {} pere who's your father
+ * @returns {Boolean} if there's a collision in the way given
+ */
     function collision(v_ou_h, sens, pere) {
         var inc = v_ou_h;
         var new_div = $(sqlist).index(pere);
@@ -333,3 +348,52 @@ function piece_code(code, name) {
     this.p_code = code;
     this.p_name = name;
 }
+
+chess.controller('Explications', function() {
+    var that = this;
+    this.explications = new Array();
+
+    try {
+        $.getJSON("../assets/json/echecs_explications.json", function(json) {
+            var ms = json['explications'];
+            for (var i in ms) {
+                that.add_explain(ms[i],i);
+            }
+        });
+    } catch (ex) {
+        console.error(ex);
+    }
+
+    this.add_explain = function(expl_array,title){
+        var premier = false;
+        if(title === "game"){
+            premier = true;
+        }
+        this.explications.push(new button_bool(expl_array["button"],premier,title,expl_array["texte"].join("\n")));
+    };
+
+    this.change_button = function(quebouton) {
+        var exp = this.explications;
+        for(var m_ex in exp){
+            if(exp[m_ex].button_name === quebouton){
+                this.explications[m_ex].button_b = true;
+            }else{
+                this.explications[m_ex].button_b = false;
+            }
+        }
+    };
+
+});
+
+function button_bool(b_text, b_bool,b_title, text) {
+    this.button_text = b_text;
+    this.button_name = b_title;
+    this.button_b = b_bool;
+    this.ex_text = text;
+}
+
+chess.filter('unsafe', function($sce) {
+    return function(val) {
+        return $sce.trustAsHtml(val);
+    };
+});

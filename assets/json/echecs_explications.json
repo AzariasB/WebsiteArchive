@@ -1,0 +1,37 @@
+{
+    "explications" :{
+        "game" :{
+            "button" : "Le jeu",
+            "texte" :[
+                "Jeu d'échecs réalisé en jQuery/javascript",
+                "Tout est partis d'un petit projet scolaire pour apprendre à utiliser jQuery, et la gestion du drag'n drop",
+                "Ce projet avait pour but de réussir à faire déplacer les pions ... et puis c'était tout.",
+                "J'ai trouvé dommage qu'on aille pas plus loin dans la reflexion, et je me suis mis à aprofondir le sujet de mon côté",
+                "Au final, j'ai réussi à faire un jeu d'échecs presque fonctionnel.",
+                "Deux règles n'ont pas (encore) été implémentées. Les avez vous trouvé ?",
+                "La première, et peut être la plus simple des deux à mettre en place est 'la prise en passant', il s'agit d'un coup aux échecs permet à un pion d'en manger un autre,adverse même si celui-ci l'a avancé de deux cases",
+                "La seconde règle : 'le roc'. Ce coup se joue avec une tour et un roi. Le roi ne doit pas avoir été mis en échec auparavant, il ne doit pas avoir bougé, et ne dois pas être en échec au moment de jouer ce coup. Il y a deux types de roc : le grand et le petit roc",
+                "Le petit se joue lorsqu'il y a deux cases libres entre le roi et une des deux tours, le grand se joue lorsqu'il y a trois cases libres entre le roi et une des deux tours. Je pense que pour cette règles je vais me documenter un peu sur le type d'algorithme à mettre en place :)"
+            ]
+        },
+        "version" : {
+            "button": "A venir ?",
+            "texte":[
+                "Bon d'abord il faut que j'ajoute les deux règles qui ne sont pas implémentés, puis si j'ai le temps et le courage, j'ai deux idées d'ajout pour ce jeu.",
+                "La première idée existe déjà sûrement autre part : au lieu d'être deux devant un même écran, pourquoi ne pas être sur deux écrans différents ? Oui, mettre en place un système de jeu en réseau... à suivre",
+                "Seconde idée : pourquoi jouer à deux, quand on peut jouer seul contre l'ordinateur ! Créer une IA qui pourrait vous égaler aux échecs ! J'ai déjà effectué un exposé sur les IA aux échecs et sur l'algorithme qui permet de bien faire réfléchir l'ordinateur sur les coups qu'il va faire",
+                "L'algorithme Minmax, très utilisé dans les jeux de plateaux",
+                "Mais avant ça, je ferais peut être un jeu plus simple utilisant l'algorithme minmax"
+            ]
+        },
+        "about":{
+            "button" : "A propos",
+            "texte":[
+                "Réalisé par Azarias, ayant comme origine un TP. Avec jQuery",
+                "Version du jeu : 1.0",
+                "Date de création : 15/02/2015",
+                "Dernière modification : 15/02/2015"
+            ]
+        }
+    }
+}

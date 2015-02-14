@@ -24,7 +24,7 @@
                 <br/><br/>
                 Cette semaine était aussi un concours. Malheuresement nous n'avons pas gagné.
                 Mais notre jeu a été rendu terminé, sans bugs. Il manquait juste le fil de l'histoire. Et surtout, une fin digne de ce nom.
-                Le jeu est sur github : <a href="https://github.com/AzariasB/Intership_gameJam" target="_blank">Internship</a>
+                Le jeu est sur github : <a href="https://github.com/AzariasB/InternShip" target="_blank">Internship</a>
                 <br/><br/>
                 <img src="<?php echo Globals::$pictures; ?>Projets/iCredits.png" class="wrap-right" />
                 L'histoire du jeu parlais de deux personnes qui se retrouvaient sur une île perdu et qui cherchaint la sortie pour pouvoir rentrer chez eux.

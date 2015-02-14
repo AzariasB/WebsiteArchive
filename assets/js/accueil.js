@@ -35,7 +35,7 @@ app.controller('MultiController', ['$http', '$timeout', function($http, $timeout
                 }
                 $timeout(function() {
                     MultiScreen.init();
-                }, 1);
+                }, 2);
             });
         };
 
@@ -57,7 +57,6 @@ app.controller('MultiController', ['$http', '$timeout', function($http, $timeout
                     href = true;
                     var enplus = 'projects/MonSite';
                     target = "http://" + window.location.host + '/' + enplus + "/" + mylink[titre]['Lien'];
-                    console.log(target);
                 }
                 links.push(new link(titre, target, back,href));
             }

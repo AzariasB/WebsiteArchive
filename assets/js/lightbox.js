@@ -8,7 +8,7 @@
 $(function() {
     $('img').click(function() {
         var img = $('<img/>')
-                .attr("src",$('img').attr("src"));
+                .attr("src",$(this).attr("src"));
         img
                 .css("cursor", "default")
                 .css("z-index", "999")

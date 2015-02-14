@@ -1,0 +1,45 @@
+#board{
+    width:524px;
+    height:524px;
+    border:solid thick gray;
+    position:relative;
+    padding: 0px;
+    margin-left: auto;
+    margin-right: auto;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}   
+
+#board>div{
+    border: 1px solid red;
+}
+
+#board div div{
+    font-size:300%;
+    text-align:center;
+    z-index: 999;
+    cursor: pointer;
+}
+
+header{
+    height: 10vh;
+    margin-bottom: 5px;
+    border-bottom: 1px solid white;
+}
+
+footer{
+    height: 0px;
+    padding: 0;
+}
+
+.Noir{
+    color :black;
+}
+
+.Blanc{
+    color :white;
+}

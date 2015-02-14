@@ -3,85 +3,69 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-var ms_exit = " data-ms-exit-animation";
-ms_enter = " data-ms-enter-animation";
-ms_target = " data-ms-target";
-ms_class = " ms-nav-link ";
-
-$(function() {
 
 
-    var ms_horizontal = " data-ms-horizontal-distance";
-    try {
-        $.getJSON("assets/js/morse_expllication.json", function(json) {
-            var ms = json['multi_screen'];
-            for (var i in ms) {
-                create_container(ms[i], i);
-            }
-        });
-    } catch (ex) {
-        console.error(ex);
-    }
+var app = angular.module('MultiScreen', ['todoApp']);
 
+function link(l_titre, l_target, l_back,l_href) {
+    this.titre = l_titre;
+    this.target = l_target;
+    this.back = l_back;
+    this.href = l_href;
+}
 
+function ecran(s_ident, s_def, s_links) {
+    this.identifiant = s_ident;
+    this.default = s_def;
+    this.links = s_links;
+}
 
-    function create_container(container, myname) {
-        var div = $('<div/>')
-                .addClass('ms-container container');
-        var ul = $('<ul/>')
-                .addClass('bmenu');
-        div.append($('<div/>')
-                .addClass('content')
-                .append(ul));
-        if (isset(container['default']) && container['default']) {
-            div.addClass('ms-default');
-            delete container['default'];
-        }
-        var li = create_li(container, myname);
-        ul.append(li);
-        $('body').append(div);
-    }
+app.controller('MultiController', ['$http', '$timeout', function($http, $timeout) {
+        var that = this;
+        this.ecrans = new Array();
 
-    function create_li(li_array, me) {
-        var li = $('<li/>');
-        for (var obj in li_array) {
-            if (li_array[obj] === "NOPE") {
-                li.append($('<a/>')
-                        .attr("href", "javascript:void(0)"));
-            } else {
-                if (isobj(li_array[obj])) {
-                    //.attr({ms_horizontal: '1000'});
-                    //Il s'agit d'un objet
-                    var objet = li_array[obj];
-                    if (isset(objet["Cible"])) {
-                        var a = $('<a/>', {
-                            'class': ms_class,
-                            "data-ms-enter-animation": "right",
-                            "data-ms-exit-animation":"left",
-                            "ng-clik":"titreCtrl.addLink('"+me+"','"+me+"')"
-                        });
-                        li.append(a);
-                    } else if (isset(objet["Cible_retour"])) {
-                        console.log('Coucou');
-                    } else if (isset(objet["Lien"])) {
-                        console.log("Recoucou");
-                    } else {
-                        console.log("Erreur");
-                    }
-                } else {
-                    //Si on a pas un objet...
-                    console.error("Nope");
+        this.add_screens = function() {
+            $http.get("assets/json/multiscreen.json").success(function(json) {
+                var ms = json['multi_screen'];
+                for (var i in ms) {
+                    var def = ms[i].default;
+                    delete ms[i].default;
+                    var screen = new ecran(i, def, that.create_link(ms[i]));
+                    that.ecrans.push(screen);
                 }
+                $timeout(function() {
+                    MultiScreen.init();
+                }, 1);
+            });
+        };
+
+        this.create_link = function(mylink) {
+            var links = new Array();
+            for (var titre in mylink) {
+                var back = false;
+                var href = false;
+                var target = '';
+                if (isset(mylink[titre]['Cible'])) {
+                    target = mylink[titre]['Cible'];
+                } else if (mylink[titre] === 'NOPE') {
+                    target = "#";
+                } else if (isset(mylink[titre]['Cible_retour'])) {
+                    target = mylink[titre]['Cible_retour'];
+                    back = true;
+                }else if(isset(mylink[titre]['Lien'])){
+                    console.log('Un lien');
+                    href = true;
+                    var enplus = 'projects/MonSite';
+                    target = "http://" + window.location.host + '/' + enplus + "/" + mylink[titre]['Lien'];
+                    console.log(target);
+                }
+                links.push(new link(titre, target, back,href));
             }
-        }
-        return li;
-    }
+            return links;
+        };
 
-    function isset(value) {
-        return typeof value !== "undefined";
-    }
+    }]);
 
-    function isobj(value) {
-        return typeof value === "object";
-    }
-});
+function isset(value) {
+    return typeof value !== 'undefined';
+}

@@ -10,7 +10,7 @@
             'Projets scolaires' => array('Cible' => 'projet_scol'),
         ),
         'projet_scol' => array(
-//            'Echecs' => array('Cible' => 'retour_scol'),
+            'Echecs' => array('Lien' => site_url('Projets_scolaires/Echecs')),
             'CowGow' => array('Lien' => site_url('Projets_scolaires/CowGow')),
 //            'GameJam' => array('Cible' => 'retour_scol'),
             'Retour' => array('Cible_retour' => 'accueil')

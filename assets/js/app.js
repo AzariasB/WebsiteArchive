@@ -28,6 +28,7 @@ app.controller('TitreController', function() {
     };
 
     this.addLink = function(titre, lien) {
+        console.log('Yep ? ');
         this.titre.push(new titre_lien(titre, lien));
     };
 

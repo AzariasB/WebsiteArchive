@@ -23,7 +23,7 @@
         -->
         <div class="row">
             <div class="col-md-12 text-center">
-                <a class="btn btn-primary btn-lg" href="<?php echo site_url('Morse/entrainement'); ?>" >Recommencer</a>
+                <a class="btn btn-primary btn-lg" href="<?php echo site_url('Projets_perso/Morse_decodage'); ?>" >Recommencer</a>
             </div>
         </div>
 
@@ -90,7 +90,7 @@
         </div>
         <div id="after" style="display: none" >
             <div class="col-md-2 col-sm-2 col-xs-3 ">
-                <a class="col-md-12 btn btn-default btn-lg" href="<?php echo site_url('Morse/entrainement_retour'); ?>"><span class="glyphicon glyphicon-chevron-left"> </span>  Retour</a>
+                <a class="col-md-12 btn btn-default btn-lg" href="<?php echo site_url('Projets_perso/Morse_retour'); ?>"><span class="glyphicon glyphicon-chevron-left"> </span>  Retour</a>
             </div>
             <div class="col-md-2 col-md-offset-1  col-xs-3 col-sm-2">
                 <button type="button" class="col-md-12 btn btn-lg btn-danger" ng-click="score.pause()" id="pause">
@@ -103,7 +103,7 @@
                 </button>
             </div>
             <div class="col-md-2 hidden-sm hidden-xs ">
-                <a href="<?php echo site_url('Morse/entrainement'); ?>" class="col-md-12 btn btn-lg btn-info" id="restart">
+                <a href="<?php echo site_url('Projets_perso/Morse_decodage'); ?>" class="col-md-12 btn btn-lg btn-info" id="restart">
                     Recommencer
                 </a>
             </div>

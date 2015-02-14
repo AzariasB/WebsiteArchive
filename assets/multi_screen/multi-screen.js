@@ -112,7 +112,6 @@ var MultiScreen = (function() {
 
 		// run plugin only if at least two screens
 		if (ms_screens.length > 1) {
-
 			// check for default screen
 			var default_screen = $('div.ms-container.ms-default');
 			

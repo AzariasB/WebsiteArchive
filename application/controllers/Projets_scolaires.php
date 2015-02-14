@@ -16,4 +16,9 @@ class Projets_scolaires extends CI_Controller {
         $this->load->view('Links');
         $this->load->view('Scolaire/CowGow');
     }
+    
+    function Echecs(){
+        $this->load->view('Links');
+        $this->load->view('Scolaire/Chess');
+    }
 }

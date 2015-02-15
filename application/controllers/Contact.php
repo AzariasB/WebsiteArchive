@@ -42,20 +42,17 @@ class Contact extends CI_Controller {
 
     function success() {
         $this->load->library('email');
-
         $this->email->from($_POST['mail'], $_POST['nom_u']);
-        $this->email->to('***REMOVED***');
+        $this->email->to('contact@azarias.byethost12.com');
 
         $this->email->subject($_POST['objet']);
         $this->email->message($_POST['message']);
 
         $this->email->send();
-
-        echo $this->email->print_debugger();
-        die();
+        
         
         $this->load->view('Links');
-        $this->load->view('mssg_success');
+        $this->load->view('msg_success');
     }
 
 }

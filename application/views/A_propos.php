@@ -63,7 +63,7 @@ $content[$pere] = $fils;
     <footer>
         <div class="row">
             <a href="<?php echo site_url('Accueil'); ?>" class="btn btn-default col-sm-3 col-xs-5 "><span class="glyphicon glyphicon-chevron-left"></span> Accueil</a>
-            <a href="#" class="btn btn-default col-sm-offset-6 col-sm-3 col-xs-5 col-xs-offset-2 " ><span class="glyphicon glyphicon-envelope"></span> Me contacter </a>
+            <a href="<?php echo site_url('Contact') ?>" class="btn btn-default col-sm-offset-6 col-sm-3 col-xs-5 col-xs-offset-2 " ><span class="glyphicon glyphicon-envelope"></span> Me contacter </a>
         </div>
     </footer>
 </body>

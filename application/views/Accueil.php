@@ -8,17 +8,18 @@
         'accueil' => array(
             'Projets personnels' => array('Cible' => 'projet_perso'),
             'Projets scolaires' => array('Cible' => 'projet_scol'),
+            'Echecs' => array('Cible' => 'echecs'),
         ),
         'projet_scol' => array(
-            'Echecs' => array('Lien' => site_url('Projets_scolaires/Echecs')),
             'CowGow' => array('Lien' => site_url('Projets_scolaires/CowGow')),
             'GameJam' => array('Lien' => site_url('Projets_scolaires/GameJam') ),
             'Retour' => array('Cible_retour' => 'accueil')
         ),
-        'retour_scol' => array(
-            'En cours' => array('Cible_retour' => 'projet_scol'),
-            'Retour' => array('Cible_retour' => 'projet_scol')
-        ),
+        'echecs' => array(
+            'Version simple' => array('Lien' => site_url('Echecs/simple')),
+            'Retour' => array('Cible_retour' => 'accueil')
+        )
+        ,
         'projet_perso' => array(
             'Semaphore' => array('Cible' => 'semaphore'),
             'Morse' => array('Cible' => 'morse'),
@@ -37,7 +38,7 @@
         ),
         'semaphore' => array(
 //            'Apprendre' => array('Cible' => 'retour_sem'),
-            'Decodage' => array('Lien' => "#"),
+            'Decodage' => array('Lien' => site_url('Projets_perso/Semaphore_decodage')),
 //            'Codage' => array('Cible' => 'retour_semaphore'),
             'Retour' => array('Cible_retour' => 'projet_perso')
         ),

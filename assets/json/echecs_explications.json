@@ -7,11 +7,9 @@
                 "Tout est partis d'un petit projet scolaire pour apprendre à utiliser jQuery, et la gestion du drag'n drop",
                 "Ce projet avait pour but de réussir à faire déplacer les pions ... et puis c'était tout.",
                 "J'ai trouvé dommage qu'on aille pas plus loin dans la reflexion, et je me suis mis à aprofondir le sujet de mon côté",
-                "Au final, j'ai réussi à faire un jeu d'échecs presque fonctionnel.",
-                "Deux règles n'ont pas (encore) été implémentées. Les avez vous trouvé ?",
-                "La première, et peut être la plus simple des deux à mettre en place est 'la prise en passant', il s'agit d'un coup aux échecs permet à un pion d'en manger un autre,adverse même si celui-ci l'a avancé de deux cases",
-                "La seconde règle : 'le roc'. Ce coup se joue avec une tour et un roi. Le roi ne doit pas avoir été mis en échec auparavant, il ne doit pas avoir bougé, et ne dois pas être en échec au moment de jouer ce coup. Il y a deux types de roc : le grand et le petit roc",
-                "Le petit se joue lorsqu'il y a deux cases libres entre le roi et une des deux tours, le grand se joue lorsqu'il y a trois cases libres entre le roi et une des deux tours. Je pense que pour cette règles je vais me documenter un peu sur le type d'algorithme à mettre en place :)"
+                "Au final, cette version permet d'effectuer tout les déplacements de base du jeu d'échecs",
+                "En revanche, aucune règles n'a été implémenté : le jeu ne détecte pas les 'pat' ou quand le roi est en échec ou la prise en passant, ou le roc ...",
+                "Cela sera le but de la seconde version : faire un jeu qui respecte toutes les règles des échecs"
             ]
         },
         "version" : {

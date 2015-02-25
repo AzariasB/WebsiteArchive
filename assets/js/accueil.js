@@ -1,13 +1,12 @@
 /* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Don't erase the 'todoApp', its useful !
  */
 
-
+var ITEM = "CurrentScreen";
+var LINKS = "links";
 var app = angular.module('MultiScreen', ['todoApp']);
 
-function link(l_titre, l_target, l_back,l_href) {
+function link(l_titre, l_target, l_back, l_href) {
     this.titre = l_titre;
     this.target = l_target;
     this.back = l_back;
@@ -20,12 +19,11 @@ function ecran(s_ident, s_def, s_links) {
     this.links = s_links;
 }
 
-app.controller('MultiController', ['$http', '$timeout', function($http, $timeout) {
+app.controller('MultiController', ['$http', '$timeout', function ($http, $timeout) {
         var that = this;
         this.ecrans = new Array();
-
-        this.add_screens = function() {
-            $http.get("assets/json/multiscreen.json").success(function(json) {
+        this.add_screens = function () {
+            $http.get("assets/json/multiscreen.json").success(function (json) {
                 var ms = json['multi_screen'];
                 for (var i in ms) {
                     var def = ms[i].default;
@@ -33,13 +31,18 @@ app.controller('MultiController', ['$http', '$timeout', function($http, $timeout
                     var screen = new ecran(i, def, that.create_link(ms[i]));
                     that.ecrans.push(screen);
                 }
-                $timeout(function() {
+                if (sessionStorage.getItem(ITEM) !== null) {
+                    that.setDefault(sessionStorage.getItem(ITEM), 'begin');
+                } else {
+                    console.log("Null");
+                }
+                $timeout(function () {
                     MultiScreen.init();
-                }, 2);
+                }, 10);
             });
         };
 
-        this.create_link = function(mylink) {
+        this.create_link = function (mylink) {
             var links = new Array();
             for (var titre in mylink) {
                 var back = false;
@@ -52,15 +55,52 @@ app.controller('MultiController', ['$http', '$timeout', function($http, $timeout
                 } else if (isset(mylink[titre]['Cible_retour'])) {
                     target = mylink[titre]['Cible_retour'];
                     back = true;
-                }else if(isset(mylink[titre]['Lien'])){
-                    console.log('Un lien');
+                } else if (isset(mylink[titre]['Lien'])) {
                     href = true;
                     var enplus = 'projects/MonSite';
                     target = "http://" + window.location.host + '/' + enplus + "/" + mylink[titre]['Lien'];
                 }
-                links.push(new link(titre, target, back,href));
+                links.push(new link(titre, target, back, href));
             }
             return links;
+        };
+
+
+        this.setDefault = function (myLink, controller) {
+            if (typeof myLink === 'string' && controller === 'begin') { // On arrive tout juste
+                myLink = JSON.parse(myLink);
+                controller = null;
+            }
+
+            if (controller !== null && controller !== undefined) {
+                myLink.back ? controller.removeLink(myLink) :
+                        (myLink.target === '#' || myLink.href) ? '' : controller.addLink(myLink.titre, myLink.target);
+            }
+
+            if (myLink.target !== "#" && myLink.target.indexOf("http://") === -1) {
+                sessionStorage.setItem(ITEM, JSON.stringify(myLink));
+                // console.log(sessionStorage.getItem(ITEM));
+                for (var index in this.ecrans) {
+                    // console.log("Attendu : " + this.ecrans[index].identifiant + " \t => reçu : " + myLink.target);
+                    if (this.ecrans[index].identifiant === myLink.target) {
+                        this.ecrans[index].default = true;
+                    } else {
+                        this.ecrans[index].default = false;
+                    }
+                }
+            } else if (myLink.target.indexOf("http://") !== -1) {
+                sessionStorage.setItem(LINKS, JSON.stringify(controller.titre));
+            }
+
+        };
+
+        this.initLinks = function (controller) {
+            var titres = JSON.parse(sessionStorage.getItem(LINKS));
+            controller.titre = [];
+            for (var obj in titres) {
+                controller.addLink(titres[obj].titre, titres[obj].lien);
+            }
+            console.log(controller.getTitre());
         };
 
     }]);

@@ -1,0 +1,35 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 23 févr. 2015, 19:20:39
+    Author     : Azarias
+*/
+
+
+body header{
+    height: 20vh;
+}
+
+img{
+    width: 75%;
+    height: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input{
+    width: 100px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    font-weight: bold;
+    font-size: 1.5em;
+}
+
+body input:not([type=submit]):not([type=file]):hover{
+    background-color: #4F671C;
+    color: #0f0f0f;
+}

@@ -20,5 +20,10 @@ class Projets_perso extends CI_Controller {
         $this->session->set_flashdata('retour', 'morse');
         redirect(site_url('Accueil'));
     }
+    
+    function Semaphore_decodage(){
+        $this->load->view('Links');
+        $this->load->view('Projets/Semaphore');
+    }
 
 }

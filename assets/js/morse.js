@@ -4,7 +4,7 @@ var DASH = '<div class="dash"></div>';
 var EMPTY_SQUARE = '&#x2610';
 var CHECK_SQUARE = '&#x2611';
 
-morse.controller('ScoreBoard', function($scope, $timeout) {
+morse.controller('ScoreBoard', function($timeout) {
 
     var that = this;
     this.nbr_questions = 10;

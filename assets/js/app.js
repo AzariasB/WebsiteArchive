@@ -5,10 +5,11 @@ function titre_lien(titre, lien) {
     this.lien = lien;
 }
 
-app.controller('TitreController', function() {
+app.controller('TitreController', function () {
     this.titre = new Array(new titre_lien('Accueil', 'accueil'));
 
-    this.removeLink = function(lien) {
+    this.removeLink = function (lien) {
+        console.log(lien);
         if (typeof lien === 'object') {
             this.titre.splice(this.titre.indexOf(lien) + 1, this.titre.length - this.titre.indexOf(lien));
         } else if (typeof lien === 'string') {
@@ -27,9 +28,13 @@ app.controller('TitreController', function() {
 
     };
 
-    this.addLink = function(titre, lien) {
-        console.log('Yep ? ');
+    this.addLink = function (titre, lien) {
         this.titre.push(new titre_lien(titre, lien));
+        console.log(this.titre.length);
+    };
+    
+    this.getTitre = function(){
+        return this.titre;
     };
 
 });

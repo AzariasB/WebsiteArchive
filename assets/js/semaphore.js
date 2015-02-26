@@ -14,6 +14,7 @@ app.controller('game', function ($timeout) {
     this.score = 0;
     this.commentaries = '...';
     this.d_time = '00:00:00';
+    this.time_out;
     //   this.chrono();
     this.paused = false;
 
@@ -30,11 +31,20 @@ app.controller('game', function ($timeout) {
         this.user_letter = '';
         if (answer === this.current_letter) {
             this.commentaries = 'Bien joué !';
+            this.clear_input();
             this.score++;
         } else {
             this.commentaries = 'Faux, la réponse était : ' + this.current_letter;
+            this.clear_input();
         }
         this.new_letter();
+    };
+    
+    this.clear_input = function(){
+        $timeout.cancel(this.time_out);
+        this.time_out = $timeout(function(){
+            that.commentaries = "...";
+        },1000);
     };
 
     this.chrono = function () {

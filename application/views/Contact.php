@@ -1,6 +1,6 @@
 
-<link href="<?php echo Globals::$css; ?>contact_style.css" rel="stylesheet">
-<script src="<?php echo Globals::$js ?>contact.js" type="text/javascript" ></script>
+<link href="<?php echo css() ?>contact_style.css" rel="stylesheet">
+<script src="<?php echo js() ?>contact.js" type="text/javascript" ></script>
 </head>
 <body>
     <header class="text-center" >

@@ -1,6 +1,6 @@
-<script src="<?php echo Globals::$js; ?>lightbox.js" ></script>
-<link href="<?php echo Globals::$css; ?>contact_style.css" rel="stylesheet" />
-<link href="<?php echo Globals::$css ?>projets_scol_style.css" rel="stylesheet" />
+<script src="<?php echo js() ?>lightbox.js" ></script>
+<link href="<?php echo css() ?>contact_style.css" rel="stylesheet" />
+<link href="<?php echo css() ?>projets_scol_style.css" rel="stylesheet" />
 </head>
 <body>
     <header>
@@ -13,7 +13,7 @@
             <p class="text-justify">
                 Une semaine durant, à l'IUT, nous avons eu une 'GameJam'. Une semaine pour coder notre propre jeu. Ce jeu devait respecter un certaion thème : 'A deux, c'est mieux'.
                 Nous étions donc une équipe d 6 étudiants, et nous avons developpé un petit jeu en 2d. Le but du jeu étais de résoudre des minis-puzzle.
-                <img src="<?php echo Globals::$pictures; ?>Projets/Internship.png" class="wrap-left" />
+                <img src="<?php echo images() ?>Projets/Internship.png" class="wrap-left" />
                 Le jeu étais composé de deux joueurs utilisant deux parties du clavier.
                 On ne pouvait pas finir le jeu tout seul. Tout les puzzles n'étaient resolvables qu'à deux.
                 Deux règles étaient établies :
@@ -26,7 +26,7 @@
                 Mais notre jeu a été rendu terminé, sans bugs. Il manquait juste le fil de l'histoire. Et surtout, une fin digne de ce nom.
                 Le jeu est sur github : <a href="https://github.com/AzariasB/InternShip" target="_blank">Internship</a>
                 <br/><br/>
-                <img src="<?php echo Globals::$pictures; ?>Projets/iCredits.png" class="wrap-right" />
+                <img src="<?php echo images() ?>Projets/iCredits.png" class="wrap-right" />
                 L'histoire du jeu parlais de deux personnes qui se retrouvaient sur une île perdu et qui cherchaint la sortie pour pouvoir rentrer chez eux.
                 A la fin de l'aventure, un des deux personnages se dévoilait en tant que recrutteur et proposait à l'autre personnage un stage.
                 Parce que, bien entendu, le rêve de tout étudiant de notre âge, c'est de trouver un stage :)

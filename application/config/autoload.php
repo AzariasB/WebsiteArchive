@@ -64,7 +64,7 @@ $autoload['libraries'] = array('database','session','form_validation');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array('url','form');
+$autoload['helper'] = array('url','form','debug','assets');
 
 
 /*
@@ -109,7 +109,7 @@ $autoload['language'] = array();
 |
 */
 
-$autoload['model'] = array('globals');
+$autoload['model'] = array();
 
 
 /* End of file autoload.php */

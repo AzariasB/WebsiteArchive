@@ -30,8 +30,8 @@ foreach ($data as $key => $value) {
 $content[$pere] = $fils;
 ?>
 
-<script type="text/javascript" src="<?php echo Globals::$js; ?>a_propos.js"></script>
-<link href="<?php echo Globals::$css; ?>a_propos_style.css" rel="stylesheet" />
+<script type="text/javascript" src="<?php echo js() ?>a_propos.js"></script>
+<link href="<?php echo css()?>a_propos_style.css" rel="stylesheet" />
 </head>
 <body>
     <header class="text-center">

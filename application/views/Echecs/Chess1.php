@@ -1,5 +1,5 @@
 
-<link rel='stylesheet' href='<?php echo Globals::$css ?>chess.css'/>
+<link rel='stylesheet' href='<?php echo css() ?>chess.css'/>
 <script src='<?php echo Globals::$js ?>chess.js'></script>
 </head>
 <body ng-app="chess" ng-controller="Explications as xp"  >

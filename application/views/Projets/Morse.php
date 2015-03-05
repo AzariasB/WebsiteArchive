@@ -1,5 +1,5 @@
-<link href="<?php echo Globals::$css ?>morse_style.css" rel="stylesheet" media="screen" >
-<script LANGUAGE="JavaScript" src="<?php echo Globals::$js; ?>morse.js" type="text/javascript" ></script>
+<link href="<?php echo css() ?>morse_style.css" rel="stylesheet" media="screen" >
+<script LANGUAGE="JavaScript" src="<?php echo js() ?>morse.js" type="text/javascript" ></script>
 </head>
 
 <body ng-app="morse" ng-controller="ScoreBoard as score">

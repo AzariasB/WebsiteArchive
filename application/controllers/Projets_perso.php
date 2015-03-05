@@ -25,5 +25,15 @@ class Projets_perso extends CI_Controller {
         $this->load->view('Links');
         $this->load->view('Projets/Semaphore');
     }
+    
+    function Morse_score(){
+        $this->load->view('Links');
+        $this->load->view('Projets/Morse_score');
+    }
+    
+    function Semaphore_score(){
+        $this->load->view('Links');
+        $this->load->view('Projets/Semaphore_score');
+    }
 
 }

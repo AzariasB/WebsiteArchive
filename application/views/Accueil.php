@@ -1,4 +1,4 @@
-<script src="<?php echo Globals::$js ?>app.js" ></script>
+<script src="<?php echo js() ?>app.js" ></script>
 </head>
 <body ng-app="todoApp" ng-controller="TitreController as titreCtrl" >
     <?php
@@ -33,27 +33,16 @@
         'morse' => array(
 //            'Apprendre le morse' => array('Cible' => 'retour_morse'),
             'Decodage' => array('Lien' => site_url('Projets_perso/Morse_decodage')),
+            'Classement' => array('Lien' => site_url('Projets_perso/Morse_score') ),
 //            'Codage' => array('Cible' => 'retour_morse'),
             'Retour' => array('Cible_retour' => 'projet_perso')
         ),
         'semaphore' => array(
 //            'Apprendre' => array('Cible' => 'retour_sem'),
             'Decodage' => array('Lien' => site_url('Projets_perso/Semaphore_decodage')),
-//            'Codage' => array('Cible' => 'retour_semaphore'),
+            'Classement' => array('Lien' => site_url('Projets_perso/Semaphore_score')),
             'Retour' => array('Cible_retour' => 'projet_perso')
         ),
-//        'retour_morse' => array(
-//            'En cours...' => array('Cible_retour' => 'morse'),
-//            'Retour' => array('Cible_retour' => 'morse')
-//        ),
-//        'retour_sem' => array(
-//            'En cours...' => array('Cible_retour' => 'semaphore'),
-//            'Retour' => array('Cible_retour' => 'semaphore') 
-//        ),
-//        'en_cours' => array(
-//            'A venir ...' => array('Cible_retour' => 'accueil'),
-//            'Retour' => array('Cible_retour' => 'accueil')
-//        )
     );
 
     if (isset($backscreen)) {

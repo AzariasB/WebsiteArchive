@@ -1,7 +1,7 @@
 
-<link href="<?php echo Globals::$css ?>contact_style.css" rel="stylesheet" />
-<link href="<?php echo Globals::$css ?>projets_scol_style.css" rel="stylesheet" />
-<script src="<?php echo Globals::$js ?>lightbox.js" type="text/javascript" ></script>
+<link href="<?php echo css() ?>contact_style.css" rel="stylesheet" />
+<link href="<?php echo css() ?>projets_scol_style.css" rel="stylesheet" />
+<script src="<?php echo js() ?>lightbox.js" type="text/javascript" ></script>
 </head>
 <body>
     <header class="text-center">
@@ -19,7 +19,7 @@
                 Il n'y a aucun but commercial derrière celui-ci.<br/>
                 Vous pouvez y accéder en cliquant sur le titre ci-dessus, ou en cliquant sur le lien ci-après :
                 <a target="_blank" href="http://cowgow.byethost7.com/">http://cowgow.byethost7.com</a>
-                Le but du projet était de réaliser un site de vente de voyages en ligne.<img class="wrap-left" src="<?php echo Globals::$pictures; ?>Projets/CowGow.jpg" />
+                Le but du projet était de réaliser un site de vente de voyages en ligne.<img class="wrap-left" src="<?php echo images()?>Projets/CowGow.jpg" />
                 Nous n'avons pas eu le temps de complètement finir tout le site.<br/>
                 Seules les pages les plus importantes ont été faites. L'inscription fonctionne normalement.
                 Vous pouvez vous connecter directement après vous être inscrit.<br/>

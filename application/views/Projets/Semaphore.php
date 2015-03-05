@@ -1,6 +1,6 @@
-<script src="<?php echo Globals::$js ?>semaphore.js"></script>
-<link href=" <?php echo Globals::$css ?>semaphore_style.css" rel="stylesheet"/>
-<link href="<?php echo Globals::$css ?>contact_style.css" rel="stylesheet" />
+<script src="<?php echo js() ?>semaphore.js"></script>
+<link href=" <?php echo css() ?>semaphore_style.css" rel="stylesheet"/>
+<link href="<?php echo css() ?>contact_style.css" rel="stylesheet" />
 </head>
 <body ng-app="semaphore" >
     <div ng-controller="game as g" ng-init="g.chrono()" >
@@ -27,7 +27,7 @@
 
         </header>
         <div class="col-sm-8 col-sm-offset-2 col-xs-12 text-center " >
-            <img class="img-responsive " src="<?php echo Globals::$pictures ?>/Projets/semaphore/{{ g.current_letter}}.png" alt="{{ g.current_letter}}" />
+            <img class="img-responsive " src="<?php echo images()?>/Projets/semaphore/{{ g.current_letter}}.png" alt="{{ g.current_letter}}" />
             <input id="answer" class="form-control-static text-center" onblur="this.focus()" type="text" ng-model="g.user_letter" ng-change="g.user_input()" />
         </div>
 

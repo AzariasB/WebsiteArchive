@@ -1,5 +1,5 @@
 
-<link href="<?php echo Globals::$css; ?>contact_style.css" rel="stylesheet" >
+<link href="<?php echo css() ?>contact_style.css" rel="stylesheet" >
     </head>
     <body>
         <header>

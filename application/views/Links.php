@@ -20,25 +20,25 @@ Tout les liens basiques nécessaires pour le bon fonctionnement du site.
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- jQuery -->
-        <link href="<?php echo Globals::$css; ?>jquery-ui.css" rel="stylesheet" />
-        <script LANGUAGE="JavaScript" src="<?php echo Globals::$js; ?>jQuery.js" type="text/javascript" ></script>
-        <script LANGUAGE="JavaScript" src="<?php echo Globals::$js; ?>jquery-ui.js" type="text/javascript" ></script>
+        <link href="<?php echo css(); ?>jquery-ui.css" rel="stylesheet" />
+        <script LANGUAGE="JavaScript" src="<?php echo js(); ?>jQuery.js" type="text/javascript" ></script>
+        <script LANGUAGE="JavaScript" src="<?php echo js(); ?>jquery-ui.js" type="text/javascript" ></script>
 
         <!--Angular-->
-        <script LANGUAGE="JavaScript" src="<?php echo Globals::$js ?>angular.min.js" type="text/javascript" ></script>
+        <script LANGUAGE="JavaScript" src="<?php echo js(); ?>angular.min.js" type="text/javascript" ></script>
 
 
         <!-- Bootstrap -->
-        <script LANGUAGE="JavaScript" src="<?php echo Globals::$js ?>bootstrap.min.js" type="text/javascript" ></script>
-        <link href="<?php echo Globals::$css; ?>bootstrap.min.css" rel="stylesheet" />
+        <script LANGUAGE="JavaScript" src="<?php echo js(); ?>bootstrap.min.js" type="text/javascript" ></script>
+        <link href="<?php echo css() ?>bootstrap.min.css" rel="stylesheet" />
 
         <!-- Autre -->
-        <link rel="icon"  href="<?php echo Globals::$pictures; ?>icons/icon_512.png" />
-        <link rel="stylesheet" href="<?php echo Globals::$css; ?>general_style.css" />
-        <link href="<?php echo Globals::$css; ?>nice_style.css" rel="stylesheet" />
+        <link rel="icon"  href="<?php echo images() ?>icons/icon_512.png" />
+        <link rel="stylesheet" href="<?php echo css() ?>general_style.css" />
+        <link href="<?php echo css() ?>nice_style.css" rel="stylesheet" />
 
-        <link href="<?php echo Globals::$multi_screen; ?>multi-screen-css.css" type="text/css" rel="stylesheet"/>
-        <script LANGUAGE="JavaScript" type="text/javascript" src="<?php echo Globals::$multi_screen; ?>multi-screen.js"></script>
+        <link href="<?php echo multi_screen() ?>multi-screen-css.css" type="text/css" rel="stylesheet"/>
+        <script LANGUAGE="JavaScript" type="text/javascript" src="<?php echo multi_screen(); ?>multi-screen.js"></script>
         <script LANGUAGE="JavaScript" type="text/javascript">$(document).ready(function() {
                 MultiScreen.init();
             });</script>

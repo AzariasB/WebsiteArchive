@@ -1,6 +1,6 @@
 
-<script src="<?php echo Globals::$js ?>app.js" ></script>
-<script src="<?php echo Globals::$js; ?>accueil.js" type="text/javascript" ></script>
+<script src="<?php echo js() ?>app.js" ></script>
+<script src="<?php echo js() ?>accueil.js" type="text/javascript" ></script>
 <style>
     body{
         overflow-x: hidden;

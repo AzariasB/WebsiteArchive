@@ -18,16 +18,24 @@
         'echecs' => array(
             'Version simple' => array('Lien' => site_url('Echecs/simple')),
             'Retour' => array('Cible_retour' => 'accueil')
-        )
-        ,
+        ),
         'projet_perso' => array(
-            'Semaphore' => array('Cible' => 'semaphore'),
-            'Morse' => array('Cible' => 'morse'),
-//            'Vitesse de frappe' => array('Cible' => 'retour_projet'),
+            'Decodage' => array('Cible' => 'decodage'),
+            'Github' => array('Cible' => 'github'),
             'Retour' => array('Cible_retour' => 'accueil')
         ),
         'retour_projet' => array(
             'En cours...' => array('Cible_retour' => 'projet_perso'),
+            'Retour' => array('Cible_retour' => 'projet_perso')
+        ),
+        'decodage' => array(
+            'Morse' => array('Cible' => 'morse'),
+            'Semaphore' => array('Cible' => 'semaphore'),
+            'Retour' => array('Cible_retour' => 'projet_perso')
+        ),
+        'github' => array(
+            'Sort.js' => array('Lien' => site_url('Projets_perso/sortjs')),
+             'Euraka' => array('Lien' => site_url('Projets_perso/euraka')),
             'Retour' => array('Cible_retour' => 'projet_perso')
         ),
         'morse' => array(

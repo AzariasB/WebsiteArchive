@@ -16,7 +16,7 @@ class Projets_perso extends CI_Controller {
     }
 
     function Morse_decodage() {
-        $this->load_projet(DECODAGE_PATH.'Morse');
+        $this->load_projet(DECODAGE_PATH . 'Morse');
     }
 
     function Morse_retour() {
@@ -25,48 +25,58 @@ class Projets_perso extends CI_Controller {
     }
 
     function Semaphore_decodage() {
-        $this->load_projet(DECODAGE_PATH."Semaphore");
+        $this->load_projet(DECODAGE_PATH . "Semaphore");
     }
 
     function Morse_score() {
         $this->load->model('scores_model');
         $scores = $this->scores_model->get_morse_score();
         $this->load->view('Links');
-        $this->load->view(DECODAGE_PATH.'Morse_score', array('scores' => $scores));
+        $this->load->view(DECODAGE_PATH . 'Morse_score', array('scores' => $scores));
     }
 
     function Semaphore_score() {
-        $this->load_projet(DECODAGE_PATH.'Semaphore_score');
+        $this->load_projet(DECODAGE_PATH . 'Semaphore_score');
     }
-    
-    function sortjs(){
-        $this->load_projet(GITHUB_PATH.'Sort_js');
+
+    function sortjs() {
+        $this->load_projet(GITHUB_PATH . 'Sort_js');
     }
-    
-    function euraka(){
-        $this->load_projet(GITHUB_PATH.'Euraka');
+
+    function euraka() {
+        $this->load_projet(GITHUB_PATH . 'Euraka');
     }
 
     function add_morse_score() {
-        $infos = $_POST;
-        if (
-                isset($infos['pseudo']) && isset($infos['nbrquestions']) &&
-                isset($infos['lettres']) && isset($infos['chiffres']) &&
-                isset($infos['ponctuation']) && isset($infos['score']) &&
-                isset($infos['temps'])
-        ) {
-            $pseudo = $infos['pseudo'];
-            $score = $this->calcul_score($infos['score'], $infos['nbrquestions'], $infos['temps']);
 
-            echo $score;
+        $pseudo = $this->input->post('pseudo');
+        $nbrquestion = $this->input->post('nbrquestions');
+        $lettres = $this->input->post('lettres');
+        $chiffres = $this->input->post('chiffres');
+        $ponctuation = $this->input->post('ponctuation');
+        $score = $this->input->post('score');
+        $temps = $this->input->post('temps');
+        if (!empty($pseudo) && !empty($nbrquestion) &&
+                !empty($score) && !empty($temps)) {
+            $score_calc = $this->calcul_score($nbrquestion, $lettres, $chiffres, $ponctuation, $score, $temps);
             $this->load->model('scores_model');
-            $this->scores_model->insert_morse_score($pseudo, floor($score), $infos['lettres'], $infos['chiffres'], $infos['ponctuation']);
+            $this->scores_model->insert_morse_score($pseudo, floor($score_calc), $lettres, $chiffres, $ponctuation,$nbrquestion,$temps);
+            echo floor($score_calc);
+        } else {
+            echo 'failed';
         }
     }
 
-    
-    private function load_projet($projet){
+    private function load_projet($projet) {
         $this->load->view('Links');
         $this->load->view($projet);
     }
+
+    public function calcul_score($nbrquestions, $lettres, $chiffres, $ponctuation, $res, $temps) {
+        $numerateur = ($res / $nbrquestions) * 100 * log($nbrquestions) * (1 * ($lettres == 'true' ) + 1.5 * ($chiffres == 'true' ) + 2 * ($ponctuation == 'true'));
+        //           --------------------------------------------------------------------------------------------
+        $denominateur = $temps / $nbrquestions;
+        return $numerateur / $denominateur;
+    }
+
 }

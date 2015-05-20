@@ -11,23 +11,21 @@
  *
  * @author Azarias
  */
-class Accueil extends CI_Controller {
+class Accueil extends MY_Controller {
 
     //put your code here
 
     function __construct() {
         parent::__construct();
+        error_reporting(E_ALL);
+        ini_set('display_errors', 1);
     }
 
     function index() {
-        $this->load->view('Links');
-        $backscreen = $this->session->flashdata('retour');
-        if (isset($backscreen) && $backscreen != NULL) {
-            $retour = array('backscreen' => $backscreen);
-            $this->load->view('Accueil', $retour);
-        } else {
-            $this->load->view('Accueil');
-        }
+        $data = array();
+        $data['titre'] = "Tu as réussi";
+        
+        $this->twig->display('accueil.html.twig',$data);
     }
 
 }

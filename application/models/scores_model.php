@@ -30,13 +30,15 @@ class scores_model extends CI_Model {
         return $result;
     }
     
-    function insert_morse_score($pseudo,$score,$lettres,$chiffres,$ponctuation){
+    function insert_morse_score($pseudo,$score,$lettres,$chiffres,$ponctuation,$nbr_questions,$temps){
         $toInsert = array(
             'score' => $score,
             'pseudo' => $pseudo,
-            'Lettres' => ($lettres ? 1 : 0),
-            "Chiffres" => ($chiffres ? 1 : 0),
-            "Ponctuation" => ($chiffres ? 1 : 0)
+            'Lettres' => ($lettres == 'true' ? 1 : 0),
+            "Chiffres" => ($chiffres == 'true' ? 1 : 0),
+            "Ponctuation" => ($ponctuation == 'true' ? 1 : 0),
+            "Nbr_questions" => $nbr_questions,
+            "Temps_total" => $temps
         );
         
         $this->db->insert('morse_score',$toInsert);

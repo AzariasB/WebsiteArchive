@@ -97,15 +97,6 @@
             </li>
         </ul>
     </header>
-    <footer>
-        <div class="row text-center">
-            <ul>
-                <li><a href="<?php echo site_url('Contact'); ?>" >Contact</a></li>
-                <li> - </li>
-                <li><a href="<?php echo site_url('A_propos'); ?>" >A propos</a></li>
-            </ul>
-        </div>
-    </footer>
 </body>
 
 

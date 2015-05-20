@@ -5,13 +5,15 @@ if (!defined('BASEPATH')) {
 }
 
 function display_score($informations, $rang) {
-    echo '<tr>
-                <td>'.$rang.'</td>
-                <td>'.$informations->score.'</td>'
-            . ' <td>'.$informations->pseudo. '</td>'
-            . '<td>'. ($informations->Lettres == 0 ? '&#x2610' : '&#x2611') .'</td>
-                <td>'. ($informations->Chiffres == 0 ? '&#x2610' : '&#x2611') .' </td>
-              <td> '.($informations->Ponctuation == 0 ? '&#x2611' : '&#x2610'). ' </td>
+    echo '<tr>'
+    . '<td>' . $rang . '</td>'
+    . '<td>' . $informations->score . '</td>'
+    . ' <td>' . $informations->pseudo . '</td>'
+    . '<td>' . $informations->Nbr_questions . '</td>'
+    . '<td>' . $informations->Temps_total . '</td>'
+    . '<td>' . ($informations->Lettres == 0 ? '&#x2610' : '&#x2611') . '</td>'
+    . '<td>' . ($informations->Chiffres == 0 ? '&#x2610' : '&#x2611') . ' </td>'
+    . '<td> ' . ($informations->Ponctuation == 0 ? '&#x2610' : '&#x2611') . ' </td>
             </tr>';
 }
 ?>
@@ -21,24 +23,27 @@ function display_score($informations, $rang) {
 <body>
     <div class="col-sm-10 col-sm-offset-1 col-xs-12 text-center">
         <table class="table table-hover" >
-            <thead>
+            <thead class="fixedHeader" >
                 <tr id="table-header" >
                     <th class="text-center" >Rang</th>
-                    <th class="text-center" >Score</th>
-                    <th class="text-center" >Pseudo</th>
-                    <th class="text-center" >Lettres</th>
-                    <th class="text-center" >Chiffres</th>
-                    <th class="text-center" >Ponctuation</th>
+                    <th class="text-center">Score</th>
+                    <th class="text-center">Pseudo</th>
+                    <th class="text-center" >Nombre de questions</th>
+                    <th class="text-center" >Temps total</th>
+                    <th class="text-center">Lettres</th>
+                    <th class="text-center">Chiffres</th>
+                    <th class="text-center">Ponctuation</th>
                 </tr>
             </thead>
-            <?php
-            $rang = 1;
-            foreach ($scores as $info){
-                display_score($info, $rang);
-                $rang++;
-            }
-            
-            ?>
+            <tbody>
+                <?php
+                $rang = 1;
+                foreach ($scores as $info) {
+                    display_score($info, $rang);
+                    $rang++;
+                }
+                ?>
+            </tbody>
         </table>
     </div>
 

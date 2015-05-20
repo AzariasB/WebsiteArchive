@@ -1,0 +1,52 @@
+<!Doctype html>
+<html>
+    <head>
+        <title>{{ titre}}</title>
+        {{ load_css() }}
+        {{ load_javascript() }}
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta HTTP-EQUIV="CONTENT-LANGUAGE" CONTENT="fr">
+        <meta HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=iso-8859-1">
+        <meta name="DESCRIPTION" CONTENT="Apprentissage, codage, cryptage, timelapses, projets scolaire">
+        <meta name="KEYWORDS" CONTENT="Morse, Sémaphore, Cryptage">
+        <meta name="ROBOTS" CONTENT="INDEX,FOLLOW">
+        <meta name="REVISIT-AFTER" CONTENT="15days">
+        <meta name="IDENTIFIER-URL" CONTENT="http://http://azarias.byethost12.com/">
+        <meta name="AUTHOR" CONTENT="Azarias">
+        <meta name="REPLY-TO" CONTENT="***REMOVED***">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon"  href="{{ images() }}icons/icon_512.png" />
+
+        <script LANGUAGE="JavaScript" type="text/javascript">$(document).ready(function () {
+                MultiScreen.init();
+            });</script>
+    </head>
+    <body>
+        <header class="text-center">
+            {% block head %}
+            <h1>
+                Bienvenue sur Azarias.com
+            </h1>
+            {% endblock %}
+        </header>
+        <div>
+            {% block body %}
+            <div class="text-center col-xs-12" >
+                <h2>Ici, c'est le corps</h2>
+            </div>
+            {% endblock %}
+        </div>
+        <footer>
+            {% block footer %}
+            <div class="row text-center">
+                <ul>
+                    <li><a href="{{ site_url('Contact') }} " >Contact</a></li>
+                    <li> - </li>
+                    <li><a href="{{ site_url('A_propos') }}" >A propos</a></li>
+                </ul>
+            </div>
+            {% endblock %}
+        </footer>
+    </body>
+</html>

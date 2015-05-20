@@ -1,5 +1,5 @@
-<link href="<?php echo css() ?>morse_style.css" rel="stylesheet" media="screen" >
-<script LANGUAGE="JavaScript" src="<?php echo js() ?>morse.js" type="text/javascript" ></script>
+    <link href="<?php echo css() ?>morse_style.css" rel="stylesheet" media="screen" >
+    <script LANGUAGE="JavaScript" src="<?php echo js() ?>morse.js" type="text/javascript" ></script>
 </head>
 
 <body ng-app="morse" ng-controller="ScoreBoard as score">
@@ -15,15 +15,16 @@
         <div class="row">
             <div class="col-md-12 text-center">
                 <h2 id="pause_score"></h2>
+                <h2 id="pause_time" ></h2>
+                <h2 id="score_calc" ></h2>
             </div>
-
         </div>
-        <!-- 
-        Rajouter le tableau des scores ici !
-        -->
         <div class="row">
-            <div class="col-md-12 text-center">
+            <div class="col-md-6 text-right">
                 <a class="btn btn-primary btn-lg" href="<?php echo site_url('Projets_perso/Morse_decodage'); ?>" >Recommencer</a>
+            </div>
+            <div class="col-md-6 text-left">
+                <a class="btn btn-default btn-lg" href="<?php echo site_url('Projets_perso/Morse_score') ?>" >Tableau des scores</a>
             </div>
         </div>
 
@@ -49,7 +50,7 @@
     <header class="text-center">
         <div class="row">
             <div class="col-md-4 hidden-sm hidden-xs ">
-                <h2>Score</h2>
+                <h2>Résultat</h2>
             </div>
             <div class="col-md-4 col-sm-6 hidden-xs">
                 <h2 id="text">{{ score.d_commentaire}}</h2>

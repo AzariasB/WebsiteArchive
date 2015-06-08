@@ -3,15 +3,16 @@
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
-class A_propos extends CI_Controller {
+class A_propos extends MY_Controller {
 
     function __construct() {
         parent::__construct();
     }
 
     function index() {
-        $this->load->view('Links');
-        $this->load->view('A_propos');
+        $this->add_js("a_propos.js");
+        $this->add_css("a_propos_style.css");
+        $this->twig->display('a_propos.html.twig');
     }
 
     public function get_a_propos() {

@@ -11,14 +11,16 @@
  *
  * @author Azarias
  */
-class Test  extends CI_Controller {
+class Test  extends MY_Controller {
     
     function __construct() {
         parent::__construct();
     }
     
     function index(){
-        $this->load->view('Links');
-        $this->load->view('Testaccueil');
+        $this->add_js('app.js');
+        $this->add_js('accueil.js');
+        
+        $this->twig->display('test.html.twig');
     }
 }

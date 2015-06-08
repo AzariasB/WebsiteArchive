@@ -17,21 +17,18 @@ class MY_Controller extends CI_Controller {
         parent::__construct();
         $this->load->library('Twig/twig');
         $this->load->library('assetic');
-        $this->set_twig_functions();
-    }
-
-    private function set_twig_functions() {
-        foreach ($twig_functions as $function){
-            $this->add_twig_function($function);
+        if (ENVIRONMENT == 'development') {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
         }
     }
 
     protected function add_css($file, $name = 'style') {
-        $this->assetic->addCss($file, $name);
+        $this->assetic->addCss('assets/css/'.$file, $name);
     }
 
     protected function add_js($file, $name = 'common') {
-        $this->assetic->addJsDir($file, $name);
+        $this->assetic->addJsDir('assets/js/' . $file, $name);
     }
 
     protected function add_twig_function($function_name) {

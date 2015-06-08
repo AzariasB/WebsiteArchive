@@ -1,1 +1,48 @@
 {% extends "base.html.twig" %}
+
+{% block body_definition %}
+    <body ng-app="todoApp" ng-controller="TitreController as titreCtrl" >
+    {% endblock %}
+
+    {% block head %}
+        <header class="text-center">
+            <ul id="path">
+                <li ng-repeat="title in titreCtrl.titre" id="ms-nav-parent">
+                    <a ng-show="!$last" ng-click="titreCtrl.removeLink(title)" class="ms-nav-link" data-ms-exit-animation="right" data-ms-enter-animation="left" data-ms-horizontal-distance="1000" data-ms-target="{{'{{'}}title.lien{{'}}'}}" href="javascript:void(0)">{{'{{'}}title.titre{{'}}'}}</a>
+                    <p ng-show="$last" id="last">{{ '{{' }} title.titre {{ '}}' }} </p>
+                    <p ng-show="!$last"> > </p>
+                </li>
+            </ul>
+        </header>
+    {% endblock %} 
+
+    {% block main_part %}
+        {% set multiS_right = ' data-ms-exit-animation="left" data-ms-enter-animation="right" data-ms-horizontal-distance="1000" href="javascript:void(0)"' %}
+        {% set multiS_back = ' data-ms-exit-animation = "right" data-ms-enter-animation = "left" data-ms-horizontal-distance = "1000" href="javascript:void(0)" ' %}
+        {% for key,value in screens %}
+            {% if key == 'accueil' %}
+                <div id="{{ key }}" class="ms-container ms-default container" >
+                {% else %}
+                    <div id="{{ key }}" class="ms-container container" >
+                    {% endif %}
+                    <div class="content" >
+                        <ul class="bmenu" >
+                            {% for titre,cible in value %}
+                                {% if cible.Cible is defined %}
+                                    {% set onclick = ' ng-click="titreCtrl.addLink(\'' ~titre~'\',\'' ~cible.Cible~'\');" ' %}
+                                    <li><a class="ms-nav-link" data-ms-target="{{ cible.Cible }}" {{ multiS_right|raw }} {{ onclick|raw }} >{{ titre }}</a></li>
+                                    {% elseif cible.Cible_retour is defined  %}
+                                        {% set remove = ' ng-click="titreCtrl.removeLink(1);" '%}
+                                    <li><a class='ms-nav-link' data-ms-target="{{ cible.Cible_retour }}" {{ multiS_back|raw }} {{ remove|raw }}" ><span class="glyphicon glyphicon-chevron-left" ></span>{{ titre }}</a></li>
+                                        {% elseif cible.Lien is defined %}
+                                    <li><a href="{{ cible.Lien }}">{{ titre }}</a></li>
+                                    {% else %}
+                                        {% set remove = ' ng-click="titreCtrl.removeLink(1);" ' %}
+                                    <li><a class="ms-nav-link" data-ms-target="accueil" {{ multiS_back }} {{ remove|raw }} ><span class="glyphicon glyphicon-chevron-left" ></span> </a></li>
+                                    {% endif %}
+                                {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor%}
+        {% endblock %}

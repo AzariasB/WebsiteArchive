@@ -9,19 +9,16 @@ define('DECODAGE_PATH', 'Projets/Decodage/');
 define('GITHUB_PATH', 'Projets/GitHub/');
 define('AUTRE_PATH', 'Projets/Autres/');
 
-class Projets_perso extends CI_Controller {
+class Projets_perso extends MY_Controller {
 
     function __construct() {
         parent::__construct();
     }
 
     function Morse_decodage() {
+        $this->add_js('morse.js');
+        $this->add_css('morse_style.css');
         $this->load_projet(DECODAGE_PATH . 'Morse');
-    }
-
-    function Morse_retour() {
-        $this->session->set_flashdata('retour', 'morse');
-        redirect(site_url('Accueil'));
     }
 
     function Semaphore_decodage() {
@@ -38,13 +35,28 @@ class Projets_perso extends CI_Controller {
     function Semaphore_score() {
         $this->load_projet(DECODAGE_PATH . 'Semaphore_score');
     }
-
+/*
+ * <link href="<?php echo css() ?>contact_style.css" rel="stylesheet" />
+<link href="<?php echo css() ?>projets_scol_style.css" rel="stylesheet" />
+<script src="<?php echo js() ?>lightbox.js" type="text/javascript" ></script>
+ */
+    
     function sortjs() {
-        $this->load_projet(GITHUB_PATH . 'Sort_js');
+        $this->add_css("contact_style.css");
+        $this->add_css("projets_scol_style.css");
+        $this->add_js("lightbox.js");
+        $this->load_projet(GITHUB_PATH . 'sort_js');
     }
 
     function euraka() {
-        $this->load_projet(GITHUB_PATH . 'Euraka');
+        $this->add_css("contact_style.css");
+        $this->add_css("projets_scol_style.css");
+        $this->add_js("lightbox.js");
+        $this->load_projet(GITHUB_PATH . 'euraka');
+    }
+
+    private function load_projet($projet) {
+        $this->twig->display($projet.".html.twig");
     }
 
     function add_morse_score() {
@@ -60,16 +72,11 @@ class Projets_perso extends CI_Controller {
                 !empty($score) && !empty($temps)) {
             $score_calc = $this->calcul_score($nbrquestion, $lettres, $chiffres, $ponctuation, $score, $temps);
             $this->load->model('scores_model');
-            $this->scores_model->insert_morse_score($pseudo, floor($score_calc), $lettres, $chiffres, $ponctuation,$nbrquestion,$temps);
+            $this->scores_model->insert_morse_score($pseudo, floor($score_calc), $lettres, $chiffres, $ponctuation, $nbrquestion, $temps);
             echo floor($score_calc);
         } else {
             echo 'failed';
         }
-    }
-
-    private function load_projet($projet) {
-        $this->load->view('Links');
-        $this->load->view($projet);
     }
 
     public function calcul_score($nbrquestions, $lettres, $chiffres, $ponctuation, $res, $temps) {

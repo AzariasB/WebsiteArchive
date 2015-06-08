@@ -1,7 +1,9 @@
 <!Doctype html>
 <html>
     <head>
-        <title>{{ titre}}</title>
+        <title>
+            {{ (titre is defined) ? titre : 'Azarias' }}   
+        </title>
         {{ load_css() }}
         {{ load_javascript() }}
         <meta charset="utf-8">
@@ -22,31 +24,31 @@
                 MultiScreen.init();
             });</script>
     </head>
-    <body>
-        <header class="text-center">
-            {% block head %}
-            <h1>
-                Bienvenue sur Azarias.com
-            </h1>
-            {% endblock %}
-        </header>
-        <div>
-            {% block body %}
+    {% block body_definition %}
+        <body>
+        {% endblock %}
+        {% block head %}
+            <header class="text-center">
+                <h1>
+                    Bienvenue sur Azarias.com
+                </h1>
+            </header>
+        {% endblock %}
+        {% block main_part %}
             <div class="text-center col-xs-12" >
                 <h2>Ici, c'est le corps</h2>
             </div>
-            {% endblock %}
-        </div>
-        <footer>
-            {% block footer %}
-            <div class="row text-center">
-                <ul>
-                    <li><a href="{{ site_url('Contact') }} " >Contact</a></li>
-                    <li> - </li>
-                    <li><a href="{{ site_url('A_propos') }}" >A propos</a></li>
-                </ul>
-            </div>
-            {% endblock %}
-        </footer>
+        {% endblock %}
+        {% block footer %}
+            <footer>
+                <div class="row text-center">
+                    <ul>
+                        <li><a href="{{ site_url('Contact') }} " >Contact</a></li>
+                        <li> - </li>
+                        <li><a href="{{ site_url('A_propos') }}" >A propos</a></li>
+                    </ul>
+                </div>
+            </footer>
+        {% endblock %}
     </body>
 </html>

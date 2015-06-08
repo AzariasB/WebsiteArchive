@@ -11,15 +11,16 @@
  *
  * @author Azarias
  */
-class Contact extends CI_Controller {
+class Contact extends MY_Controller {
 
     function __construct() {
         parent::__construct();
     }
 
     function index() {
-        $this->load->view('Links');
-        $this->load->view('Contact');
+        $this->add_css("contact_style.css");
+        $this->add_js("contact.js");
+        $this->twig->display('contact.html.twig');
     }
 
     function message() {
@@ -42,17 +43,16 @@ class Contact extends CI_Controller {
 
     function success() {
         $this->load->library('email');
-        $this->email->from($_POST['mail'], $_POST['nom_u']);
+        $this->email->from($this->input->post('mail'),  $this->input->post('nom_u'));
         $this->email->to('contact@azarias.byethost12.com');
 
-        $this->email->subject($_POST['objet']);
-        $this->email->message($_POST['message']);
+        $this->email->subject($this->input->post('objet'));
+        $this->email->message($this->input->post('message'));
 
         $this->email->send();
-        
-        
-        $this->load->view('Links');
-        $this->load->view('msg_success');
+
+        $this->add_css("contact_style.css");
+        $this->twig->display('msg_success.html.twig');
     }
 
 }

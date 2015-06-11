@@ -22,14 +22,18 @@ class Projets_perso extends MY_Controller {
     }
 
     function Semaphore_decodage() {
+        $this->add_js('semaphore.js');
+        $this->add_css('semaphore_style.css');
+        $this->add_css('contact_style.css');
         $this->load_projet(DECODAGE_PATH . "Semaphore");
     }
 
     function Morse_score() {
+        $this->add_css('contact_style.css');
+        $this->add_css('score_style.css');
         $this->load->model('scores_model');
         $scores = $this->scores_model->get_morse_score();
-        $this->load->view('Links');
-        $this->load->view(DECODAGE_PATH . 'Morse_score', array('scores' => $scores));
+        $this->load_projet(DECODAGE_PATH . 'Morse_score', array('scores' => $scores));
     }
 
     function Semaphore_score() {
@@ -55,8 +59,8 @@ class Projets_perso extends MY_Controller {
         $this->load_projet(GITHUB_PATH . 'euraka');
     }
 
-    private function load_projet($projet) {
-        $this->twig->display($projet.".html.twig");
+    private function load_projet($projet,$data = array()) {
+        $this->twig->display($projet.".html.twig",$data);
     }
 
     function add_morse_score() {

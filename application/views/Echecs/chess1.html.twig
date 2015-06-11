@@ -6,13 +6,13 @@
     {% block head %}
         <header>
             <div class="col-xs-4">
-                <a href="{{ site_url('Accueil') }}" class="btn btn-lg btn-default"><span class="glyphicon glyphicon-chevron-left" ></span> Accueil </a>
+                <a href="{{ site_url('Accueil') }}" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" ></span> Accueil </a>
             </div>
             <div class="col-xs-4 text-center">
                 <h1>Jeux d'échecs</h1>
             </div>
             <div class="col-xs-4 text-right" >
-                <button ng-click="" type="button" data-toggle="modal" data-target="#myModal" class="btn btn-lg btn-primary">Explications</button>
+                <button ng-click="" type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Explications</button>
             </div>
         </header>
     {% endblock %}
@@ -30,7 +30,7 @@
                     <div class="modal-body">
                         <div class="row">
                             <div ng-repeat="button in xp.explications" class="col-md-2">
-                                <button class="col-md-12 btn btn-primary choice" ng-class="button.button_b ? 'active':''" id="button.button_name" type="button" ng-click="xp.change_button(button.button_name);">{{ button.button_text}}</button>
+                                <button class="col-md-12 btn btn-primary choice" ng-class="button.button_b ? 'active':''" id="button.button_name" type="button" ng-click="xp.change_button(button.button_name);">{{ '{{' }} button.button_text {{ '}}' }}</button>
                             </div>
                         </div>
                         <hr/>

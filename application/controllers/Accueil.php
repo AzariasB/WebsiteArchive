@@ -41,6 +41,7 @@ class Accueil extends MY_Controller {
             ),
             'echecs' => array(
                 'Version simple' => array('Lien' => site_url('Echecs/simple')),
+                'Seconde version' => array('Lien' => site_url('Echecs/seconde_v')),
                 'Retour' => array('Cible_retour' => 'accueil')
             ),
             'projet_perso' => array(
@@ -55,6 +56,7 @@ class Accueil extends MY_Controller {
             'decodage' => array(
                 'Morse' => array('Cible' => 'morse'),
                 'Semaphore' => array('Cible' => 'semaphore'),
+                'Crypter' => array('Lien' => 'Projets_perso/TicTacToe'),
                 'Retour' => array('Cible_retour' => 'projet_perso')
             ),
             'github' => array(

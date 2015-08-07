@@ -2,6 +2,7 @@
  * Don't erase the 'todoApp', its useful !
  */
 
+
 var ITEM = "CurrentScreen";
 var LINKS = "links";
 var app = angular.module('MultiScreen', ['todoApp']);
@@ -22,24 +23,30 @@ function ecran(s_ident, s_def, s_links) {
 app.controller('MultiController', ['$http', '$timeout', function ($http, $timeout) {
         var that = this;
         this.ecrans = new Array();
+
+
         this.add_screens = function () {
-            $http.get("assets/json/multiscreen.json").success(function (json) {
-                var ms = json['multi_screen'];
-                for (var i in ms) {
-                    var def = ms[i].default;
-                    delete ms[i].default;
-                    var screen = new ecran(i, def, that.create_link(ms[i]));
-                    that.ecrans.push(screen);
-                }
-                if (sessionStorage.getItem(ITEM) !== null) {
-                    that.setDefault(sessionStorage.getItem(ITEM), 'begin');
-                } else {
-                    console.log("Null");
-                }
-                $timeout(function () {
-                    MultiScreen.init();
-                }, 10);
-            });
+            $http.get("assets/json/multiscreen.json")
+                    .success(function (json) {
+                        var ms = json['multi_screen'];
+                        for (var i in ms) {
+                            var def = ms[i].default;
+                            delete ms[i].default;
+                            var screen = new ecran(i, def, that.create_link(ms[i]));
+                            that.ecrans.push(screen);
+                        }
+                        if (sessionStorage.getItem(ITEM) !== null) {
+                            that.setDefault(sessionStorage.getItem(ITEM), 'begin');
+                        } else {
+                            
+                        }
+                        $timeout(function () {
+                            MultiScreen.init();
+                        }, 10);
+                    })
+                    .error(function (data) {
+                        console.log("Erreur :" + data);
+                    });
         };
 
         this.create_link = function (mylink) {
@@ -57,8 +64,7 @@ app.controller('MultiController', ['$http', '$timeout', function ($http, $timeou
                     back = true;
                 } else if (isset(mylink[titre]['Lien'])) {
                     href = true;
-                    var enplus = 'projects/MonSite';
-                    target = "http://" + window.location.host + '/' + enplus + "/" + mylink[titre]['Lien'];
+                    target = "http://" + window.location.host +  "/" + mylink[titre]['Lien'];
                 }
                 links.push(new link(titre, target, back, href));
             }
@@ -75,11 +81,11 @@ app.controller('MultiController', ['$http', '$timeout', function ($http, $timeou
             if (controller !== null && controller !== undefined) {
                 myLink.back ? controller.removeLink(myLink) :
                         (myLink.target === '#' || myLink.href) ? '' : controller.addLink(myLink.titre, myLink.target);
+                sessionStorage.setItem(LINKS, JSON.stringify(controller.titre));
             }
 
             if (myLink.target !== "#" && myLink.target.indexOf("http://") === -1) {
                 sessionStorage.setItem(ITEM, JSON.stringify(myLink));
-                // console.log(sessionStorage.getItem(ITEM));
                 for (var index in this.ecrans) {
                     // console.log("Attendu : " + this.ecrans[index].identifiant + " \t => reçu : " + myLink.target);
                     if (this.ecrans[index].identifiant === myLink.target) {

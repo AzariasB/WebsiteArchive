@@ -1,0 +1,68 @@
+
+{% extends "base.html.twig" %}
+
+{% block head %}
+    <header class="text-center">
+        <h1>
+            TicTacToe encryptation
+        </h1>
+    </header>
+{% endblock %}
+
+{% block main_part %}
+    <div class="container-fluid">
+        <div class="row" >
+            <div class="col-xs-12" >
+                <form id="toTranslate"  >
+                    <div class="form-group" >
+                        <label for="plain" class="label label-info" >Texte à traduire</label>
+                        <input id="plain" placeholder="Tapez ici votre texte"  class="form-control" type="text" />
+                    </div> 
+                    <div class="form-group col-xs-3">
+                        <label for="textSize" class="label label-info" >Taille du texte</label>
+                        <div class="form-group" >
+                            <input id="textSize" data-slider-id='mSlider' type="text" data-slider-min="8" data-slider-max="250" data-slider-step="2" data-slider-value="50"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="encodage" class="label label-info" >Type de cryptage</label>
+                            <select id="encodage" class="form-control" >
+                                <option data-class="ticTacToe" >Tic Tac Toe</option>
+                                <option data-class="chinese" >Samourai</option>
+                                <option data-class="children" >Enfantin</option>
+                                <option data-class="elfic" >Elfique</option>
+                                <option data-class="music" >Musical</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default" >Créer image</button>                            
+                        </div>
+                    </div>
+                    <div class="col-xs-9" >
+                        <div class="row" >
+                            <h4>Texte</h4>
+                            <div id="texte" class="ticTacToe" ></div>
+                        </div>
+                        <div class="row" >
+                            <h4>Image</h4>
+                            <div id="resImage"></div>
+                        </div>
+                    </div>
+                </form>
+                <div class="col-xs-12">
+                    <form id="mFont" method="POST" enctype="multipart/form-data" >
+                        <select class="hidden" ></select>
+                        <div class="form-group">
+                            <input name="file" type="file" accept=".woff"  class="btn btn-info"  />
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-default" >Charger un police</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% endblock %}
+
+    {% block footer %}
+
+    {% endblock %}

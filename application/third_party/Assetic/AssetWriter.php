@@ -58,7 +58,6 @@ class AssetWriter
     {
         foreach (VarUtils::getCombinations($asset->getVars(), $this->values) as $combination) {
             $asset->setValues($combination);
-
             static::write(
                 $this->dir.'/'.VarUtils::resolve(
                     $asset->getTargetPath(),
@@ -75,7 +74,7 @@ class AssetWriter
         if (!is_dir($dir = dirname($path)) && false === @mkdir($dir, 0777, true)) {
             throw new \RuntimeException('Unable to create directory '.$dir);
         }
-
+        
         if (false === @file_put_contents($path, $contents)) {
             throw new \RuntimeException('Unable to write file '.$path);
         }

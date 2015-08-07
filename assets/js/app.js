@@ -13,7 +13,7 @@ app.controller('TitreController', function () {
         if (typeof lien === 'object') {
             this.titre.splice(this.titre.indexOf(lien) + 1, this.titre.length - this.titre.indexOf(lien));
         } else if (typeof lien === 'string') {
-            for (titrel in this.titre) {
+            for (var titrel in this.titre) {
                 if (titrel.lien === lien) {
                     this.titre.splice(this.titre.indexOf(titrel), this.titre.length - this.titre.indexOf(titrel));
                     break;
@@ -32,10 +32,10 @@ app.controller('TitreController', function () {
         this.titre.push(new titre_lien(titre, lien));
         console.log(this.titre.length);
     };
-    
+
     this.getTitre = function(){
         return this.titre;
     };
+    
 
 });
-

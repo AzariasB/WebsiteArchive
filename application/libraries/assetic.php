@@ -101,10 +101,10 @@ class CI_Assetic {
         $urls = array();
 
         foreach ($this->collections['js'] as $filename => $ac) {
-            if (!file_exists($this->config['static']['dir'] . $filename)) {
-                $ac->setTargetPath($filename);
-                $this->writer->writeAsset($ac);
-            }
+            //if (!file_exists($this->config['static']['dir'] . $filename)) {
+            $ac->setTargetPath($filename);
+            $this->writer->writeAsset($ac);
+            //}
             $urls[] = base_url($this->config['static']['dir'] . $filename);
         }
 
@@ -152,10 +152,10 @@ class CI_Assetic {
         $urls = array();
 
         foreach ($this->collections['css'] as $filename => $ac) {
-            if (!file_exists($this->config['static']['dir'] . $filename)) {
-                $ac->setTargetPath($filename);
-                $this->writer->writeAsset($ac);
-            }
+            //if (!file_exists($this->config['static']['dir'] . $filename)) {
+            $ac->setTargetPath($filename);
+            $this->writer->writeAsset($ac);
+            //}
             $urls[] = base_url($this->config['static']['dir'] . $filename);
         }
 

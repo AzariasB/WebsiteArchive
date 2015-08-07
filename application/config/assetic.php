@@ -13,7 +13,7 @@ $config['assetic'] = array(
             js() . "bootstrap.min.js",
             multi_screen().'multi-screen.js'
         ),
-        'default-group' => 'common',
+        'default-group' => 'script',
     ),
     'css' => array(
         //For every page

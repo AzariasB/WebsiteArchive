@@ -24,7 +24,7 @@ class MY_Controller extends CI_Controller {
     }
 
     protected function add_css($file, $name = 'style') {
-        $this->assetic->addCss('assets/css/'.$file, $name);
+        $this->assetic->addCss('assets/css/' . $file, $name);
     }
 
     protected function add_js($file, $name = 'common') {

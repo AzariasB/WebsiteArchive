@@ -4,12 +4,20 @@ var DASH = '<div class="dash"></div>';
 var EMPTY_SQUARE = '&#x2610';
 var CHECK_SQUARE = '&#x2611';
 
-morse.controller('ScoreBoard', function($timeout) {
+morse.controller('ScoreBoard', function ($timeout, $http, $scope,$sce) {
+    $http.defaults.headers.post["Content-Type"] =
+            "application/x-www-form-urlencoded; charset=UTF-8;";
+    //Pour l'ajax
+    //Launch le modal si besoin
+    get_user();
+
 
     var that = this;
+    this.pseudo = (sessionStorage['pseudo'] === undefined ? 'Anonyme' : sessionStorage['pseudo']);
     this.nbr_questions = 10;
     this.nbr_questions_rest = this.nbr_questions;
     this.answer = '';
+    this.eraser;
 
     this.with_alphabet = true;
     this.with_ponctuation = false;
@@ -24,6 +32,7 @@ morse.controller('ScoreBoard', function($timeout) {
     this.d_score = 0;
     this.d_morse;
     this.d_time = '00:00:00';
+    this.r_time = 0;
     this.d_countdown = 3;
     this.d_commentaire = 'Choix des options ...';
 
@@ -31,7 +40,7 @@ morse.controller('ScoreBoard', function($timeout) {
     this.d_chiffre =
             this.d_ponctuation = EMPTY_SQUARE;
 
-    this.debut_jeu = function() {
+    this.debut_jeu = function () {
         if (!this.with_alphabet && !this.with_chiffres && !this.with_ponctuation) {
             this.d_commentaire = 'Une séléction nécessaire';
         } else {
@@ -44,16 +53,30 @@ morse.controller('ScoreBoard', function($timeout) {
             $('#before').hide();
             $('#after').fadeIn('fast');
             $('#answer').focus();
+            $('#answer').blur(function () {
+                $('#answer').focus();
+            });
             this.new_morse();
             this.paused = 0;
             this.chrono();
         }
+        document.getElementById('answer').addEventListener("blur", function () {
+            var element = this;
+            setTimeout(function () {
+                element.focus();
+            }, 1);
+        }, true);
 
+        $(window).focus(function () {
+            $('#answer').focus();
+        });
 
+        $('#pseudo').attr("readonly", "");
+        sessionStorage['pseudo'] = this.pseudo;
     };
 
 
-    this.getkey = function() {
+    this.getkey = function () {
         try {
             if (this.paused !== 1) {
                 var r_ans = this.answer;
@@ -70,32 +93,63 @@ morse.controller('ScoreBoard', function($timeout) {
         }
     };
 
-    this.end = function() {
+    this.end = function () {
+        var score_calc = $('<span/>').addClass("fa fa-circle-o-notch fa-spin").get(0).outerHTML;
+        this.send_score();
         this.paused = 1;
         $('#answer').hide();
         $("#pause_text").text("Fini !!!");
-        var text = "Score :" + this.d_score + "/" + this.nbr_questions;
+        var text = "Résultat :" + this.d_score + "/" + this.nbr_questions;
         if (this.d_score === this.nbr_questions) {
             text += "<br/> Bien joué, tu as fait un sans-fautes !";
         }
-        text += "<br/>Réalisé en " + this.d_time;
+
         $("#pause_score").html(text);
+        $("#pause_time").html("Réalisé en " + this.time(this.r_time));
+        $("#score_calc").html("Score : " + score_calc);
         $('#pause').addClass('disabled');
         $('#continue').addClass('disabled');
         $('#pause_screen').fadeIn(1000);
-        $('#pause_screen').click(function() {
-            $('#pause_screen').fadeOut(500);
-        });
+      //  $('#pause_screen').click(function () {
+      //      $('#pause_screen').fadeOut(500);
+      //  });
     };
 
-    this.right = function() {
+    this.send_score = function () {
+        var url = window.location.href;
+        url = url.slice(0, url.lastIndexOf('/'));
+        url = url + '/add_morse_score'
+
+        $http({
+            method: 'POST',
+            url: url,
+            data: $.param({
+                pseudo: this.pseudo,
+                temps: this.r_time,
+                nbrquestions: this.nbr_questions,
+                score: this.d_score,
+                lettres: this.with_alphabet,
+                chiffres: this.with_chiffres,
+                ponctuation: this.with_ponctuation
+            }),
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'}
+        }).success(function(data){
+           $("#score_calc").text("Score : " + data);
+        });
+        
+        return this.d_score;
+    };
+
+
+    this.right = function () {
         try {
             this.d_commentaire = 'Bien joué !';
             this.d_score++;
             if (this.nbr_questions_rest === 0) {
                 this.end();
             } else {
-                $timeout(function() {
+                $timeout.cancel(this.eraser);
+                this.eraser = $timeout(function () {
                     that.d_commentaire = '';
                 }, 1000);
                 this.new_morse();
@@ -106,27 +160,28 @@ morse.controller('ScoreBoard', function($timeout) {
 
     };
 
-    this.wrong = function() {
+    this.wrong = function () {
         this.paused = 1;
         $('#answer').hide();
         this.d_commentaire = 'Faux, la réponse était : ' + this.letters[this.current_letter];
         if (this.nbr_questions_rest === 0) {
             this.end();
         } else {
-            $timeout(function() {
+            $timeout.cancel(this.eraser);
+            this.eraser = $timeout(function () {
                 $('#answer').show();
                 $('#answer').focus();
                 that.new_morse();
                 that.d_commentaire = '';
                 that.paused = 0;
                 that.chrono();
-
+                
             }, 1500);
         }
 
     };
 
-    this.new_morse = function() {
+    this.new_morse = function () {
         var rand = Math.floor(Math.random() * this.total_car);
         //  Pour éviter de tomber deux fois de suite sur la même lettre
         while (rand === this.current_letter) {
@@ -138,7 +193,7 @@ morse.controller('ScoreBoard', function($timeout) {
     };
 
 
-    this.print_code = function(binarie) {
+    this.print_code = function (binarie) {
         var newimg = '';
         for (var i = 0; i < binarie.length; i++) {
             if (binarie.charAt(i) === '1') {
@@ -150,18 +205,19 @@ morse.controller('ScoreBoard', function($timeout) {
         return newimg;
     };
 
-    this.chrono = function() {
+    this.chrono = function () {
         if (this.paused !== 1) {
             if (this.d_time !== null) {
-                this.d_time = this.time(this.d_time);
+                this.d_time = this.time(this.r_time);
+                this.r_time++;
             }
-            $timeout(function() {
+            $timeout(function () {
                 that.chrono();
             }, 1000);
         }
     };
 
-    this.pause = function() {
+    this.pause = function () {
         $('#answer').hide();
         $('#pause').addClass('disabled');
         $('#continue').removeClass("disabled");
@@ -169,7 +225,7 @@ morse.controller('ScoreBoard', function($timeout) {
         $('#image').fadeOut(200);
     };
 
-    this.unpause = function() {
+    this.unpause = function () {
         $('#answer').show();
         $('#answer').focus();
         $('#continue').addClass("disabled");
@@ -179,40 +235,24 @@ morse.controller('ScoreBoard', function($timeout) {
         $('#image').fadeIn(200);
     };
 
-    this.time = function(time) {
-        time = time.trim();
-        var hour = parseInt(time.substr(0, 2));
-        var minute = parseInt(time.substr(3, 2));
-        var second = parseInt(time.substr(6, 2));
-        second++;
+    this.time = function (time) {
+        var second = time % 60;
+        second = (second < 10 ? '0' : '') + second;
 
-        if (second > 59) {
-            second = 0;
-            minute++;
-        }
-        if (minute > 59) {
-            minute = 0;
-            hour++;
-        }
+        var minutes = ((time - second) / 60) % 60;
+        minutes = (minutes < 10 ? '0' : '') + minutes;
 
-        if (second < 10) {
-            second = "0" + second.toString();
-        }
-        if (minute < 10) {
-            minute = "0" + minute.toString();
-        }
-        if (hour < 10) {
-            hour = "0" + hour.toString();
-        }
+        var heures = Math.floor((time - second) / 3600);
+        heures = (heures < 10 ? '0' : '') + heures;
 
+        return heures + ':' + minutes + ':' + second;
 
-        return hour + ':' + minute + ':' + second;
     };
     /*
      * Met à jour le nombre de questions de la partie
      * @param le nombres de questions
      */
-    this.nbr_question = function() {
+    this.nbr_question = function () {
         if (this.nbr_questions < 40) {
             this.nbr_questions += 10;
         } else {
@@ -221,27 +261,27 @@ morse.controller('ScoreBoard', function($timeout) {
         this.nbr_questions_rest = this.nbr_questions;
     };
 
-    this.check_alphabet = function() {
+    this.check_alphabet = function () {
         this.d_alphabet = this.change_option(this.d_alphabet);
         this.with_alphabet = (this.d_alphabet === EMPTY_SQUARE ? false : true);
     };
 
-    this.check_chiffre = function() {
+    this.check_chiffre = function () {
         this.d_chiffre = this.change_option(this.d_chiffre);
         this.with_chiffres = (this.d_chiffre === EMPTY_SQUARE ? false : true);
     };
 
-    this.check_ponctuation = function() {
+    this.check_ponctuation = function () {
         this.d_ponctuation = this.change_option(this.d_ponctuation);
         this.with_ponctuation = (this.d_ponctuation === EMPTY_SQUARE ? false : true);
     };
 
-    this.change_option = function(vartocheck) {
+    this.change_option = function (vartocheck) {
         return (vartocheck === EMPTY_SQUARE ? CHECK_SQUARE : EMPTY_SQUARE);
     };
 
 
-    this.get_morse = function() {
+    this.get_morse = function () {
         //De base, on met les lettres de l'alphabet
         var morses = new Array();
         if (this.with_alphabet) {
@@ -261,7 +301,7 @@ morse.controller('ScoreBoard', function($timeout) {
         return morses;
     };
 
-    this.get_letters = function() {
+    this.get_letters = function () {
         //Si demandé, l'alphabet
         var letters = new Array();
         if (this.with_alphabet) {
@@ -288,61 +328,41 @@ morse.controller('ScoreBoard', function($timeout) {
  * Ajouter un filtre
  * Pour pouvoir injecter de l'HTML dans la vue via Angular
  */
-morse.filter('unsafe', function($sce) {
-    return function(val) {
+morse.filter('unsafe', function ($sce) {
+    return function (val) {
         return $sce.trustAsHtml(val);
     };
 });
 
-$(document).ready(function() {
-
-    document.getElementById('answer').addEventListener("blur", function() {
-        var element = this;
-        setTimeout(function() {
-            element.focus();
-        }, 1);
-    }, true);
-
-    $(window).focus(function() {
-        $('#answer').focus();
-    });
-});
-
-
-
-
-
-
-morse.controller('Explications', function() {
+morse.controller('Explications', function () {
     var that = this;
     this.explications = new Array();
 
     try {
-        $.getJSON("../assets/json/morse_explication.json", function(json) {
+        $.getJSON("../../assets/json/morse_explication.json", function (json) {
             var ms = json['explications'];
             for (var i in ms) {
-                that.add_explain(ms[i],i);
+                that.add_explain(ms[i], i);
             }
         });
     } catch (ex) {
         console.error(ex);
     }
 
-    this.add_explain = function(expl_array,title){
+    this.add_explain = function (expl_array, title) {
         var premier = false;
-        if(title === "lejeu"){
+        if (title === "lejeu") {
             premier = true;
         }
-        this.explications.push(new button_bool(expl_array["button"],premier,title,expl_array["text"].join("\n")));
+        this.explications.push(new button_bool(expl_array["button"], premier, title, expl_array["text"].join("\n")));
     };
 
-    this.change_button = function(quebouton) {
+    this.change_button = function (quebouton) {
         var exp = this.explications;
-        for(var m_ex in exp){
-            if(exp[m_ex].button_name === quebouton){
-                console.log("Passé à 'true");
+        for (var m_ex in exp) {
+            if (exp[m_ex].button_name === quebouton) {
                 this.explications[m_ex].button_b = true;
-            }else{
+            } else {
                 this.explications[m_ex].button_b = false;
             }
         }
@@ -350,9 +370,20 @@ morse.controller('Explications', function() {
 
 });
 
-function button_bool(b_text, b_bool,b_title, text) {
+function button_bool(b_text, b_bool, b_title, text) {
     this.button_text = b_text;
     this.button_name = b_title;
     this.button_b = b_bool;
     this.ex_text = text;
+}
+
+function get_user() {
+    //Utiliser un sessionStorage
+    if (sessionStorage['pseudo'] === 'undefined' || sessionStorage['pseudo'] === undefined) {
+        $(window).load(function () {
+            $('#modal_pseudo').modal('toggle');
+        });
+    }
+
+
 }

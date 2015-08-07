@@ -1,0 +1,45 @@
+{% extends "base.html.twig" %}
+
+{% block head %}
+    <header>
+        <div class="col-xs-12 text-center" >
+            <h1>Echecs version 2</h1>
+        </div>
+    </header>
+{% endblock %}
+
+{% block main_part %}
+    <div class="row text-center" id="chess2" >
+        <div class="col-xs-3 text-center">
+            <h3> Pions mangés</h3>
+            <div id="eaten"></div>
+        </div>
+        <div class="col-xs-1" id="board" style="color : black;"  >Chargement ...</div>
+        <div class="col-xs-2 text-center">
+            <h3> Liste des mouvements</h3>
+            <div id="lst_coups"></div>
+        </div>
+    </div>
+    <div data-backdrop="static"  class="modal fade" id="newpiece" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel" style="color : black;" >Que deviendra ton pion ?</h4>
+                </div>
+                <div class="modal-body" style="color: black;font-size: 4em;" >
+                    <div id="choose" >
+                        <div id="queen" >&#9819; Reine</div>
+                        <div id="rook" >&#9820; Tour </div>
+                        <div id="bishop" >&#9821 Fou</div>
+                        <div id="knight" >&#9822 Cavalier</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ js()~'chess/chess.js' }}" ></script>
+{% endblock %}
+
+{% block footer %}
+{% endblock %}

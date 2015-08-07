@@ -17,7 +17,7 @@ if (!function_exists('images')) {
 }
 
 if (!function_exists('js')) {
-
+    
     function js() {
         return ASSETS . 'js/';
     }

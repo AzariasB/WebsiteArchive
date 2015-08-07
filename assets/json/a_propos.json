@@ -1,0 +1,32 @@
+{
+    "blocs" : [
+        {
+            "titre" : "Azarias",
+            "id" : "azarias",
+            "parties" : {
+                "A propos de moi " : "Je suis un étudiant en informatique qui aime apprendre toujours plus dans les domaines du développement. Dans le cadre de ce site, je peux m'exercer en javaScript, et utiliser plusieurs frameworks connus.",
+                "Ma formation" : "Pour le moment, je suis en seconde année d'IUT informatique. Je m'y plais bien. Je pense poursuivre mes études à l'étranger ..."
+            }
+        },
+        {
+            "titre" : "Crédits",
+            "id" : "credits",
+            "parties" : {
+               "<a href='http://getbootstrap.com/' target='_blank'> Bootstrap</a>" : "Bootstrap est un framework CSS très pratique qui contient des classes prédéfinies. De base, bootstrap contient aussi des petites images appelées 'glyphicon' qui permettent de remplacer joliment du texte. Normalement responsive-design, même si je vais devoir ajouter beaucoup de CSS pour afficher des pages proprement sur les téléphones portables.",
+               "<a href='https://angularjs.org/' target='_blank'> Angular.js</a>" : "Developpé par Google (rien que ça !) Ce framework javascript est très complet. Je ne connais pas encore tout ses composants. Cela permet de réduire la quantité de javascript et d'augmenter l'interactivité avec l'utilisateur et la lisibilité du code.",
+               "<a href='http://www.codeigniter.com/' target='_blank'> CodeIgniter</a>": "Pour avoir un site sécurisé, un belle URL et une architecture MVC. Ce framework est léger et facile d'utilisation. Un autre gros avantage : une documentation bien fournie. Ce n'est pas toujours le cas de tout les frameworks. On remarquera d'ailleurs que ce sont les frameworks les plus documentés qui sont les plus connus.",
+               "<a href='http://jquery.com/' target='_blank'> JQuery</a>" :"Presque inévitable dès qu'on fait un peu de javascript. Plus complet qu'angular mais on doit aussi fournir plus de code pour arriver à ce que l'on désire. Le jeu d'échec (dans 'projets personnels') à été réalisé en jQuery. De même que pour CodeIgniter, Bootstrap et Angular.js, la documentation est bien fournie et facile à comprendre.",
+               "<a href='http://www.ian-devries.com/multiscreenjs/' target='_blank'> MultiScreen.js</a>" : "Un plug-in très pratique dévellopé par un webdesigner Hollandais.Je crois qu'il manque la compatibilité pour firefox. Ce plug-in est très facile à utiliser et le rendu est satisfaisant."
+            }
+        },
+        {
+            "titre" : "Le contenu",
+            "id" : "le-contenu",
+            "parties" : {
+                "Projets personnels ": "Tout les projets qui me sont venus à l'idée et que j'ai tenté de développer avec ma propre réflexion.Ils sont loin d'être parfaits et j'ai beaucoup d'améliorations à faire sur tous et chacun.<br/>-Le morse : Vous apprenez à coder/décoder des lettres ou des chiffres en morse.<br/>-Le sémaphore : pareil que pour le morse, mais avec du sémaphore (en cours de développement)<br/>-La vitesse de frappe. J'ai toujours aimé me tester à la vitesse de frappe, alors pourquoi ne pas voir comment cela fonctionne et essayer de développer mon propre test ? ",
+                "Projets scolaires" : "Beaucoup de projets plus ou moins grands ont été réalisés à l'IUT.<br/>Les projets qui ne concernent pas le web sont sur GitHub.Ainsi, vous pouvez télécharger les fichiers nécessaires et essayer d'exécuter le projet chez vous.<br/>Les projets qui ont un rapport avec le web ont soit été ajoutés directement au site, soit vous redirigent vers le site réalisé.",
+                "Echecs" : "Non, il ne s'agit pas des projets ratés, mais du jeu d'échec. La version actuelle est très (trop) simple et je compte bien l'améliorer. Pour le moment, seul les mouvements sont contraints. A l'avenir, j'aimera pouvoir intégere les règles du jeu de base : mise en échec, le roque, le coup en passant, ... etc."
+            }
+        }
+    ]
+}

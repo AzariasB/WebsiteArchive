@@ -66,6 +66,12 @@ $(function () {
         start: function (event, ui) {
             start_position = ui.helper.position();
             start_div = sqlist.index(ui.helper.parent());
+            var mPiece = ui.helper[0];
+            $(mPiece).css({
+               rotation : '45deg',
+               "rotation-point" : "bottom left",
+               color : "red"
+            });
         }
     });
 
@@ -354,7 +360,7 @@ chess.controller('Explications', function() {
     this.explications = new Array();
 
     try {
-        $.getJSON("../assets/json/echecs_explications.json", function(json) {
+        $.getJSON("../../assets/json/echecs_explications.json", function(json) {
             var ms = json['explications'];
             for (var i in ms) {
                 that.add_explain(ms[i],i);

@@ -1,0 +1,63 @@
+
+@font-face{
+    font-family: children;
+    src : url("/assets/fonts/Children.woff");
+}
+
+@font-face{
+    font-family: music;
+    src : url("/assets/fonts/Music.woff");
+}
+
+@font-face{
+    font-family: chinese;
+    src : url("/assets/fonts/Chinese.woff");
+}
+
+@font-face{
+    font-family: elfic;
+    src : url("/assets/fonts/Elfic.woff");
+}
+
+@font-face{
+    font-family: ticTacToe;
+    src : url("/assets/fonts/TicTacToe.woff");
+}
+
+.music,
+.ticTacToe,
+.children,
+.elfic,
+.chinese{
+    background-color: whitesmoke;
+    font-size: 5em;
+    color : black;
+    text-transform: lowercase;
+    word-break: break-all;
+}
+
+.children{
+    background-color: whitesmoke;
+    font-family: children;
+    font-size: 5em;
+    color : black;
+    text-transform: lowercase;
+}
+
+.music{
+    font-family: music;
+}
+
+.elfic{
+    font-size : 2em;
+    line-height: 100px;
+    font-family: elfic;
+}
+
+.chinese{
+    font-family: chinese;
+}
+
+.ticTacToe{
+    font-family: ticTacToe;
+}

@@ -1,40 +1,53 @@
 {
     "multi_screen": {
-        "accueil":{
-            "default":true,
-            "Timelapse": {"Cible":"timelapse"},
-            "Projets Scolaire":{"Cible":"projet_scolaire"},
-            "Projets Personnels":{"Cible":"projet_perso"},
-            "Autre":"NOPE"
+        "accueil": {
+            "default": true,
+            "Timelapse": {
+                "Cible": "timelapse"
+            },
+            "Projets Scolaire": {
+                "Cible": "projet_scolaire"
+            },
+            "Projets Personnels": {
+                "Cible": "projet_perso"
+            },
+            "Autre": "NOPE"
         },
-        "timelapse":{
-            "default" : false,
-            "Nature":"NOPE",
-            "Urbain":"NOPE",
-            "Autre":"NOPE",
-            "Retour":{"Cible_retour":"accueil"}
+        "timelapse": {
+            "Nature": "NOPE",
+            "Urbain": "NOPE",
+            "Autre": "NOPE",
+            "Retour": {
+                "Cible_retour": "accueil"
+            }
         },
-        "projet_perso":{
-            "default" : false,
-            "Sémaphore":"NOPE",
-            "Morse":{"Cible":"morse"},
-            "Vitesse de frappe":"NOPE",
-            "Retour":{"Cible_retour":"accueil"}
+        "projet_perso": {
+            "Sémaphore": "NOPE",
+            "Morse": {
+                "Cible": "morse"
+            },
+            "Vitesse de frappe": "NOPE",
+            "Retour": {
+                "Cible_retour": "accueil"
+            }
         },
-        "projet_scolaire":{
-            "default" : false,
-            "CowGow":"NOPE",
-            "Echecs":"NOPE",
-            "GameJam":"NOPE",
-            "Retour":{"Cible_retour":"accueil"}
+        "projet_scolaire": {
+            "CowGow": "NOPE",
+            "Echecs": "NOPE",
+            "GameJam": "NOPE",
+            "Retour": {
+                "Cible_retour": "accueil"
+            }
         },
-        "morse":{
-            "default" : false,
-            "Apprendre le morse":"NOPE",
-            "Décodage":{"Lien":"Projets_perso/Morse_decodage"},
-            "Codage":"NOPE",
-            "Retour":{"Cible_retour":"projet_perso"}
+        "morse": {
+            "Apprendre le morse": "NOPE",
+            "Décodage": {
+                "Lien": "Projets_perso/Morse_decodage"
+            },
+            "Codage": "NOPE",
+            "Retour": {
+                "Cible_retour": "projet_perso"
+            }
         }
     }
-    
 }

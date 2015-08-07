@@ -39,12 +39,19 @@ class Projets_perso extends MY_Controller {
     function Semaphore_score() {
         $this->load_projet(DECODAGE_PATH . 'Semaphore_score');
     }
-/*
- * <link href="<?php echo css() ?>contact_style.css" rel="stylesheet" />
-<link href="<?php echo css() ?>projets_scol_style.css" rel="stylesheet" />
-<script src="<?php echo js() ?>lightbox.js" type="text/javascript" ></script>
- */
-    
+
+    function TicTacToe() {
+        $this->add_css("bootstrap-slider.min.css");
+        $this->add_css('tictactoe.css');
+        $this->add_js("bootstrap-slider.min.js");
+        $this->add_js("underscore.js");
+        $this->add_js("backbone.min.js");
+        $this->add_js("html2canvas.js");
+        $this->add_js('TicTacToe.js');
+
+        $this->load_projet(DECODAGE_PATH . 'TicTacToe', array('titre' => 'TicTacToe'));
+    }
+
     function sortjs() {
         $this->add_css("contact_style.css");
         $this->add_css("projets_scol_style.css");
@@ -59,8 +66,8 @@ class Projets_perso extends MY_Controller {
         $this->load_projet(GITHUB_PATH . 'euraka');
     }
 
-    private function load_projet($projet,$data = array()) {
-        $this->twig->display($projet.".html.twig",$data);
+    private function load_projet($projet, $data = array()) {
+        $this->twig->display($projet . ".html.twig", $data);
     }
 
     function add_morse_score() {

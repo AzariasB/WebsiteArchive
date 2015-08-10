@@ -101,7 +101,17 @@ var Tools = {
                 return "";
                 break;
         }
-    },    
+    },
+    getColorName : function(piece){
+        var color = this.getPieceColor(piece);
+        if(color === COLOR.WHITE){
+            return "Blanc";
+        }else if(COLOR === COLOR.BLACK){
+            return "Noir";
+        }else{
+            return;
+        }
+    },
     
     getHtmlName: function (piece_number) {
         var piece_type = Tools.getPieceType(piece_number);
@@ -157,6 +167,7 @@ var Tools = {
         return number & 2 !== 0;
     },
     getInvertColor: function (color) {
+        color = this.getPieceColor(color);
         return color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
     },
     getAlebraFromPosition : function (index) {

@@ -1,4 +1,6 @@
 
+/* global _ */
+
 var PIECES_CHAR = {
     WHITE: {
         KING: '9812',
@@ -55,6 +57,21 @@ var Gen = {
 
 
 var Tools = {
+    addIfSame: function (tracks, targetBox, piece, wayToAdd) {
+        _.each(tracks, function (track) {
+            if (track === targetBox) {
+                if (wayToAdd && targetBox[wayToAdd] ) {
+                    targetBox[wayToAdd](piece);
+                } else {
+                    targetBox.addTrAndBg(piece);
+                }
+            }
+        });
+    },
+    containPinOrBegun: function (begunPin) {
+        return begunPin && begunPin.begun && begunPin.pin
+                && (!_.isEmpty(begunPin.begun) || !_.isEmpty(begunPin.pin));
+    },
     isWhite: function (piece) {
         return (piece & COLOR.WHITE) !== 0;
     },
@@ -66,7 +83,7 @@ var Tools = {
         piece2 = piece2 & 0x1111E0;
         return piece1 === piece2;
     },
-    sameType : function(piece1,piece2){
+    sameType: function (piece1, piece2) {
         return this.getPieceType(piece1) === this.getPieceType(piece2);
     },
     getPieceColor: function (piece_code) {
@@ -75,7 +92,7 @@ var Tools = {
     getPieceType: function (piece_code) {
         return (piece_code & 0x7);
     },
-    getName: function (piece_hex,algebra) {
+    getName: function (piece_hex, algebra) {
         algebra = algebra || false;
         var piece_type = Tools.getPieceType(piece_hex);
         switch (piece_type) {
@@ -92,7 +109,7 @@ var Tools = {
                 return algebra ? "F" : "Fou";
                 break;
             case P_HEX.KNIGHT:
-                return algebra ? "C": "Cavalier";
+                return algebra ? "C" : "Cavalier";
                 break;
             case P_HEX.PAWN:
                 return algebra ? "" : "Pion";
@@ -102,17 +119,16 @@ var Tools = {
                 break;
         }
     },
-    getColorName : function(piece){
+    getColorName: function (piece) {
         var color = this.getPieceColor(piece);
-        if(color === COLOR.WHITE){
+        if (color === COLOR.WHITE) {
             return "Blanc";
-        }else if(COLOR === COLOR.BLACK){
+        } else if (color === COLOR.BLACK) {
             return "Noir";
-        }else{
+        } else {
             return;
         }
     },
-    
     getHtmlName: function (piece_number) {
         var piece_type = Tools.getPieceType(piece_number);
         //console.log(piece_number.toString(16));
@@ -131,7 +147,7 @@ var Tools = {
             case P_HEX.QUEEN:
                 return hex + code.QUEEN;
             case P_HEX.ROOK:
-                return hex +code.ROOK;
+                return hex + code.ROOK;
             case P_HEX.KNIGHT:
                 return hex + code.KNIGHT;
             case P_HEX.BISHOP:
@@ -170,9 +186,27 @@ var Tools = {
         color = this.getPieceColor(color);
         return color === COLOR.BLACK ? COLOR.WHITE : COLOR.BLACK;
     },
-    getAlebraFromPosition : function (index) {
+    getAlebraFromPosition: function (index) {
         var column = index & 0x7;
         var row = (index - column) / 8;
-        return String.fromCharCode(97 + column) + (row+1);
+        return String.fromCharCode(97 + column) + (row + 1);
     },
+    //TODO : improve speed of this function by adding a "break" in for loop
+    pieceIsPin: function (pin, piecePos) {
+        var isPin = false;
+        _.each(pin, function (box) {
+            if (box === piecePos) {
+                isPin = true;
+            }
+        });
+        return isPin;
+    },
+    sameColumn : function(index1,index2){
+        var minIndex = Math.min(index1,index2);
+        var maxIndex = Math.max(index1,index2);
+        while(minIndex < maxIndex){
+            minIndex+=8;
+        }
+        return minIndex === maxIndex;
+    }
 };

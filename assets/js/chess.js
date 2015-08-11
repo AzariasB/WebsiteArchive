@@ -24,8 +24,13 @@ $(function () {
         for (var j = 0; j < 8; j++) {
             var sq;
             sq = $('<div/>');
-            sq.css({position: 'absolute', width: 64, height: 64,
-                left: j * 64 + 1, top: i * 64 + 1, background: '#d18b47'});
+            sq.css({
+                position: 'absolute',
+                width: 64,
+                height: 64,
+                left: j * 64 + 1,
+                top: i * 64 + 1,
+            });
             $('#board').append(sq);
         }
     }

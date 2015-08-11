@@ -11,6 +11,8 @@
  *
  * @author Azarias
  */
+
+
 class Accueil extends MY_Controller {
 
     //put your code here
@@ -23,7 +25,6 @@ class Accueil extends MY_Controller {
         $data = array();
         $data['screens'] = $this->get_screens();
         $this->add_js("app.js");
-
         $this->twig->display('accueil.html.twig', $data);
     }
 

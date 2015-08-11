@@ -29,25 +29,29 @@
         {% block head %}
             <header class="text-center">
                 <h1>
-                    Bienvenue sur Azarias.com
-                </h1>
-            </header>
-        {% endblock %}
-        {% block main_part %}
-            <div class="text-center col-xs-12" >
-                <h2>Ici, c'est le corps</h2>
-            </div>
-        {% endblock %}
-        {% block footer %}
-            <footer>
-                <div class="row text-center">
-                    <ul>
-                        <li><a href="{{ site_url('Contact') }} " >Contact</a></li>
-                        <li> - </li>
-                        <li><a href="{{ site_url('A_propos') }}" >A propos</a></li>
-                    </ul>
-                </div>
-            </footer>
-        {% endblock %}
-    </body>
-</html>
+                    {% trans "Bienvenue sur Azarias.com" %}
+                    </h1>
+                </header>
+                {% endblock %}
+                    {% block main_part %}
+                        <div class="text-center col-xs-12" >
+                            <h2>Ici, c'est le corps</h2>
+                        </div>
+                    {% endblock %}
+                    {% block footer %}
+                        <footer>
+                            <div class="row text-center">
+                                <ul>
+                                    <li><a href="{{ site_url('Contact') }} " >
+                                            {% trans "Contact" %}
+                                            </a></li>
+                                        <li> - </li>
+                                        <li><a href="{{ site_url('A_propos') }}" >
+                                                {% trans    "A propos" %}
+                                                </a></li>
+                                        </ul>
+                                    </div>
+                                </footer>
+                                {% endblock %}
+                                </body>
+                            </html>

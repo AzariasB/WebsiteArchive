@@ -64,15 +64,32 @@ var ChessView = Backbone.View.extend({
                     .css({"cursor": "default"});
         }
     },
-    select: function (touched, turn) {
+    select: function (game, touched, turn) {
         var id_div = touched.id;
         var mCase = this.chessBoard.at(id_div);
+        var event = {
+            'indexCase': id_div,
+            'case': mCase,
+            'turn': turn
+        };
         if (!_.isUndefined(mCase) &&
                 mCase.getCurrent() !== 0 && Tools.sameColor(mCase.getCurrent(), turn)) {
-            return this.firstClick(id_div, mCase);
+            _.each(game.rules, function (rule) {
+                var funcName = rule.events.firstClick;
+                if (funcName && rule[funcName]) {
+                    rule[funcName](game, event);
+                }
+            });
+            return this.firstClick(id_div, mCase, turn);
         } else if (this.state === "first" && !_.isUndefined(this.selected)) {
             var move = this.chessBoard.moveFromTo(this.selected, id_div);
             if (move) {
+                _.each(game.rules, function (rule) {
+                    var funcName = rule.events.secondClick;
+                    if (funcName && rule[funcName]) {
+                        move = rule[funcName](game,event,move);
+                    }
+                });
                 this.secondClickEnd(turn);
                 return move;
             }
@@ -105,7 +122,8 @@ var ChessView = Backbone.View.extend({
             });
         });
     },
-    firstClick: function (indexSelected, mCase) {
+    firstClick: function (indexSelected, mCase, turn) {
+        this.state = "first";
         this.resetChoice();
         $('#' + indexSelected).css({
             "border": "5px dotted green"
@@ -113,13 +131,29 @@ var ChessView = Backbone.View.extend({
 
         this.proposeChoice(mCase.getCurrent());
         this.selected = indexSelected;
-        this.state = "first";
         return;
     },
     secondClickEnd: function (turn) {
         this.renderPieces();
         this.chessBoard.updateAll(turn);
+        this.hilightChessKing(turn);
         this.resetChoice();
         this.state = "none";
     },
+    hilightChessKing: function (turn) {
+        _.each(this.$el.children(), function (value) {
+            $(value).css({
+                "background-color": ''
+            });
+        });
+        var color = Tools.getInvertColor(turn);
+        if (this.chessBoard.myKingIsChess(color)) {
+            var indexKing = this.chessBoard.findColorKing(color);
+            if (indexKing >= 0) {
+                $("#" + indexKing).css({
+                    "background-color": 'red'
+                });
+            }
+        }
+    }
 });

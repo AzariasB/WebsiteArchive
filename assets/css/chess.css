@@ -3,6 +3,8 @@
 }
 
 #board{
+    margin-left: auto;
+    margin-right: auto;
     width:572px;
     height:572px;
     border:solid thick gray;
@@ -14,9 +16,12 @@
     user-select: none;
 }
 
+
+
 #board>div{
     color : white;
 }
+
 
 #board div div{
     font-size:300%;
@@ -112,8 +117,8 @@ pre{
 
 .side_number {
     position: absolute;
-    width: 16;
-    height: 64;
+    width: 16px;
+    height: 64px;
     text-align: center;
     color: black;
     font-size: 2em;

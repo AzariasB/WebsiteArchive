@@ -18,6 +18,7 @@ var ChessBox = Backbone.Model.extend({
         if (piece !== 0 && this.get("PRESENT") !== 0 && Tools.sameColor(piece, this.get("PRESENT"))) {
             throw "Pièce déjà présente";
         } else {
+            //Pièce mangée
             var eaten = this.get("PRESENT");
             this.set({"PRESENT": piece});
             return eaten;
@@ -116,6 +117,10 @@ var ChessBox = Backbone.Model.extend({
     },
     canBeEaten: function (eater) {
         return !this.isEmpty() && !Tools.sameColor(this.get("PRESENT"), eater);
+    },
+    containsPiece : function(pieceHex){
+        var present = this.getCurrent();
+        return Tools.sameType(pieceHex,present);
     },
     containKing : function(color){
         var present = this.get("PRESENT");

@@ -29,6 +29,7 @@ class Echecs extends MY_Controller {
         $this->add_js('chess/Plugin.js');
         $this->add_js('chess/ChessBoard.js');
         $this->add_js("chess/view.js");
+        $this->add_js('chess/rules.js');
 
         $data = array('titre' => 'Echecs v2.0');
         $this->twig->display("Echecs/chess2.html.twig", $data);

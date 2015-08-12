@@ -1,4 +1,6 @@
 
+/* global Tools, P_HEX, COLOR */
+
 var enPassant = {
     events: {
         "firstClick": "proposeEnPassant",
@@ -73,9 +75,8 @@ var castling = {
         if (Tools.sameType(selected, P_HEX.KING) && !chess.moves.moves.myKingMoved(color)
                 && !event.case.currentIsBegun()
                 ) {
-            var chosenColor = color === COLOR.WHITE ? this.positionsCastling.white :
-                    color === COLOR.BLACK ? this.positionsCastling.black : undefined;
-
+            var chosenColor = Tools.ifWhiteElseIfBlack(color,this.positionsCastling.white,this.positionsCastling.black)
+            
             !chess.moves.moves.myRightRookMoved(color)
                     && this.castlingPossible(chess, chosenColor.right, color) &&
                     this.updateForCastling(chess, chosenColor.right, event.case.getCurrent());
@@ -136,5 +137,83 @@ var castling = {
 };
 
 var pawnTransform = {
+   
+    init : function(){
+        var self = this;
+        $(".modal-close").on("click",function(){
+            $("#newpiece").modal("hide");
+            self.changePawn(this);
+        });
+    },
     
+    events : {
+        "secondClick" : "transformPawn"
+    },
+    transformPawn : function(chess,event,move){
+        this.chess = chess;
+        this.event = event;
+        var piece = event.case.getCurrent();
+        if(Tools.sameType(piece,P_HEX.PAWN) && Tools.isOnHisLastLine(piece,event.indexCase)){
+            //Le pion est arrivé sur sa dernière case, on doit le transformer
+            $("#newpiece").modal({
+                keyboard : false
+            });
+        }
+        return move;
+    },
+    changePawn : function(target){
+        var nwType = $(target).data("hex");
+        var pawn = this.event.case.getCurrent();
+        var nwPiece = Tools.changeType(pawn,nwType);
+        this.chess.board.chessBoard.at(this.event.indexCase).setCurrent(nwPiece);
+        this.chess.board.chessBoard.updateAll();
+        this.chess.board.renderPieces();
+    }
+    
+};
+
+var mat = {
+    
+    events : {
+        "secondClick" : "checkForMat"
+    },
+    
+    checkForMat : function(chess,event,move){
+        /**
+         * Mat signifie : à la find de mon tour, l'autre roi :
+         *  - Est en échec
+         *  - Toutes les cases autour sont menacées, ou contiennent un allié
+         *  - Les "begun" listes ne peuvent pas être protégées
+         * 
+         */
+        var color = Tools.getInvertColor(event.turn);
+        if(chess.board.chessBoard.myKingIsChess(color)
+                && true){
+            
+        }
+        return move;
+    },
+    cinematiqueCheckMate : function(colorWin){
+        
+    }
+};
+
+var pat = {
+    events : {
+        "secondClick" : "checkForPat"
+    },
+    
+    checkForPat : function(chess,event,move){
+        /**
+         * Pat signifie, à la fin de mon tour, l'autre roi :
+         * - N'est pas en échec
+         * - Est le seul à pouvoir bouger
+         * - A toutes les cases autour de lui menacées
+         */
+        return move;
+        
+    },
+    cinematiqueCheckPat : function(){
+        
+    }
 };

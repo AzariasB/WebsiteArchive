@@ -8,10 +8,10 @@ var ChessView = Backbone.View.extend({
     selected: undefined,
     chessBoard: new ChessBoard(),
     initialize: function () {
-        this.render();
+        this.initChessBoard();
         //var res = this.showPawnModal(COLOR.BLACK);
     },
-    render: function () {
+    initChessBoard: function () {
         this.$el.text("");
         var counter = 0;
 

@@ -60,7 +60,7 @@ var Tools = {
     addIfSame: function (tracks, targetBox, piece, wayToAdd) {
         _.each(tracks, function (track) {
             if (track === targetBox) {
-                if (wayToAdd && targetBox[wayToAdd] ) {
+                if (wayToAdd && targetBox[wayToAdd]) {
                     targetBox[wayToAdd](piece);
                 } else {
                     targetBox.addTrAndBg(piece);
@@ -120,42 +120,30 @@ var Tools = {
         }
     },
     getColorName: function (piece) {
-        var color = this.getPieceColor(piece);
-        if (color === COLOR.WHITE) {
-            return "Blanc";
-        } else if (color === COLOR.BLACK) {
-            return "Noir";
-        } else {
-            return;
-        }
+        return this.ifWhiteElseIfBlack(piece, "Blan", "Noir");
     },
     getHtmlName: function (piece_number) {
         var piece_type = Tools.getPieceType(piece_number);
-        //console.log(piece_number.toString(16));
-        var color = Tools.getPieceColor(piece_number);
         var code = {};
         var hex = "&#";
-        if (color === COLOR.WHITE) {
-            code = PIECES_CHAR.WHITE;
-        } else {
-            code = PIECES_CHAR.BLACK;
-        }
-
-        switch (piece_type) {
-            case P_HEX.KING:
-                return hex + code.KING;
-            case P_HEX.QUEEN:
-                return hex + code.QUEEN;
-            case P_HEX.ROOK:
-                return hex + code.ROOK;
-            case P_HEX.KNIGHT:
-                return hex + code.KNIGHT;
-            case P_HEX.BISHOP:
-                return hex + code.BISHOP;
-            case P_HEX.PAWN:
-                return hex + code.PAWN;
-            default:
-                break;
+        code = this.ifWhiteElseIfBlack(piece_number, PIECES_CHAR.WHITE, PIECES_CHAR.BLACK);
+        if (code) {
+            switch (piece_type) {
+                case P_HEX.KING:
+                    return hex + code.KING;
+                case P_HEX.QUEEN:
+                    return hex + code.QUEEN;
+                case P_HEX.ROOK:
+                    return hex + code.ROOK;
+                case P_HEX.KNIGHT:
+                    return hex + code.KNIGHT;
+                case P_HEX.BISHOP:
+                    return hex + code.BISHOP;
+                case P_HEX.PAWN:
+                    return hex + code.PAWN;
+                default:
+                    break;
+            }
         }
     },
     isAtLeftBorder: function (div_id) {
@@ -163,6 +151,15 @@ var Tools = {
     },
     isAtRightBorder: function (div_id) {
         return (((Math.abs(div_id) + 1) % 8) === 0);
+    },
+    isOnHisLastLine: function (piece, position) {
+        return this.ifWhiteElseIfBlack(piece, position >= 56 && position <= 63,
+                position >= 0 && position <= 8);
+    },
+    ifWhiteElseIfBlack: function (piece, returnWhite, returnBlack) {
+        var color = this.getPieceColor( parseInt(piece));
+        return color === COLOR.WHITE ? returnWhite :
+                color === COLOR.BLACK ? returnBlack : undefined;
     },
     sameColor: function (piece1, piece2) {
         return (Tools.getPieceColor(piece1) === Tools.getPieceColor(piece2));
@@ -201,12 +198,16 @@ var Tools = {
         });
         return isPin;
     },
-    sameColumn : function(index1,index2){
-        var minIndex = Math.min(index1,index2);
-        var maxIndex = Math.max(index1,index2);
-        while(minIndex < maxIndex){
-            minIndex+=8;
+    sameColumn: function (index1, index2) {
+        var minIndex = Math.min(index1, index2);
+        var maxIndex = Math.max(index1, index2);
+        while (minIndex < maxIndex) {
+            minIndex += 8;
         }
         return minIndex === maxIndex;
+    },
+    changeType: function (oldPiece, nwType) {
+        var noType = oldPiece & 0x18;
+        return noType + nwType;
     }
 };

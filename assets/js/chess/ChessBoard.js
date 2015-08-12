@@ -26,14 +26,10 @@ var ChessBoard = Backbone.Collection.extend({
         return !_.isEmpty(this.whitePin) ? this.whitePin : false;
     },
     myKingIsChess: function (piece) {
-        var color = Tools.getPieceColor(piece);
-        return color === COLOR.WHITE ? this.whiteIsChess() :
-                color === COLOR.BLACK ? this.blackIsChess() : undefined;
+        return Tools.ifWhiteElseIfBlack(piece, this.whiteIsChess(), this.blackIsChess());
     },
     myKingIsPin: function (piece) {
-        var color = Tools.getPieceColor(piece);
-        return color === COLOR.WHITE ? this.whiteIsPin() :
-                color === COLOR.BLACK ? this.blackIsChess() : undefined;
+        return Tools.ifWhiteElseIfBlack(piece, this.whiteIsPin(), this.blackIsPin());
     },
     addPieces: function () {
         var id_start = 0;
@@ -41,18 +37,18 @@ var ChessBoard = Backbone.Collection.extend({
         var firstLine = [
             P_HEX.ROOK,
             P_HEX.KNIGHT,
-            0,// P_HEX.BISHOP,
-            0,//P_HEX.QUEEN,
+            0, // P_HEX.BISHOP,
+            0, //P_HEX.QUEEN,
             P_HEX.KING,
-            0,//P_HEX.BISHOP,
+            0, //P_HEX.BISHOP,
             P_HEX.KNIGHT,
             P_HEX.ROOK
         ];
         _.each(firstLine, function (value) {
-            id_start = self.addPiece(id_start, Gen.newWPiece(value));
+            id_start = self.addPiece(id_start, Gen.newBPiece(value));
         });
         _.each([0, 1, 2, 3, 4, 5, 6, 7], function () {
-            id_start = self.addPiece(id_start, Gen.newWPiece(P_HEX.PAWN));
+            id_start = self.addPiece(id_start, Gen.newBPiece(P_HEX.PAWN));
         });
 
         for (var empty = 0; empty < 8 * 4; empty++) {
@@ -60,10 +56,10 @@ var ChessBoard = Backbone.Collection.extend({
         }
 
         _.each([0, 1, 2, 3, 4, 5, 6, 7], function () {
-            id_start = self.addPiece(id_start, Gen.newBPiece(P_HEX.PAWN));
+            id_start = self.addPiece(id_start, Gen.newWPiece(P_HEX.PAWN));
         });
         _.each(firstLine, function (value) {
-            id_start = self.addPiece(id_start, Gen.newBPiece(value));
+            id_start = self.addPiece(id_start, Gen.newWPiece(value));
         });
     },
     addPiece: function (div_id, piece_code) {
@@ -188,6 +184,15 @@ var ChessBoard = Backbone.Collection.extend({
         }
         return -1;
 
+    },
+    kingCannotMove : function(color){
+        var canMove = false;
+        var indexKing = this.findColorKing(color);
+        var directions = [-9,-8,-7,-1,1,7,8,9];
+        for(var i in directions){
+            var dir = directions[i];
+            
+        }
     },
     /*
      * All the functions that update the chessboard
@@ -366,9 +371,9 @@ var ChessBoard = Backbone.Collection.extend({
 
         var devant = this.at(index + pDevant);
         if (!_.isUndefined(devant) && devant.isEmpty()) {
-            if(imPin){
-                Tools.addIfSame(pin,devant,pawnPiece,"addTrack");
-            }else if (tracks) {
+            if (imPin) {
+                Tools.addIfSame(pin, devant, pawnPiece, "addTrack");
+            } else if (tracks) {
                 Tools.addIfSame(tracks, devant, pawnPiece, "addTrack");
             } else {
                 devant.addTrack(pawnPiece);
@@ -378,9 +383,9 @@ var ChessBoard = Backbone.Collection.extend({
         if (this.isAtStart(pawnPiece, index)) {
             var devant2 = this.at(index + pDevant * 2);
             if (!_.isUndefined(devant2) && devant.isEmpty() && devant2.isEmpty()) {
-                if(imPin){
-                    Tools.addIfSame(pin,devant2,pawnPiece,"addTrack");
-                }else if ( tracks) {
+                if (imPin) {
+                    Tools.addIfSame(pin, devant2, pawnPiece, "addTrack");
+                } else if (tracks) {
                     Tools.addIfSame(tracks, devant2, pawnPiece, "addTrack");
                 } else {
                     devant2.addTrack(pawnPiece);
@@ -391,37 +396,41 @@ var ChessBoard = Backbone.Collection.extend({
 
 
         var droite = this.at(index + pDroite);
-        !Tools.isAtRightBorder(index) && droite.addBegun(pawnPiece);
+        if (droite) {
+            !Tools.isAtRightBorder(index) && droite.addBegun(pawnPiece);
 
-        if (!Tools.isAtRightBorder(index) && !_.isUndefined(droite) && droite.canBeEaten(pawnPiece)) {
-            if (imPin) {
-                Tools.addIfSame(pin, droite, pawnPiece, "addTrack");
-            } else if (tracks) {
-                Tools.addIfSame(tracks, droite, pawnPiece, "addTrack");
-            } else {
-                droite.addTrack(pawnPiece);
-                var invertColor = Tools.getInvertColor(pawnPiece);
-                if (droite.containKing(invertColor)) {
-                    //Le roi est mis en échecc par le pion
-                    kingInTarget.push(this.at(index));
+            if (!Tools.isAtRightBorder(index) && !_.isUndefined(droite) && droite.canBeEaten(pawnPiece)) {
+                if (imPin) {
+                    Tools.addIfSame(pin, droite, pawnPiece, "addTrack");
+                } else if (tracks) {
+                    Tools.addIfSame(tracks, droite, pawnPiece, "addTrack");
+                } else {
+                    droite.addTrack(pawnPiece);
+                    var invertColor = Tools.getInvertColor(pawnPiece);
+                    if (droite.containKing(invertColor)) {
+                        //Le roi est mis en échecc par le pion
+                        kingInTarget.push(this.at(index));
+                    }
                 }
             }
         }
 
 
         var gauche = this.at(index + pGauche);
-        !Tools.isAtLeftBorder(index) && gauche.addBegun(pawnPiece);
+        if (gauche) {
+            !Tools.isAtLeftBorder(index) && gauche.addBegun(pawnPiece);
 
-        if (!Tools.isAtLeftBorder(index) && !_.isUndefined(gauche) && gauche.canBeEaten(pawnPiece)) {
-            if (imPin) {
-                Tools.addIfSame(pin, droite, pawnPiece, "addTrack");
-            } else if (tracks) {
-                Tools.addIfSame(tracks, gauche, pawnPiece, gauche.addTrack);
-            } else {
-                gauche.addTrack(pawnPiece);
-                var invertColor = Tools.getInvertColor(pawnPiece);
-                if (droite.containKing(invertColor)) {
-                    kingInTarget.push(this.at(index));
+            if (!Tools.isAtLeftBorder(index) && !_.isUndefined(gauche) && gauche.canBeEaten(pawnPiece)) {
+                if (imPin) {
+                    Tools.addIfSame(pin, droite, pawnPiece, "addTrack");
+                } else if (tracks) {
+                    Tools.addIfSame(tracks, gauche, pawnPiece, gauche.addTrack);
+                } else {
+                    gauche.addTrack(pawnPiece);
+                    var invertColor = Tools.getInvertColor(pawnPiece);
+                    if (droite.containKing(invertColor)) {
+                        kingInTarget.push(this.at(index));
+                    }
                 }
             }
         }

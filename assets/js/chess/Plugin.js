@@ -109,18 +109,15 @@ var Moves = Backbone.Collection.extend({
     },
     myKingMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
-        return color === COLOR.WHITE ? this.whiteKingMoved :
-                color === COLOR.BLACK ? this.blackKingMoved : undefined;
+        return Tools.ifWhiteElseIfBlack(piece,this.whiteKingMoved,this.blackKingMoved);
     },
     myLeftRookMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
-        return color === COLOR.WHITE ? this.rookMoved.left.white :
-                color === COLOR.BLACK ? this.rookMoved.left.black : undefined;
+        return Tools.ifWhiteElseIfBlack(piece,this.rookMoved.left.white,this.rookMoved.left.black);
     },
     myRightRookMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
-        return color === COLOR.WHITE ? this.rookMoved.right.white :
-                color === COLOR.BLACK ? this.rookMoved.right.black : undefined;
+        return Tools.ifWhiteElseIfBlack(piece,this.rookMoved.right.white,this.rookMoved.right.black);
     }
 });
 

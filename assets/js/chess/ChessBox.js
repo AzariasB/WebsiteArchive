@@ -15,14 +15,9 @@ var ChessBox = Backbone.Model.extend({
         TRACKS: [],
     },
     setCurrent: function (piece) {
-        if (piece !== 0 && this.get("PRESENT") !== 0 && Tools.sameColor(piece, this.get("PRESENT"))) {
-            throw "Pièce déjà présente";
-        } else {
-            //Pièce mangée
-            var eaten = this.get("PRESENT");
-            this.set({"PRESENT": piece});
-            return eaten;
-        }
+        var eaten = this.get("PRESENT");
+        this.set({"PRESENT": piece});
+        return eaten;
     },
     getCurrent: function () {
         return this.get("PRESENT");
@@ -40,19 +35,20 @@ var ChessBox = Backbone.Model.extend({
         this.get("TRACKS").push(piece);
     },
     getTracks: function (color) {
-        return color === COLOR.WHITE ? this.get("WHITEBEGUN") : this.get("BLACKBEGUN");
+        return Tools.ifWhiteElseIfBlack(color, this.get("WHITEBEGUN"), this.get("BLACKBEGUN"));
     },
     currentIsBegun: function () {
         return this.get("PRESENT") &&
                 !_.isEmpty(this.getTracks(Tools.getInvertColor(this.get("PRESENT"))));
     },
     addBegun: function (piece) {
-        var toPush = Tools.isWhite(piece) ? this.get("WHITEBEGUN") : this.get("BLACKBEGUN");
-        toPush.push(piece);
+        var toPush = Tools.ifWhiteElseIfBlack(piece, this.get("WHITEBEGUN"), this.get("BLACKBEGUN"));
+        toPush && toPush.push(piece);
     },
     getBegunner: function () {
         var present = this.getCurrent();
         if (present && this.currentIsBegun()) {
+            return Tools.ifWhiteElseIfBlack(present, this.get("BLACKBEGUN"), this.get("WHITEBEGUN"));
             return Tools.getPieceColor(present) === COLOR.WHITE ? this.get("BLACKBEGUN") : this.get("WHITEBEGUN");
         } else {
             return;
@@ -99,7 +95,7 @@ var ChessBox = Backbone.Model.extend({
         });
     },
     removeBegun: function (piece) {
-        var toRemove = Tools.isWhite(piece) ? this.get("WHITEBEGUN") : this.get("BLACKBEGUN");
+        var toRemove = Tools.ifWhiteElseIfBlack(piece, this.get("WHITEBEGUN"), this.get("BLACKBEGUN"));
         _.each(toRemove, function (mPiece, index) {
             if (Tools.sameId(mPiece, piece)) {
                 toRemove.splice(index, 1);
@@ -121,20 +117,20 @@ var ChessBox = Backbone.Model.extend({
     canBeEaten: function (eater) {
         return !this.isEmpty() && !Tools.sameColor(this.get("PRESENT"), eater);
     },
-    containsPiece : function(pieceHex){
+    containsPiece: function (pieceHex) {
         var present = this.getCurrent();
-        return Tools.sameType(pieceHex,present);
+        return Tools.sameType(pieceHex, present);
     },
-    containKing : function(color){
+    containKing: function (color) {
         var present = this.get("PRESENT");
-        return Tools.sameType(present,P_HEX.KING) && Tools.sameColor(color,present);
+        return Tools.sameType(present, P_HEX.KING) && Tools.sameColor(color, present);
     },
     hasATrack: function (piece) {
         var color = Tools.getPieceColor(piece);
 
         var hasTrack = false;
         _.each(this.get("TRACKS"), function (value) {
-            if (Tools.sameId(value, piece) && Tools.sameType(value,piece) && Tools.sameColor(value,piece)) {
+            if (Tools.sameId(value, piece) && Tools.sameType(value, piece) && Tools.sameColor(value, piece)) {
                 hasTrack = true;
             }
         });

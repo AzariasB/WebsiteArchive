@@ -1,5 +1,5 @@
 
-/* global Backbone, COLOR, Tools, P_HEX, enPassant, castling, pawnTransform */
+/* global Backbone, COLOR, Tools, P_HEX, enPassant, castling, pawnTransform, mat, pat */
 
 
 $(document).ready(function () {
@@ -17,6 +17,7 @@ $(document).ready(function () {
             "dblclick": "rollBack"
         },
         addRule: function (rule) {
+            rule.init && rule.init();
             this.rules.push(rule);
         },
         handleClick: function (event) {
@@ -83,4 +84,6 @@ $(document).ready(function () {
     chess.addRule(enPassant);
     chess.addRule(castling);
     chess.addRule(pawnTransform);
+    chess.addRule(mat);
+    chess.addRule(pat);
 });

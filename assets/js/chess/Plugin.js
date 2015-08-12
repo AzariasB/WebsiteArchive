@@ -29,6 +29,10 @@ var Move = Backbone.Model.extend({
             return "+";
         } else if (this.get("checkmate")) {
             return "#";
+        } else if (this.get("littleCastling")) {
+            return " 0-0 ";
+        } else if (this.get("bigCastling")) {
+            return " 0-0-0 ";
         } else {
             return "-";
         }
@@ -36,11 +40,7 @@ var Move = Backbone.Model.extend({
     getEndString: function () {
         if (this.get("enPassant")) {
             return " e.p. ";
-        } else if (this.get("littleCastling")) {
-            return " 0-0 ";
-        } else if (this.get("bigCastling")) {
-            return " 0-0-0 ";
-        }
+        } 
     }
 });
 
@@ -59,25 +59,25 @@ var Eaten = Backbone.Model.extend({
 
 var Moves = Backbone.Collection.extend({
     model: Move,
-    kingMoved : {
-        white : false,
-        black : false
+    kingMoved: {
+        white: false,
+        black: false
     },
-    rookMoved : {
-        left : {
-            white : false,
-            black : false
+    rookMoved: {
+        left: {
+            white: false,
+            black: false
         },
-        right : {
-            white : false,
-            black : false
+        right: {
+            white: false,
+            black: false
         }
     },
     addMove: function (move) {
         var piece = move.get("piece");
-        if(Tools.sameType(piece,P_HEX.KING)){
+        if (Tools.sameType(piece, P_HEX.KING)) {
             this.updateKingMoved(piece);
-        }else if(Tools.sameType(piece,P_HEX.ROOK)){
+        } else if (Tools.sameType(piece, P_HEX.ROOK)) {
             this.updateRookMoved(move);
         }
         this.add(move);
@@ -91,18 +91,18 @@ var Moves = Backbone.Collection.extend({
     removeLastMove: function () {
         return this.pop();
     },
-    updateKingMoved : function(piece){
+    updateKingMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
-        color === COLOR.WHITE ? (this.whiteKingMoved = true):
-                color === COLOR.BLACK ? (this.blackKingMoved = true): "";
+        color === COLOR.WHITE ? (this.whiteKingMoved = true) :
+                color === COLOR.BLACK ? (this.blackKingMoved = true) : "";
     },
-    updateRookMoved : function(move){
+    updateRookMoved: function (move) {
         var from = parseInt(move.get("from"));
         var color = Tools.getPieceColor(parseInt(move.get("piece")));
-        if(Tools.isAtLeftBorder(from)){
+        if (Tools.isAtLeftBorder(from)) {
             color === COLOR.WHITE ? (this.rookMoved.left.white = true) :
                     color === COLOR.BLACK ? (this.rookMoved.left.black = true) : undefined;
-        }else if(Tools.isAtRightBorder(from)){
+        } else if (Tools.isAtRightBorder(from)) {
             color === COLOR.WHITE ? (this.rookMoved.right.white = true) :
                     color === COLOR.BLACK ? (this.rookMoved.right.black = true) : undefined;
         }
@@ -112,12 +112,12 @@ var Moves = Backbone.Collection.extend({
         return color === COLOR.WHITE ? this.whiteKingMoved :
                 color === COLOR.BLACK ? this.blackKingMoved : undefined;
     },
-    myLeftRookMoved : function(piece){
+    myLeftRookMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
         return color === COLOR.WHITE ? this.rookMoved.left.white :
-                color === COLOR.BLACK ? this.rookMoved.left.black: undefined;
+                color === COLOR.BLACK ? this.rookMoved.left.black : undefined;
     },
-    myRightRookMoved : function(piece){
+    myRightRookMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
         return color === COLOR.WHITE ? this.rookMoved.right.white :
                 color === COLOR.BLACK ? this.rookMoved.right.black : undefined;

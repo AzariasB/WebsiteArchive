@@ -41,10 +41,10 @@ var ChessBoard = Backbone.Collection.extend({
         var firstLine = [
             P_HEX.ROOK,
             P_HEX.KNIGHT,
-            P_HEX.BISHOP,
-            P_HEX.QUEEN,
+            0,// P_HEX.BISHOP,
+            0,//P_HEX.QUEEN,
             P_HEX.KING,
-            P_HEX.BISHOP,
+            0,//P_HEX.BISHOP,
             P_HEX.KNIGHT,
             P_HEX.ROOK
         ];

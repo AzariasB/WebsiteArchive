@@ -109,7 +109,10 @@ var ChessBox = Backbone.Model.extend({
 
     },
     isBegunBy: function (begunner) {
-        return (this.get("PRESENT") && !Tools.sameColor(this.get("PRESENT"), begunner));
+        var color = Tools.getPieceColor(begunner);
+        console.log(this.get("WHITEBEGUN"));
+        return Tools.isWhite(color) ? !_.isEmpty(this.get("WHITEBEGUN")) :
+                Tools.isBlack(color) ? !_.isEmpty(this.get("BLACKBEGUN")) : undefined;
 
     },
     isEmpty: function () {
@@ -131,7 +134,7 @@ var ChessBox = Backbone.Model.extend({
 
         var hasTrack = false;
         _.each(this.get("TRACKS"), function (value) {
-            if (Tools.sameId(value, piece)) {
+            if (Tools.sameId(value, piece) && Tools.sameType(value,piece) && Tools.sameColor(value,piece)) {
                 hasTrack = true;
             }
         });

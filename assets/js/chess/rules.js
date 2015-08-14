@@ -75,8 +75,8 @@ var castling = {
         if (Tools.sameType(selected, P_HEX.KING) && !chess.moves.moves.myKingMoved(color)
                 && !event.case.currentIsBegun()
                 ) {
-            var chosenColor = Tools.ifWhiteElseIfBlack(color,this.positionsCastling.white,this.positionsCastling.black)
-            
+            var chosenColor = Tools.ifWhiteElseIfBlack(color, this.positionsCastling.white, this.positionsCastling.black)
+
             !chess.moves.moves.myRightRookMoved(color)
                     && this.castlingPossible(chess, chosenColor.right, color) &&
                     this.updateForCastling(chess, chosenColor.right, event.case.getCurrent());
@@ -137,48 +137,44 @@ var castling = {
 };
 
 var pawnTransform = {
-   
-    init : function(){
+    init: function () {
         var self = this;
-        $(".modal-close").on("click",function(){
+        $(".modal-close").on("click", function () {
             $("#newpiece").modal("hide");
             self.changePawn(this);
         });
     },
-    
-    events : {
-        "secondClick" : "transformPawn"
+    events: {
+        "secondClick": "transformPawn"
     },
-    transformPawn : function(chess,event,move){
+    transformPawn: function (chess, event, move) {
         this.chess = chess;
         this.event = event;
         var piece = event.case.getCurrent();
-        if(Tools.sameType(piece,P_HEX.PAWN) && Tools.isOnHisLastLine(piece,event.indexCase)){
+        if (Tools.sameType(piece, P_HEX.PAWN) && Tools.isOnHisLastLine(piece, event.indexCase)) {
             //Le pion est arrivé sur sa dernière case, on doit le transformer
             $("#newpiece").modal({
-                keyboard : false
+                keyboard: false
             });
         }
         return move;
     },
-    changePawn : function(target){
+    changePawn: function (target) {
         var nwType = $(target).data("hex");
         var pawn = this.event.case.getCurrent();
-        var nwPiece = Tools.changeType(pawn,nwType);
+        var nwPiece = Tools.changeType(pawn, nwType);
         this.chess.board.chessBoard.at(this.event.indexCase).setCurrent(nwPiece);
         this.chess.board.chessBoard.updateAll();
         this.chess.board.renderPieces();
     }
-    
+
 };
 
 var mat = {
-    
-    events : {
-        "secondClick" : "checkForMat"
+    events: {
+        "secondClick": "checkForMat"
     },
-    
-    checkForMat : function(chess,event,move){
+    checkForMat: function (chess, event, move) {
         /**
          * Mat signifie : à la find de mon tour, l'autre roi :
          *  - Est en échec
@@ -187,23 +183,27 @@ var mat = {
          * 
          */
         var color = Tools.getInvertColor(event.turn);
-        if(chess.board.chessBoard.myKingIsChess(color)
-                && true){
-            
+        //console.log(Tools.getColorName(color));
+        //console.log("Mon roi est en échec", chess.board.chessBoard.myKingIsChess(color));
+//        console.log(chess.board.chessBoard.whiteKingBegunTrack);
+//        console.log(chess.board.chessBoard.blackKingBegunTrack);
+//        console.log("Mon roi ne peut pas bouger", chess.board.chessBoard.kingCannotMove(color));
+        if (chess.board.chessBoard.myKingIsChess(color)
+                && chess.board.chessBoard.kingCannotMove(color)) {
+//            console.log("Echec et mat !");
         }
         return move;
     },
-    cinematiqueCheckMate : function(colorWin){
-        
+    cinematiqueCheckMate: function (colorWin) {
+
     }
 };
 
 var pat = {
-    events : {
-        "secondClick" : "checkForPat"
+    events: {
+        "secondClick": "checkForPat"
     },
-    
-    checkForPat : function(chess,event,move){
+    checkForPat: function (chess, event, move) {
         /**
          * Pat signifie, à la fin de mon tour, l'autre roi :
          * - N'est pas en échec
@@ -211,9 +211,9 @@ var pat = {
          * - A toutes les cases autour de lui menacées
          */
         return move;
-        
+
     },
-    cinematiqueCheckPat : function(){
-        
+    cinematiqueCheckPat: function () {
+
     }
 };

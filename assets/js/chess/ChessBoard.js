@@ -32,34 +32,13 @@ var ChessBoard = Backbone.Collection.extend({
         return Tools.ifWhiteElseIfBlack(piece, this.whiteIsPin(), this.blackIsPin());
     },
     addPieces: function () {
-        var id_start = 0;
-        var self = this;
-        var firstLine = [
-            P_HEX.ROOK,
-            P_HEX.KNIGHT,
-            0, // P_HEX.BISHOP,
-            0, //P_HEX.QUEEN,
-            P_HEX.KING,
-            0, //P_HEX.BISHOP,
-            P_HEX.KNIGHT,
-            P_HEX.ROOK
-        ];
-        _.each(firstLine, function (value) {
-            id_start = self.addPiece(id_start, Gen.newBPiece(value));
-        });
-        _.each([0, 1, 2, 3, 4, 5, 6, 7], function () {
-            id_start = self.addPiece(id_start, Gen.newBPiece(P_HEX.PAWN));
-        });
 
-        for (var empty = 0; empty < 8 * 4; empty++) {
-            id_start = self.addPiece(id_start);
-        }
+        var option = Gen.boardOptions.normalBoard;
+        var board = Gen.genBoard(option,true),
+                self = this;
 
-        _.each([0, 1, 2, 3, 4, 5, 6, 7], function () {
-            id_start = self.addPiece(id_start, Gen.newWPiece(P_HEX.PAWN));
-        });
-        _.each(firstLine, function (value) {
-            id_start = self.addPiece(id_start, Gen.newWPiece(value));
+        _.each(board, function (piece, index) {
+            self.addPiece(index, piece);
         });
     },
     addPiece: function (div_id, piece_code) {
@@ -185,14 +164,22 @@ var ChessBoard = Backbone.Collection.extend({
         return -1;
 
     },
-    kingCannotMove : function(color){
-        var canMove = false;
-        var indexKing = this.findColorKing(color);
-        var directions = [-9,-8,-7,-1,1,7,8,9];
-        for(var i in directions){
-            var dir = directions[i];
-            
+    kingCannotMove: function (color) {
+        var kingIndex = this.findColorKing(color);
+        if (kingIndex >= 0) {
+            var king = this.at(kingIndex).getCurrent();
+            return !this.kingHasTrack(king);
         }
+        return false;
+    },
+    kingHasTrack: function (king) {
+        var hasTrack = false;
+        this.each(function (box) {
+            if (box.hasATrack(king)) {
+                hasTrack = true;
+            }
+        });
+        return hasTrack;
     },
     /*
      * All the functions that update the chessboard
@@ -228,6 +215,7 @@ var ChessBoard = Backbone.Collection.extend({
                 begunPin = this.updatePawn(piece_code, index);
                 break;
         }
+        
         return begunPin;
     },
     updateKing: function (kingPiece, index) {
@@ -244,19 +232,21 @@ var ChessBoard = Backbone.Collection.extend({
         var dIndex = index + incrementation;
         var ennemies = {},
                 invertColor;
-        if (dIndex >= 0 && dIndex <= 64 && !(Tools.isAtLeftBorder(index) && Tools.turnLeft(incrementation)
+        if (Tools.isValidIndex(dIndex) && !(Tools.isAtLeftBorder(index) && Tools.turnLeft(incrementation)
                 || Tools.isAtRightBorder(index) && Tools.turnRight(incrementation))) {
             var newPos = this.at(dIndex);
-            if (color === COLOR.BLACK) {
-                ennemies = newPos.get("WHITEBEGUN");
-                invertColor = COLOR.WHITE;
-            } else {
-                ennemies = newPos.get("BLACKBEGUN");
-                invertColor = COLOR.BLACK;
-            }
-            if ((newPos.canBeEaten(king) || newPos.isEmpty()) && _.isEmpty(ennemies)) {
-                newPos.addTrAndBg(king);
-                return newPos;
+            if (newPos) {
+                if (color === COLOR.BLACK) {
+                    ennemies = newPos.getWhiteBegun();
+                    invertColor = COLOR.WHITE;
+                } else {
+                    ennemies = newPos.getBlackBegun();
+                    invertColor = COLOR.BLACK;
+                }
+                if ((newPos.canBeEaten(king) || newPos.isEmpty()) && _.isEmpty(ennemies)) {
+                    newPos.addTrAndBg(king);
+                    return newPos;
+                }
             }
         }
         return;
@@ -370,7 +360,7 @@ var ChessBoard = Backbone.Collection.extend({
         //Ils ne peuvent qu'avancer (ou aller en diagonale)
 
         var devant = this.at(index + pDevant);
-        if (!_.isUndefined(devant) && devant.isEmpty()) {
+        if (devant && devant.isEmpty()) {
             if (imPin) {
                 Tools.addIfSame(pin, devant, pawnPiece, "addTrack");
             } else if (tracks) {
@@ -428,14 +418,13 @@ var ChessBoard = Backbone.Collection.extend({
                 } else {
                     gauche.addTrack(pawnPiece);
                     var invertColor = Tools.getInvertColor(pawnPiece);
-                    if (droite.containKing(invertColor)) {
+                    if (gauche.containKing(invertColor)) {
                         kingInTarget.push(this.at(index));
                     }
                 }
             }
         }
-
-        return kingInTarget;
+        return !_.isEmpty(kingInTarget) ? {'begun' : kingInTarget} : undefined;
     },
     /**
      * Works only for pawns
@@ -489,21 +478,20 @@ var ChessBoard = Backbone.Collection.extend({
                         } else {
                             !firstCollision && direction.addTrAndBg(piece);
                         }
-                    }
 
-                    var invertColor = Tools.getInvertColor(piece);
-                    if (direction.containKing(invertColor)) {
-                        kingPin = true;
-                        pinPath.pop();
-                        if (!firstCollision) {
-                            pathToKing.pop();
-                            kingFound = true;
+                        var invertColor = Tools.getInvertColor(piece);
+                        if (direction.containKing(invertColor)) {
+                            kingPin = true;
+                            pinPath.pop();
+                            if (!firstCollision) {
+                                pathToKing.pop();
+                                kingFound = true;
+                            }
                         }
+                        //Si on a déjà eu une collision, ou que l'on croise un pion de la même couleur
+                        // On ne vas pas chercher plus loin pour le clouage
                     }
-
-                    //Si on a déjà eu une collision, ou que l'on croise un pion de la même couleur
-                    // On ne vas pas chercher plus loin pour le clouage
-                    if (firstCollision || Tools.sameColor(direction.getCurrent(), piece) || kingPin) {
+                    if (firstCollision || Tools.sameColor(direction.getCurrent(), piece)) {
                         break;
                     } else {
                         firstCollision = true;
@@ -520,18 +508,19 @@ var ChessBoard = Backbone.Collection.extend({
                         Tools.addIfSame(tracks, direction, piece);
                     } else {
                         !firstCollision && direction.addTrAndBg(piece);
-
+                        firstCollision && direction.addBegun(piece);
                     }
                     break;
                 }
 
-                //Default = adding tracks, or "obligatoory" tracks if king in chess
+                //Default = adding tracks, or "obligatory" tracks if king in chess
                 if (imPin) {
                     Tools.addIfSame(pin, direction, piece);
                 } else if (tracks) {
                     Tools.addIfSame(tracks, direction, piece);
                 } else {
                     !firstCollision && direction.addTrAndBg(piece);
+                    firstCollision && direction.addBegun(piece);
                 }
 
                 dIndex += incrementation;

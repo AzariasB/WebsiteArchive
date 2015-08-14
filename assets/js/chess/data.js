@@ -36,6 +36,27 @@ var COLOR = {
 var Gen = {
     idW: 0x20,
     idB: 0x20,
+    boardOptions: {
+        normalBoard: "normalBoard",
+        onlyPawn: "onlyPawnBoard",
+        noPawn: "noPawnBoard",
+        kingNRook: "kingAndRook",
+        kingNQueen : "kingAndQueen",
+        random: 10
+    },
+    baseLine: [
+        P_HEX.ROOK,
+        P_HEX.KNIGHT,
+        P_HEX.BISHOP,
+        P_HEX.QUEEN,
+        P_HEX.KING,
+        P_HEX.BISHOP,
+        P_HEX.KNIGHT,
+        P_HEX.ROOK
+    ],
+    onlyKing: [0, 0, 0, 0, P_HEX.KING, 0, 0, 0],
+    kingNRook: [P_HEX.ROOK, 0, 0, 0, P_HEX.KING, 0, 0, P_HEX.ROOK],
+    kingNQueen : [0,0,0,P_HEX.QUEEN,P_HEX.KING,0,0,0],
     newWPiece: function (piece_code) {
         if (piece_code !== 0) {
             piece_code += this.idW;
@@ -51,6 +72,61 @@ var Gen = {
             this.idB += 0x20;
         }
         return piece_code;
+    },
+    genBoard: function (option,random) {
+        random = random || false;
+        var normalBoard = this[option] && this[option]();
+        return random ? _.shuffle(normalBoard) :normalBoard;
+    },
+    normalBoard: function () {
+        return this._theGenerator(this.baseLine, true);
+    },
+    onlyPawnBoard: function () {
+        return this._theGenerator(this.onlyKing, true);
+
+    },
+    noPawnBoard: function () {
+        return this._theGenerator(this.baseLine, false);
+    },
+    kingAndRook: function () {
+        return this._theGenerator(this.kingNRook, true);
+    },
+    kingAndQueen : function(){
+        return this._theGenerator(this.kingNQueen,false);
+    },
+    /**
+     * 
+     * @param {Array} baseLine the board
+     * @param {boolean} pawn if an array of pawn is necessary
+     * @returns {Array} board filled
+     */
+    _theGenerator: function (baseLine, pawn) {
+        var whiteBLine = this.genLine(baseLine, this.newWPiece),
+                whitePLine = pawn ? this.genPawnLine(this.newWPiece) : this.genEmptyLines(8),
+                empty = this.genEmptyLines(),
+                blackPLine = pawn ? this.genPawnLine(this.newBPiece) : this.genEmptyLines(8),
+                blackBLine = this.genLine(baseLine, this.newBPiece);
+
+        return whiteBLine.concat(whitePLine, empty, blackPLine, blackBLine);
+    },
+    genPawnLine: function (funcGen) {
+        var board = [];
+        funcGen = funcGen.bind(this);
+        _.each(_.range(8), function () {
+            board.push(funcGen(P_HEX.PAWN));
+        });
+        return board;
+    },
+    genEmptyLines: function (length) {
+        return Array.apply(null, Array(length || 8 * 4)).map(Number.prototype.valueOf, 0);
+    },
+    genLine: function (line, funcGen) {
+        var board = [];
+        funcGen = funcGen.bind(this);
+        _.each(line, function (piece) {
+            board.push(funcGen(piece));
+        });
+        return board;
     },
 };
 
@@ -69,7 +145,7 @@ var Tools = {
         });
     },
     containPinOrBegun: function (begunPin) {
-        return begunPin && begunPin.begun && begunPin.pin
+        return begunPin && (begunPin.begun || begunPin.pin)
                 && (!_.isEmpty(begunPin.begun) || !_.isEmpty(begunPin.pin));
     },
     isWhite: function (piece) {
@@ -82,6 +158,9 @@ var Tools = {
         piece1 = piece1 & 0x1111E0;
         piece2 = piece2 & 0x1111E0;
         return piece1 === piece2;
+    },
+    isValidIndex: function (index) {
+        return index >= 0 && index <= 63;
     },
     sameType: function (piece1, piece2) {
         return this.getPieceType(piece1) === this.getPieceType(piece2);
@@ -157,7 +236,7 @@ var Tools = {
                 position >= 0 && position <= 8);
     },
     ifWhiteElseIfBlack: function (piece, returnWhite, returnBlack) {
-        var color = this.getPieceColor( parseInt(piece));
+        var color = this.getPieceColor(parseInt(piece));
         return color === COLOR.WHITE ? returnWhite :
                 color === COLOR.BLACK ? returnBlack : undefined;
     },

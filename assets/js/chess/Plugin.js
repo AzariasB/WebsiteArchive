@@ -1,6 +1,4 @@
-
-
-/* global Backbone, _, PIECES_CHAR, Tools, COLOR, P_HEX */
+/* global Backbone, PIECES_CHAR, Tools, Move, COLOR */
 
 var Move = Backbone.Model.extend({
     defaults: {
@@ -40,7 +38,7 @@ var Move = Backbone.Model.extend({
     getEndString: function () {
         if (this.get("enPassant")) {
             return " e.p. ";
-        } 
+        }
     }
 });
 
@@ -109,15 +107,15 @@ var Moves = Backbone.Collection.extend({
     },
     myKingMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
-        return Tools.ifWhiteElseIfBlack(piece,this.whiteKingMoved,this.blackKingMoved);
+        return Tools.ifWhiteElseIfBlack(piece, this.whiteKingMoved, this.blackKingMoved);
     },
     myLeftRookMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
-        return Tools.ifWhiteElseIfBlack(piece,this.rookMoved.left.white,this.rookMoved.left.black);
+        return Tools.ifWhiteElseIfBlack(piece, this.rookMoved.left.white, this.rookMoved.left.black);
     },
     myRightRookMoved: function (piece) {
         var color = Tools.getPieceColor(piece);
-        return Tools.ifWhiteElseIfBlack(piece,this.rookMoved.right.white,this.rookMoved.right.black);
+        return Tools.ifWhiteElseIfBlack(piece, this.rookMoved.right.white, this.rookMoved.right.black);
     }
 });
 

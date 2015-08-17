@@ -1,5 +1,5 @@
 
-/* global _ */
+/* global _, Backbone */
 
 var PIECES_CHAR = {
     WHITE: {
@@ -41,22 +41,21 @@ var Gen = {
         onlyPawn: "onlyPawnBoard",
         noPawn: "noPawnBoard",
         kingNRook: "kingAndRook",
-        kingNQueen : "kingAndQueen",
-        random: 10
+        kingNQueen: "kingAndQueen",
     },
     baseLine: [
         P_HEX.ROOK,
         P_HEX.KNIGHT,
         P_HEX.BISHOP,
-        P_HEX.QUEEN,
         P_HEX.KING,
+        P_HEX.QUEEN,
         P_HEX.BISHOP,
         P_HEX.KNIGHT,
         P_HEX.ROOK
     ],
     onlyKing: [0, 0, 0, 0, P_HEX.KING, 0, 0, 0],
-    kingNRook: [P_HEX.ROOK, 0, 0, 0, P_HEX.KING, 0, 0, P_HEX.ROOK],
-    kingNQueen : [0,0,0,P_HEX.QUEEN,P_HEX.KING,0,0,0],
+    kingNRook: [P_HEX.ROOK, 0, 0, P_HEX.KING, 0, 0, 0, P_HEX.ROOK],
+    kingNQueen: [0, 0, 0, P_HEX.KING, P_HEX.QUEEN, 0, 0, 0],
     newWPiece: function (piece_code) {
         if (piece_code !== 0) {
             piece_code += this.idW;
@@ -73,10 +72,10 @@ var Gen = {
         }
         return piece_code;
     },
-    genBoard: function (option,random) {
+    genBoard: function (option, random) {
         random = random || false;
         var normalBoard = this[option] && this[option]();
-        return random ? _.shuffle(normalBoard) :normalBoard;
+        return random ? _.shuffle(normalBoard) : normalBoard;
     },
     normalBoard: function () {
         return this._theGenerator(this.baseLine, true);
@@ -91,8 +90,8 @@ var Gen = {
     kingAndRook: function () {
         return this._theGenerator(this.kingNRook, true);
     },
-    kingAndQueen : function(){
-        return this._theGenerator(this.kingNQueen,false);
+    kingAndQueen: function () {
+        return this._theGenerator(this.kingNQueen, false);
     },
     /**
      * 
@@ -199,7 +198,7 @@ var Tools = {
         }
     },
     getColorName: function (piece) {
-        return this.ifWhiteElseIfBlack(piece, "Blan", "Noir");
+        return this.ifWhiteElseIfBlack(piece, "Blanc", "Noir");
     },
     getHtmlName: function (piece_number) {
         var piece_type = Tools.getPieceType(piece_number);
@@ -233,7 +232,7 @@ var Tools = {
     },
     isOnHisLastLine: function (piece, position) {
         return this.ifWhiteElseIfBlack(piece, position >= 56 && position <= 63,
-                position >= 0 && position <= 8);
+                position >= 0 && position <= 7);
     },
     ifWhiteElseIfBlack: function (piece, returnWhite, returnBlack) {
         var color = this.getPieceColor(parseInt(piece));
@@ -269,13 +268,18 @@ var Tools = {
     },
     //TODO : improve speed of this function by adding a "break" in for loop
     pieceIsPin: function (pin, piecePos) {
-        var isPin = false;
-        _.each(pin, function (box) {
-            if (box === piecePos) {
-                isPin = true;
-            }
+        var isPin;
+        _.each(pin, function (pinArray) {
+            _.each(pinArray, function (box) {
+                if (box === piecePos) {
+                    isPin = pinArray;
+                }
+            });
         });
         return isPin;
+    },
+    pieceCanProtect: function (tracks) {
+        return !tracks || tracks.length === 1;
     },
     sameColumn: function (index1, index2) {
         var minIndex = Math.min(index1, index2);
@@ -286,7 +290,9 @@ var Tools = {
         return minIndex === maxIndex;
     },
     changeType: function (oldPiece, nwType) {
-        var noType = oldPiece & 0x18;
+        var noType = oldPiece & 0xFFF8;
         return noType + nwType;
     }
 };
+
+

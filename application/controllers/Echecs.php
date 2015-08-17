@@ -24,11 +24,11 @@ class Echecs extends MY_Controller {
         $this->add_css("chess.css");
         $this->add_js("underscore.js");
         $this->add_js('backbone.min.js');
-        $this->add_js("chess/data.js");
+        $this->add_js("chess/tools.js");
         $this->add_js('chess/ChessBox.js');
         $this->add_js('chess/Plugin.js');
         $this->add_js('chess/ChessBoard.js');
-        $this->add_js("chess/view.js");
+        $this->add_js("chess/ChessView.js");
         $this->add_js('chess/rules.js');
 
         $data = array('titre' => 'Echecs v2.0');

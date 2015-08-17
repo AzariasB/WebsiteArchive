@@ -15,7 +15,7 @@ var ChessBox = Backbone.Model.extend({
         TRACKS: [],
     },
     setCurrent: function (piece) {
-        var eaten = this.get("PRESENT");
+        var eaten = this.getCurrent();
         this.set({"PRESENT": piece});
         return eaten;
     },
@@ -28,8 +28,11 @@ var ChessBox = Backbone.Model.extend({
     getBlackBegun: function () {
         return this.get("BLACKBEGUN");
     },
+    getTracks : function(){
+        return this.get("TRACKS");
+    },
     removePiece: function () {
-        var p = this.get("PRESENT");
+        var p = this.getCurrent();
         this.setCurrent(0);
         return p;
     },
@@ -38,14 +41,14 @@ var ChessBox = Backbone.Model.extend({
         this.addBegun(piece);
     },
     addTrack: function (piece) {
-        this.get("TRACKS").push(piece);
+        this.getTracks().push(piece);
     },
-    getTracks: function (color) {
+    getBegun: function (color) {
         return Tools.ifWhiteElseIfBlack(color, this.getWhiteBegun(), this.getBlackBegun());
     },
     currentIsBegun: function () {
-        return this.get("PRESENT") &&
-                !_.isEmpty(this.getTracks(Tools.getInvertColor(this.get("PRESENT"))));
+        return this.getCurrent() &&
+                !_.isEmpty(this.getBegun(Tools.getInvertColor(this.getCurrent())));
     },
     addBegun: function (piece) {
         var toPush = Tools.ifWhiteElseIfBlack(piece, this.getWhiteBegun(), this.getBlackBegun());
@@ -66,9 +69,9 @@ var ChessBox = Backbone.Model.extend({
     },
     removeTrack: function (piece) {
         var self = this;
-        _.each(this.get("TRACKS"), function (tracker, index) {
+        _.each(this.getTracks(), function (tracker, index) {
             if (Tools.sameId(tracker, piece)) {
-                self.get("TRACKS").split(index, 1);
+                self.getTracks().split(index, 1);
             }
         });
     },
@@ -94,9 +97,10 @@ var ChessBox = Backbone.Model.extend({
         }
     },
     resetTrackByColor: function (color) {
-        _.each(this.get("TRACKS"), function (piece, index) {
+        var self = this;
+        _.each(this.getTracks(), function (piece, index) {
             if (Tools.sameColor(piece, color)) {
-                this.get("TRACKS").splice(index, 1);
+                self.getTracks().splice(index, 1);
             }
         });
     },
@@ -122,28 +126,37 @@ var ChessBox = Backbone.Model.extend({
                 Tools.ifWhiteElseIfBlack(king, _.isEmpty(this.getBlackBegun(), _.isEmpty(this.getWhiteBegun()))) );
     },
     isEmpty: function () {
-        return (this.get("PRESENT") === 0);
+        return (this.getCurrent() === 0);
     },
     canBeEaten: function (eater) {
-        return !this.isEmpty() && !Tools.sameColor(this.get("PRESENT"), eater);
+        return !this.isEmpty() && !Tools.sameColor(this.getCurrent(), eater);
     },
     containsPiece: function (pieceHex) {
         var present = this.getCurrent();
         return Tools.sameType(pieceHex, present);
     },
     containKing: function (color) {
-        var present = this.get("PRESENT");
+        var present = this.getCurrent();
         return Tools.sameType(present, P_HEX.KING) && Tools.sameColor(color, present);
     },
     hasATrack: function (piece) {
         var color = Tools.getPieceColor(piece);
 
         var hasTrack = false;
-        _.each(this.get("TRACKS"), function (value) {
+        _.each(this.getTracks(), function (value) {
             if (Tools.sameId(value, piece) && Tools.sameType(value, piece) && Tools.sameColor(value, piece)) {
                 hasTrack = true;
             }
         });
         return hasTrack;
     },
+    colorHasTrack : function(color){
+        var hasTrack = false;
+        _.each(this.getTracks(),function(track){
+            if(Tools.sameColor(track,color)){
+                hasTrack = true;
+            }
+        });
+        return hasTrack;
+    }
 });

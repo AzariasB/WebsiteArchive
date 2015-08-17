@@ -19,7 +19,7 @@
 
 
 #board>div{
-    color : white;
+    color : black;
 }
 
 
@@ -124,10 +124,10 @@ pre{
     font-size: 2em;
 }
 
-.chessbox:nth-child(2n) {
-    background-color:  #010101;
+.chessbox:nth-child(2n ) {
+    background-color:  white;
 }
 
-.chessbox:nth-child(2n+1){
-    background-color: rgba(125,125,125,0.5);
+.chessbox:nth-child(2n + 1){
+    background-color: rgba(125,125,125,0.9);
 }

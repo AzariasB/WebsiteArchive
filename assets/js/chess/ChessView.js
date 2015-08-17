@@ -6,10 +6,10 @@
 var ChessView = Backbone.View.extend({
     el: '#board',
     selected: undefined,
-    chessBoard: new ChessBoard(),
-    initialize: function () {
+    start: function (genOption, random) {
+        this.chessBoard = new ChessBoard();
+        this.chessBoard.createBoard(genOption, random);
         this.initChessBoard();
-        //var res = this.showPawnModal(COLOR.BLACK);
     },
     initChessBoard: function () {
         this.$el.text("");
@@ -87,10 +87,16 @@ var ChessView = Backbone.View.extend({
                 _.each(game.rules, function (rule) {
                     var funcName = rule.events.secondClick;
                     if (funcName && rule[funcName]) {
-                        move = rule[funcName](game,event,move);
+                        move = rule[funcName](game, event, move);
                     }
                 });
                 this.secondClickEnd(turn);
+                _.each(game.rules, function (rule) {
+                    var funcName = rule.events.afterUpdate;
+                    if (funcName && rule[funcName]) {
+                        rule[funcName](game, event, move);
+                    }
+                });
                 return move;
             }
             return;
@@ -103,7 +109,8 @@ var ChessView = Backbone.View.extend({
     resetChoice: function () {
         _.each(this.$el.children(), function (value) {
             $(value).css({
-                "border": "none"
+                "border": "none",
+                "cursor": "default"
             });
         });
     },

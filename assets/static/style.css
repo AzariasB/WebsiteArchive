@@ -1446,3 +1446,136 @@ Pour avoir les mêmes menus
 	z-index: 2;
 	display: block;
 }
+#chess2{
+    margin : 0px auto 0px auto;
+}
+
+#board{
+    margin-left: auto;
+    margin-right: auto;
+    width:572px;
+    height:572px;
+    border:solid thick gray;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+
+
+#board>div{
+    color : black;
+}
+
+
+#board div div{
+    font-size:300%;
+    text-align:center;
+    z-index: 999;
+    cursor: pointer;
+}
+
+header{
+    height: 10vh;
+    margin-bottom: 5px;
+    border-bottom: 1px solid white;
+}
+
+footer{
+    height: 0px;
+    padding: 0;
+}
+
+.Noir{
+    color :black;
+}
+
+#myModal{
+    color: black;
+}
+
+.Blanc{
+    color :white;
+}
+
+pre{
+    font-size: 1.2em;
+    font-family: "Helvetica",sans-serif;
+}
+
+.box{
+    text-align: center;
+    vertical-align: central;
+}
+
+#choose>div{
+    border : 1px solid transparent;
+    cursor: pointer;
+}
+
+#choose>div:hover{
+    border: 1px solid gray;
+}
+
+#lst_coups,
+#eaten{
+    font-size: 2em;
+    height: 70vh;
+    overflow-y: scroll;
+}
+
+#lst_coups > p{
+    width:  100%;
+}
+
+
+#eaten{
+    width : 90%;
+    word-wrap: break-word;
+
+    overflow-x: no-content;
+}
+
+#lst_coups >p:first-child{
+    background-image:
+        linear-gradient(
+        black,
+        #f06d06
+        );
+}
+
+.chessbox{
+    position: absolute;
+    font-size: 3em;
+    width: 64px;
+    height: 64px;
+}
+
+.up_letter{
+    position: absolute;
+    width: 64px;
+    height: 16px;
+    text-align: center;
+    color: black;
+    font-size:  2em;
+}
+
+.side_number {
+    position: absolute;
+    width: 16px;
+    height: 64px;
+    text-align: center;
+    color: black;
+    font-size: 2em;
+}
+
+.chessbox:nth-child(2n ) {
+    background-color:  white;
+}
+
+.chessbox:nth-child(2n + 1){
+    background-color: rgba(125,125,125,0.9);
+}

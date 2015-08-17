@@ -20,6 +20,7 @@
             <div id="lst_coups"></div>
         </div>
     </div>
+    <!-- Modal pour pièces -->
     <div data-backdrop="static"  class="modal fade" id="newpiece" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -37,8 +38,26 @@
             </div>
         </div>
     </div>
+    <!-- Modal pour mat/pat -->
+    <div data-backdrop="static"  class="modal fade" id="winner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2 class="modal-title" id="myModalLabel" style="color : black;" >Partie terminée</h2>
+                </div>
+                <div class="modal-body" style="color: black;" >
+                    <p id="patOrMat"></p>
+                </div>
+                <div class="modal-footer">
+                    <a class="btn btn-primary" href="/Echecs/seconde_v">Recommencer</a>
+                    <button data-dismiss="modal" class="btn btn-default">Fermer</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script src="{{ js()~'chess/chess.js' }}" ></script>
+    <script src="{{ js()~'chess/chess.js' }}"></script>
+    <script src="{{ js()~'chess/app.js' }}" ></script>
 {% endblock %}
 
 {% block footer %}

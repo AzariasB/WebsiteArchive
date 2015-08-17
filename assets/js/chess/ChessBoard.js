@@ -9,8 +9,8 @@ var ChessBoard = Backbone.Collection.extend({
     blackKingBegunTrack: [],
     whitePin: [],
     blackPin: [],
-    initialize: function () {
-        this.addPieces();
+    createBoard : function (genOption,random) {
+        this.addPieces(genOption,random);
         this.updateAll();
     },
     blackIsChess: function () {
@@ -31,10 +31,13 @@ var ChessBoard = Backbone.Collection.extend({
     myKingIsPin: function (piece) {
         return Tools.ifWhiteElseIfBlack(piece, this.whiteIsPin(), this.blackIsPin());
     },
-    addPieces: function () {
+    addPieces: function (option,random) {
 
-        var option = Gen.boardOptions.normalBoard;
-        var board = Gen.genBoard(option,true),
+        /**
+         * 
+         * Choix de l'option de génération ici
+         */
+        var board = Gen.genBoard(option,random),
                 self = this;
 
         _.each(board, function (piece, index) {
@@ -43,15 +46,11 @@ var ChessBoard = Backbone.Collection.extend({
     },
     addPiece: function (div_id, piece_code) {
         var mchessBox = new ChessBox({id: div_id});
-        try {
-            if (!_.isUndefined(piece_code)) {
-                mchessBox.setCurrent(piece_code);
-            }
-            this.add(mchessBox);
-
-        } catch (ex) {
-            console.log(ex);
+        if (!_.isUndefined(piece_code)) {
+            mchessBox.setCurrent(piece_code);
         }
+        this.add(mchessBox);
+
         return div_id + 1;
     },
     removePiece: function (index) {
@@ -81,11 +80,6 @@ var ChessBoard = Backbone.Collection.extend({
                 to: to,
                 piece: piece,
                 eat: eaten
-                        // check: false,
-                        //checkmate: false,
-                        // enPassant: false,
-                        // littleCastling: false,
-                        // bigCastling: false
             });
         }
         return;
@@ -97,7 +91,7 @@ var ChessBoard = Backbone.Collection.extend({
             });
         } else {
             this.each(function (chessBox) {
-                if (!_.isEmpty(chessBox.getTracks(color))) {
+                if (!_.isEmpty(chessBox.getBegun(color))) {
                     chessBox.reset(color);
                 }
             });
@@ -147,11 +141,11 @@ var ChessBoard = Backbone.Collection.extend({
         var begun = begunPin.begun;
         var pin = begunPin.pin;
         if (color === COLOR.WHITE) {
-            this.whiteKingBegunTrack = begun;
-            this.whitePin = pin;
+            !_.isEmpty(begun) && this.whiteKingBegunTrack.push(begun);
+            !_.isEmpty(pin) && this.whitePin.push(pin);
         } else {
-            this.blackKingBegunTrack = begun;
-            this.blackPin = pin;
+            !_.isEmpty(begun) && this.blackKingBegunTrack.push(begun);
+            !_.isEmpty(pin) && this.blackPin.push(pin);
         }
     },
     findColorKing: function (color) {
@@ -172,6 +166,18 @@ var ChessBoard = Backbone.Collection.extend({
         }
         return false;
     },
+    canProtectKing: function (color) {
+        var tracks = this.myKingIsChess(color);
+        var canProtect = false;
+        if (Tools.pieceCanProtect(tracks)) {
+            _.each(tracks[0], function (box) {
+                if (box.colorHasTrack(color)) {
+                    canProtect = true;
+                }
+            });
+        }
+        return canProtect;
+    },
     kingHasTrack: function (king) {
         var hasTrack = false;
         this.each(function (box) {
@@ -180,6 +186,24 @@ var ChessBoard = Backbone.Collection.extend({
             }
         });
         return hasTrack;
+    },
+    colorCantMove: function (color) {
+        var canMove = false;
+        this.each(function (box) {
+            if (box.colorHasTrack(color)) {
+                canMove = true;
+            }
+        });
+        return !canMove;
+    },
+    onlyTwoLeft: function () {
+        var totalNumber = 0;
+        this.each(function (box) {
+            if (!box.isEmpty()) {
+                totalNumber++;
+            }
+        });
+        return totalNumber === 2;
     },
     /*
      * All the functions that update the chessboard
@@ -193,29 +217,31 @@ var ChessBoard = Backbone.Collection.extend({
      * @returns {undefined}
      */
     updatePiece: function (piece_code, index) {
-        var type = Tools.getPieceType(piece_code);
-        var begunPin;
-        switch (type) {
-            case P_HEX.KING:
-                begunPin = this.updateKing(piece_code, index);
-                break;
-            case P_HEX.QUEEN :
-                begunPin = this.updateQueen(piece_code, index);
-                break;
-            case P_HEX.ROOK :
-                begunPin = this.updateRook(piece_code, index);
-                break;
-            case P_HEX.KNIGHT:
-                begunPin = this.updateKnight(piece_code, index);
-                break;
-            case P_HEX.BISHOP :
-                begunPin = this.updateBishop(piece_code, index);
-                break;
-            case P_HEX.PAWN :
-                begunPin = this.updatePawn(piece_code, index);
-                break;
+        var type = Tools.getPieceType(piece_code),
+                tracks = this.myKingIsChess(piece_code),
+                begunPin;
+        if (Tools.pieceCanProtect(tracks) || Tools.sameType(type, P_HEX.KING)) {
+            switch (type) {
+                case P_HEX.KING:
+                    begunPin = this.updateKing(piece_code, index);
+                    break;
+                case P_HEX.QUEEN :
+                    begunPin = this.updateQueen(piece_code, index);
+                    break;
+                case P_HEX.ROOK :
+                    begunPin = this.updateRook(piece_code, index);
+                    break;
+                case P_HEX.KNIGHT:
+                    begunPin = this.updateKnight(piece_code, index);
+                    break;
+                case P_HEX.BISHOP :
+                    begunPin = this.updateBishop(piece_code, index);
+                    break;
+                case P_HEX.PAWN :
+                    begunPin = this.updatePawn(piece_code, index);
+                    break;
+            }
         }
-        
         return begunPin;
     },
     updateKing: function (kingPiece, index) {
@@ -276,7 +302,6 @@ var ChessBoard = Backbone.Collection.extend({
         return iGotTheKing;
     },
     updateKnight: function (knightPiece, index) {
-
         var possibilities = [];
         var self = this;
         var kingInTarget = {begun: [], pin: []};
@@ -309,8 +334,8 @@ var ChessBoard = Backbone.Collection.extend({
                     var tracks = self.myKingIsChess(knightPiece);
                     if (imPin) {
                         Tools.addIfSame(pin, mBox, knightPiece);
-                    } else if (tracks) {
-                        Tools.addIfSame(tracks, mBox, knightPiece);
+                    } else if (tracks && tracks[0]) {
+                        Tools.addIfSame(tracks[0], mBox, knightPiece);
                     } else {
                         mBox.addTrAndBg(knightPiece);
                         var invertColor = Tools.getInvertColor(knightPiece);
@@ -323,8 +348,7 @@ var ChessBoard = Backbone.Collection.extend({
                 }
             }
         });
-
-        return kingInTarget;
+        return  kingInTarget;
 
     },
     updateBishop: function (bishopPiece, index) {
@@ -359,10 +383,10 @@ var ChessBoard = Backbone.Collection.extend({
 
         //Ils ne peuvent qu'avancer (ou aller en diagonale)
 
-        var devant = this.at(index + pDevant);
+        var devant = Tools.isValidIndex(index + pDevant) && this.at(index + pDevant);
         if (devant && devant.isEmpty()) {
             if (imPin) {
-                Tools.addIfSame(pin, devant, pawnPiece, "addTrack");
+                Tools.addIfSame(imPin, devant, pawnPiece, "addTrack");
             } else if (tracks) {
                 Tools.addIfSame(tracks, devant, pawnPiece, "addTrack");
             } else {
@@ -374,9 +398,9 @@ var ChessBoard = Backbone.Collection.extend({
             var devant2 = this.at(index + pDevant * 2);
             if (!_.isUndefined(devant2) && devant.isEmpty() && devant2.isEmpty()) {
                 if (imPin) {
-                    Tools.addIfSame(pin, devant2, pawnPiece, "addTrack");
-                } else if (tracks) {
-                    Tools.addIfSame(tracks, devant2, pawnPiece, "addTrack");
+                    Tools.addIfSame(imPin, devant2, pawnPiece, "addTrack");
+                } else if (tracks && tracks[0]) {
+                    Tools.addIfSame(tracks[0], devant2, pawnPiece, "addTrack");
                 } else {
                     devant2.addTrack(pawnPiece);
 
@@ -385,15 +409,15 @@ var ChessBoard = Backbone.Collection.extend({
         }
 
 
-        var droite = this.at(index + pDroite);
+        var droite = Tools.isValidIndex(index + pDroite) && this.at(index + pDroite);
         if (droite) {
             !Tools.isAtRightBorder(index) && droite.addBegun(pawnPiece);
 
             if (!Tools.isAtRightBorder(index) && !_.isUndefined(droite) && droite.canBeEaten(pawnPiece)) {
                 if (imPin) {
-                    Tools.addIfSame(pin, droite, pawnPiece, "addTrack");
-                } else if (tracks) {
-                    Tools.addIfSame(tracks, droite, pawnPiece, "addTrack");
+                    Tools.addIfSame(imPin, droite, pawnPiece, "addTrack");
+                } else if (tracks && tracks[0]) {
+                    Tools.addIfSame(tracks[0], droite, pawnPiece, "addTrack");
                 } else {
                     droite.addTrack(pawnPiece);
                     var invertColor = Tools.getInvertColor(pawnPiece);
@@ -406,15 +430,15 @@ var ChessBoard = Backbone.Collection.extend({
         }
 
 
-        var gauche = this.at(index + pGauche);
+        var gauche = Tools.isValidIndex(index + pGauche) && this.at(index + pGauche);
         if (gauche) {
             !Tools.isAtLeftBorder(index) && gauche.addBegun(pawnPiece);
 
             if (!Tools.isAtLeftBorder(index) && !_.isUndefined(gauche) && gauche.canBeEaten(pawnPiece)) {
                 if (imPin) {
-                    Tools.addIfSame(pin, droite, pawnPiece, "addTrack");
-                } else if (tracks) {
-                    Tools.addIfSame(tracks, gauche, pawnPiece, gauche.addTrack);
+                    Tools.addIfSame(imPin, droite, pawnPiece, "addTrack");
+                } else if (tracks && tracks[0]) {
+                    Tools.addIfSame(tracks[0], gauche, pawnPiece, gauche.addTrack);
                 } else {
                     gauche.addTrack(pawnPiece);
                     var invertColor = Tools.getInvertColor(pawnPiece);
@@ -424,7 +448,7 @@ var ChessBoard = Backbone.Collection.extend({
                 }
             }
         }
-        return !_.isEmpty(kingInTarget) ? {'begun' : kingInTarget} : undefined;
+        return !_.isEmpty(kingInTarget) ? {'begun': kingInTarget} : undefined;
     },
     /**
      * Works only for pawns
@@ -445,6 +469,7 @@ var ChessBoard = Backbone.Collection.extend({
         }
     },
     checkDiagonal: function (piece, indexStart, incrementation) {
+        //If there are two tracks to the king, moving a piece won't resolve the problem
         var dIndex = indexStart + incrementation,
                 pathToKing = [this.at(indexStart)],
                 pinPath = [this.at(indexStart)],
@@ -455,7 +480,6 @@ var ChessBoard = Backbone.Collection.extend({
                 direction = this.at(dIndex),
                 firstCollision = false,
                 kingPin = false;
-
         if (!(Tools.isAtRightBorder(indexStart) && Tools.turnRight(incrementation)
                 || Tools.isAtLeftBorder(indexStart) && Tools.turnLeft(incrementation))) {
             while (!_.isUndefined(direction) && dIndex >= 0 && dIndex <= 64) {
@@ -472,9 +496,9 @@ var ChessBoard = Backbone.Collection.extend({
                 if (!direction.isEmpty()) {
                     if (!Tools.sameColor(direction.getCurrent(), piece)) {
                         if (imPin) {
-                            Tools.addIfSame(pin, direction, piece);
-                        } else if (tracks) {
-                            Tools.addIfSame(tracks, direction, piece);
+                            Tools.addIfSame(imPin, direction, piece);
+                        } else if (tracks && tracks[0]) {
+                            Tools.addIfSame(tracks[0], direction, piece);
                         } else {
                             !firstCollision && direction.addTrAndBg(piece);
                         }
@@ -490,7 +514,11 @@ var ChessBoard = Backbone.Collection.extend({
                         }
                         //Si on a déjà eu une collision, ou que l'on croise un pion de la même couleur
                         // On ne vas pas chercher plus loin pour le clouage
+                    } else {
+                        //On ajoute une "menace" pour le que le roi ne puisse pas manger cette pièce
+                        !firstCollision && direction.addBegun(piece);
                     }
+
                     if (firstCollision || Tools.sameColor(direction.getCurrent(), piece)) {
                         break;
                     } else {
@@ -503,9 +531,9 @@ var ChessBoard = Backbone.Collection.extend({
                         Tools.isAtLeftBorder(direction.id) && Tools.turnLeft(incrementation))) {
 
                     if (imPin) {
-                        Tools.addIfSame(pin, direction, piece);
-                    } else if (tracks) {
-                        Tools.addIfSame(tracks, direction, piece);
+                        Tools.addIfSame(imPin, direction, piece);
+                    } else if (tracks && tracks[0]) {
+                        Tools.addIfSame(tracks[0], direction, piece);
                     } else {
                         !firstCollision && direction.addTrAndBg(piece);
                         firstCollision && direction.addBegun(piece);
@@ -515,12 +543,12 @@ var ChessBoard = Backbone.Collection.extend({
 
                 //Default = adding tracks, or "obligatory" tracks if king in chess
                 if (imPin) {
-                    Tools.addIfSame(pin, direction, piece);
-                } else if (tracks) {
-                    Tools.addIfSame(tracks, direction, piece);
+                    Tools.addIfSame(imPin, direction, piece);
+                } else if (tracks && tracks[0]) {
+                    Tools.addIfSame(tracks[0], direction, piece);
                 } else {
                     !firstCollision && direction.addTrAndBg(piece);
-                    firstCollision && direction.addBegun(piece);
+                    firstCollision && direction.isEmpty() && direction.addBegun(piece);
                 }
 
                 dIndex += incrementation;

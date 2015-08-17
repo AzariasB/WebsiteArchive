@@ -1,6 +1,7 @@
 
 /* global _, Backbone */
 
+//HTML  char corresponding
 var PIECES_CHAR = {
     WHITE: {
         KING: '9812',
@@ -19,6 +20,7 @@ var PIECES_CHAR = {
         PAWN: '9823'
     }
 };
+//Hexadecimal value of each chessman
 var P_HEX = {
     PAWN: 0x6,
     BISHOP: 0x5,
@@ -27,12 +29,17 @@ var P_HEX = {
     QUEEN: 0x2,
     KING: 0x1
 };
+//Possibles color
 var COLOR = {
     WHITE: 0x8,
     BLACK: 0x10
 };
 
-
+/**
+ * Gen => Generator
+ * Helper to generate the chessmen and the board
+ * Here are the possibles options to generate differents board
+ */
 var Gen = {
     idW: 0x20,
     idB: 0x20,
@@ -130,7 +137,9 @@ var Gen = {
 };
 
 
-
+/**
+ * Some useful function to have less code in the main parts
+ */
 var Tools = {
     addIfSame: function (tracks, targetBox, piece, wayToAdd) {
         _.each(tracks, function (track) {

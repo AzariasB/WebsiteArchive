@@ -2,15 +2,36 @@
 
 /* global Backbone, CHESSBOARD, _, Gen, PIECES_CODE, Tools, COLOR, P_HEX */
 
+/**
+ * ChessView
+ * ---------
+ * 
+ * View corresponding to the chessboard.
+ * Contain the chessBoard with all pieces inside of it.
+ * Only taking care of the view : the display and the events.
+ * All the calculations are performed in the ChessBoard Collection.
+ */
 
 var ChessView = Backbone.View.extend({
     el: '#board',
+    //Get the selected item
     selected: undefined,
+    /**
+     * Function to call to create and populate the chessboard
+     * 
+     * @param {String} genOption options of the chessboard Generation (available in Gen.boardOptions)
+     * @param {boolean} random if the generation of the chessBoard must be random or not
+     */
     start: function (genOption, random) {
         this.chessBoard = new ChessBoard();
         this.chessBoard.createBoard(genOption, random);
         this.initChessBoard();
+        return;
     },
+    
+    /**
+     * Addind the tiles to the view
+     */
     initChessBoard: function () {
         this.$el.text("");
         var counter = 0;
@@ -47,12 +68,21 @@ var ChessView = Backbone.View.extend({
         }
         this.renderPieces();
     },
+    /**
+     * Display pieces of the chessBoard Collection
+     */
     renderPieces: function () {
         var self = this;
         this.chessBoard.each(function (value) {
             self.renderPiece(value.id, value.getCurrent());
         });
     },
+    /**
+     * Render one piece in one div
+     * 
+     * @param {integer} div_id the id of the div where to add the piece
+     * @param {integer} piece_code the integer that define the color, the id and the type of the piece 
+     */
     renderPiece: function (div_id, piece_code) {
         if (!_.isUndefined(piece_code) && piece_code !== 0) {
             this.$el.find('#' + div_id)
@@ -64,6 +94,13 @@ var ChessView = Backbone.View.extend({
                     .css({"cursor": "default"});
         }
     },
+    /**
+     * Display the informations when a player select a piece on the board
+     * 
+     * @param {Game} game the main game, "Game" to have access to the rules
+     * @param {HTMLElement} touched To get the id of the selected div
+     * @param {integer} turn the color of the current turn
+     */
     select: function (game, touched, turn) {
         var id_div = touched.id;
         var mCase = this.chessBoard.at(id_div);
@@ -102,10 +139,20 @@ var ChessView = Backbone.View.extend({
             return;
         }
     },
+    /**
+     * Get the tracks of the piece, and display them.
+     * 
+     * @param {integer} piece_code the code containing informations about a piece
+     */
     proposeChoice: function (piece_code) {
         var tracks = this.chessBoard.getTracksOf(piece_code);
         this.ableDivs(tracks);
+        return;
     },
+    /**
+     * Remove all choices proposed before
+     * 
+     */
     resetChoice: function () {
         _.each(this.$el.children(), function (value) {
             $(value).css({
@@ -113,7 +160,13 @@ var ChessView = Backbone.View.extend({
                 "cursor": "default"
             });
         });
+        return;
     },
+    /**
+     * Surround given div with green border
+     * 
+     * @param {Array<ChessBox>} boxes
+     */
     ableDivs: function (boxes) {
         var self = this;
         _.each(boxes, function (value) {
@@ -128,7 +181,15 @@ var ChessView = Backbone.View.extend({
                 "cursor": "pointer"
             });
         });
+        return;
     },
+    /**
+     * Action to trigger when a player perform the first click of his turn
+     * 
+     * @param {integer} indexSelected the index of the selected div
+     * @param {ChessBox} mCase the Model corresponding to the selected div
+     * @param {integer} turn the color of the current turn
+     */
     firstClick: function (indexSelected, mCase, turn) {
         this.state = "first";
         this.resetChoice();
@@ -140,13 +201,24 @@ var ChessView = Backbone.View.extend({
         this.selected = indexSelected;
         return;
     },
+    /**
+     * The actions to perform when the user perform his second click
+     * 
+     * @param {integer} turn color of the current turn
+     */
     secondClickEnd: function (turn) {
         this.renderPieces();
         this.chessBoard.updateAll(turn);
         this.hilightChessKing(turn);
         this.resetChoice();
         this.state = "none";
+        return;
     },
+    /**
+     * Set background to red if the king is in chess.
+     * 
+     * @param {integer} turn current turns color
+     */
     hilightChessKing: function (turn) {
         _.each(this.$el.children(), function (value) {
             $(value).css({
@@ -162,5 +234,6 @@ var ChessView = Backbone.View.extend({
                 });
             }
         }
+        return;
     }
 });

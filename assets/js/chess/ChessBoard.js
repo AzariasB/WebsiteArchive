@@ -2,48 +2,60 @@
 
 /* global Backbone, Tools, COLOR, _, ChessBox, P_HEX, Gen */
 
-var debug = false;
+/**
+ * ChessBoard
+ * ----------
+ * 
+ * The big head of the game, where the main calculations are performed
+ * Here are stored all the boxes of the game
+ * 
+ */
+
 var ChessBoard = Backbone.Collection.extend({
     model: ChessBox,
+    //If the kings are begun, must save the track to be able to block the begun
     whiteKingBegunTrack: [],
     blackKingBegunTrack: [],
+    //If a piece is in-between an enemy and his king, his moves are reduced
     whitePin: [],
     blackPin: [],
-    createBoard : function (genOption,random) {
-        this.addPieces(genOption,random);
+    //To get the kings positions more quickly
+    kingsPosition: {
+        white: 0,
+        black: 0
+    },
+    /**
+     * 
+     * @param {String} genOption Option of generation
+     * @param {Boolean} random must generate random board or not
+     */
+    createBoard: function (genOption, random) {
+        this.addPieces(genOption, random);
         this.updateAll();
+        return;
     },
-    blackIsChess: function () {
-        return !_.isEmpty(this.blackKingBegunTrack) ? this.blackKingBegunTrack : false;
-    },
-    whiteIsChess: function () {
-        return !_.isEmpty(this.whiteKingBegunTrack) ? this.whiteKingBegunTrack : false;
-    },
-    blackIsPin: function () {
-        return !_.isEmpty(this.blackPin) ? this.blackPin : false;
-    },
-    whiteIsPin: function () {
-        return !_.isEmpty(this.whitePin) ? this.whitePin : false;
-    },
-    myKingIsChess: function (piece) {
-        return Tools.ifWhiteElseIfBlack(piece, this.whiteIsChess(), this.blackIsChess());
-    },
-    myKingIsPin: function (piece) {
-        return Tools.ifWhiteElseIfBlack(piece, this.whiteIsPin(), this.blackIsPin());
-    },
-    addPieces: function (option,random) {
-
-        /**
-         * 
-         * Choix de l'option de génération ici
-         */
-        var board = Gen.genBoard(option,random),
+    /*
+     * 
+     * @param {String} option the board generation option
+     * @param {Boolean} random if the generation must be random or not
+     */
+    addPieces: function (option, random) {
+        var board = Gen.genBoard(option, random),
                 self = this;
 
         _.each(board, function (piece, index) {
             self.addPiece(index, piece);
         });
+        return;
     },
+    /**
+     * 
+     * Add a piece to a box.
+     * 
+     * @param {integer} div_id the id of the box where to add the piece
+     * @param {integer} piece_code the piece to add to the div
+     * @returns {integer} return the id of the next box
+     */
     addPiece: function (div_id, piece_code) {
         var mchessBox = new ChessBox({id: div_id});
         if (!_.isUndefined(piece_code)) {
@@ -53,13 +65,25 @@ var ChessBoard = Backbone.Collection.extend({
 
         return div_id + 1;
     },
+    /**
+     * 
+     * @param {integer} index the index of the piece to remove
+     * @returns {integer} the code of the piece that was removed
+     */
     removePiece: function (index) {
         return this.at(index).removePiece();
     },
+    /**
+     * 
+     * Looking for a track for a piece, so that we know were it can go
+     * 
+     * @param {integer} piece_code the code of the piece we're looking tracks for
+     * @returns {Array<ChessBox>} the array containing the tracks of the piece
+     */
     getTracksOf: function (piece_code) {
         var tracks = this.filter(function (value) {
             var to_return = false;
-            _.each(value.get("TRACKS"), function (track) {
+            _.each(value.getTracks(), function (track) {
                 if (Tools.sameId(track, piece_code) && Tools.sameColor(track, piece_code)) {
                     to_return = true;
                 }
@@ -68,6 +92,15 @@ var ChessBoard = Backbone.Collection.extend({
         });
         return tracks;
     },
+    /**
+     * 
+     * Move a piece from "from" to "to" and return a Move model containing informations about
+     * the move that was made
+     * 
+     * @param {integer} from the index of the origin
+     * @param {integer} to the index of the destination
+     * @param {Boolean} reverse if we want to do a rollback move
+     */
     moveFromTo: function (from, to, reverse) {
         reverse = reverse || false;
         var origin = this.at(from);
@@ -84,6 +117,13 @@ var ChessBoard = Backbone.Collection.extend({
         }
         return;
     },
+    /**
+     * 
+     * Remove all possible track for a color
+     * If there is no color given, then remove all tracks
+     * 
+     * @param {integer} color
+     */
     resetTracks: function (color) {
         if (!color) {
             this.each(function (value) {
@@ -96,16 +136,15 @@ var ChessBoard = Backbone.Collection.extend({
                 }
             });
         }
-
+        return;
     },
-    resetBeguns: function () {
-        this.whiteKingBegunTrack = [];
-        this.blackKingBegunTrack = [];
-    },
-    resetPin: function () {
-        this.whitePin = [];
-        this.blackPin = [];
-    },
+    /**
+     * 
+     * Update all the pieces of the board
+     * Update a color, then another, to avoid kings chess problem
+     * 
+     * @param {integer} firstColor the color to update first
+     */
     updateAll: function (firstColor) {
         firstColor = firstColor || COLOR.WHITE;
         var self = this;
@@ -135,29 +174,14 @@ var ChessBoard = Backbone.Collection.extend({
                 self.updateKingBegunAndPin(firstColor, begunPin);
             }
         });
-
+        return;
     },
-    updateKingBegunAndPin: function (color, begunPin) {
-        var begun = begunPin.begun;
-        var pin = begunPin.pin;
-        if (color === COLOR.WHITE) {
-            !_.isEmpty(begun) && this.whiteKingBegunTrack.push(begun);
-            !_.isEmpty(pin) && this.whitePin.push(pin);
-        } else {
-            !_.isEmpty(begun) && this.blackKingBegunTrack.push(begun);
-            !_.isEmpty(pin) && this.blackPin.push(pin);
-        }
-    },
-    findColorKing: function (color) {
-        for (var i in this.models) {
-            var box = this.at(i);
-            if (box.containKing(color)) {
-                return i;
-            }
-        }
-        return -1;
-
-    },
+    /**
+     * Helper to determinate if there is chessmate.
+     * 
+     * @param {integer} color the color of the king we want to know if he can move or not
+     * @returns {Boolean} if the king cannot move
+     */
     kingCannotMove: function (color) {
         var kingIndex = this.findColorKing(color);
         if (kingIndex >= 0) {
@@ -166,6 +190,12 @@ var ChessBoard = Backbone.Collection.extend({
         }
         return false;
     },
+    /**
+     * Helper to determinate if there is chessmate
+     * 
+     * @param {integer} color the color of the king who can be protected
+     * @returns {Boolean} if some piece can protect the begun kin
+     */
     canProtectKing: function (color) {
         var tracks = this.myKingIsChess(color);
         var canProtect = false;
@@ -178,6 +208,12 @@ var ChessBoard = Backbone.Collection.extend({
         }
         return canProtect;
     },
+    /**
+     * Helper to know if the king has a track on the board
+     * 
+     * @param {integer} king the piece code of the king
+     * @returns {Boolean} if king has a track on the board or not
+     */
     kingHasTrack: function (king) {
         var hasTrack = false;
         this.each(function (box) {
@@ -187,6 +223,13 @@ var ChessBoard = Backbone.Collection.extend({
         });
         return hasTrack;
     },
+    /**
+     * 
+     * Helper to determinate if the is stalemate
+     * 
+     * @param {integer} color the color we want to know if it can move
+     * @returns {Boolean} if the color can't move
+     */
     colorCantMove: function (color) {
         var canMove = false;
         this.each(function (box) {
@@ -196,6 +239,11 @@ var ChessBoard = Backbone.Collection.extend({
         });
         return !canMove;
     },
+    /**
+     * Helper to determinate if there is stalemate
+     * 
+     * @returns {Boolean} if there is only Two pieces left on the board
+     */
     onlyTwoLeft: function () {
         var totalNumber = 0;
         this.each(function (box) {
@@ -206,22 +254,23 @@ var ChessBoard = Backbone.Collection.extend({
         return totalNumber === 2;
     },
     /*
-     * All the functions that update the chessboard
+     * |----------------------------------------------|
+     * | All the functions that update the chessboard |
+     * |----------------------------------------------|
      */
-
 
     /**
      * 
      * @param {int} piece_code The number/code of the current piece to update
      * @param {int} index The position on the board of the piece (the origin, not the destionation)
-     * @returns {undefined}
+     * @returns {Object<begun,pin>}
      */
     updatePiece: function (piece_code, index) {
-        var type = Tools.getPieceType(piece_code),
+        var integer = Tools.getPieceType(piece_code),
                 tracks = this.myKingIsChess(piece_code),
                 begunPin;
-        if (Tools.pieceCanProtect(tracks) || Tools.sameType(type, P_HEX.KING)) {
-            switch (type) {
+        if (Tools.pieceCanProtect(tracks) || Tools.sameType(integer, P_HEX.KING)) {
+            switch (integer) {
                 case P_HEX.KING:
                     begunPin = this.updateKing(piece_code, index);
                     break;
@@ -244,7 +293,14 @@ var ChessBoard = Backbone.Collection.extend({
         }
         return begunPin;
     },
+    /**
+     * Add tracks and begun for the king piece
+     * 
+     * @param {integer} kingPiece code of piece
+     * @param {integer} index position of the king
+     */
     updateKing: function (kingPiece, index) {
+        this.setKingPosition(kingPiece,index);
         var color = Tools.getPieceColor(kingPiece);
         var self = this;
         var possDirection = [-1, 1, -7, 7, -8, 8, -9, 9];
@@ -254,6 +310,15 @@ var ChessBoard = Backbone.Collection.extend({
         return;
 
     },
+    /**
+     * Check if the king can go to the selected box, and add it if it can
+     * 
+     * @param {integer} king piece code
+     * @param {integer} index king position
+     * @param {integer} incrementation to get destination
+     * @param {integer} color kings color
+     * @returns {undefined|ChessBox} ChessBox if there if a possible track for the king
+     */
     kingConditions: function (king, index, incrementation, color) {
         var dIndex = index + incrementation;
         var ennemies = {},
@@ -277,6 +342,13 @@ var ChessBoard = Backbone.Collection.extend({
         }
         return;
     },
+    /**
+     * Add tracks and begun for the queen
+     * 
+     * @param {integer} queenPiece piece code
+     * @param {integer} index queens position
+     * @returns {undefined|Object<begun,pin>}
+     */
     updateQueen: function (queenPiece, index) {
         var trackToKing1 = this.updateRook(queenPiece, index);
         var trackToKing2 = this.updateBishop(queenPiece, index);
@@ -288,6 +360,13 @@ var ChessBoard = Backbone.Collection.extend({
             return;
         }
     },
+    /**
+     * Add tracks and begun for the rook
+     * 
+     * @param {integer} rookPiece piece code
+     * @param {integer} index rook position
+     * @returns {Object<begun,pin>}
+     */
     updateRook: function (rookPiece, index) {
         var directions = [-1, 1, -8, 8];
         var self = this;
@@ -301,6 +380,13 @@ var ChessBoard = Backbone.Collection.extend({
         });
         return iGotTheKing;
     },
+    /**
+     * Add tracks and begun for the knight
+     * 
+     * @param {integer} knightPiece piece code
+     * @param {integer} index knight position
+     * @returns {Object<begun,pin>}
+     */
     updateKnight: function (knightPiece, index) {
         var possibilities = [];
         var self = this;
@@ -351,6 +437,13 @@ var ChessBoard = Backbone.Collection.extend({
         return  kingInTarget;
 
     },
+    /**
+     * Add tracks and beguns for bishop
+     * 
+     * @param {integer} bishopPiece piece code
+     * @param {integer} index bishop position
+     * @returns {Object<begun,pin>}
+     */
     updateBishop: function (bishopPiece, index) {
         var directions = [-9, 9, -7, 7];
         var self = this;
@@ -365,6 +458,12 @@ var ChessBoard = Backbone.Collection.extend({
         });
         return iGotTheKing;
     },
+    /**
+     * 
+     * @param {integer} pawnPiece piece code
+     * @param {integer} index pawn position
+     * @returns {Object<begun,pin>|undefined} object if the pawn begun the enemy king
+     */
     updatePawn: function (pawnPiece, index) {
         var kingInTarget = [],
                 tracks = this.myKingIsChess(pawnPiece),
@@ -459,8 +558,8 @@ var ChessBoard = Backbone.Collection.extend({
      */
     isAtStart: function (piece_code, index) {
         var color = Tools.getPieceColor(piece_code);
-        var type = Tools.getPieceType(piece_code);
-        if (type === P_HEX.PAWN &&
+        var integer = Tools.getPieceType(piece_code);
+        if (integer === P_HEX.PAWN &&
                 ((color === COLOR.WHITE && (index >= 8 && index <= 15)) ||
                         (color === COLOR.BLACK && (index >= 48 && index <= 55)))) {
             return true;
@@ -468,6 +567,15 @@ var ChessBoard = Backbone.Collection.extend({
             return false;
         }
     },
+    /**
+     * Big function used by all the pieces that can move more than one box at once 
+     * (rook, bishop, queen)
+     * 
+     * @param {integer} piece piece code
+     * @param {integer} indexStart piece origin
+     * @param {integer} incrementation number to increase the origin with to get the destination
+     * @returns {Object<begun,pin>} the begun and the pin for the ennemy king
+     */
     checkDiagonal: function (piece, indexStart, incrementation) {
         //If there are two tracks to the king, moving a piece won't resolve the problem
         var dIndex = indexStart + incrementation,
@@ -567,16 +675,60 @@ var ChessBoard = Backbone.Collection.extend({
             'pin': pinPath
         };
     },
-    updateMoves: function (from, destination, eaten) {
-        var oldPos = Tools.getAlebraFromPosition(from);
-        var newPos = Tools.getAlebraFromPosition(destination);
-        var nameAlg = "&#" + Tools.getHtmlName(this.at(destination).getCurrent());
-        var liaison = eaten ? "x" : "-";
-        var move = nameAlg + " " + oldPos + liaison + newPos;
-        this.moves.addMovements(move);
+    /*
+     * Utilies function about the king
+     * - Get the pin Array
+     * - Get the begun Array
+     * - Get the king position
+     * - Set the kings position
+     * - Set the pin Array
+     * - Set the begun Array
+     * - Reset the pins array
+     * - Reset the beguns array
+     */
+
+    blackIsChess: function () {
+        return !_.isEmpty(this.blackKingBegunTrack) ? this.blackKingBegunTrack : false;
     },
-    updateEatenPiece: function (eaten) {
-        var code = Tools.getHtmlName(eaten);
-        this.eatController.addEaten("&#" + code);
-    }
+    whiteIsChess: function () {
+        return !_.isEmpty(this.whiteKingBegunTrack) ? this.whiteKingBegunTrack : false;
+    },
+    blackIsPin: function () {
+        return !_.isEmpty(this.blackPin) ? this.blackPin : false;
+    },
+    whiteIsPin: function () {
+        return !_.isEmpty(this.whitePin) ? this.whitePin : false;
+    },
+    myKingIsChess: function (piece) {
+        return Tools.ifWhiteElseIfBlack(piece, this.whiteIsChess(), this.blackIsChess());
+    },
+    myKingIsPin: function (piece) {
+        return Tools.ifWhiteElseIfBlack(piece, this.whiteIsPin(), this.blackIsPin());
+    },
+    setKingPosition: function (piece, position) {
+        var color = Tools.getPieceColor(piece);
+        color === COLOR.WHITE ? this.kingsPosition.white = position : this.kingsPosition.black = position;
+    },
+    resetBeguns: function () {
+        this.whiteKingBegunTrack = [];
+        this.blackKingBegunTrack = [];
+    },
+    resetPin: function () {
+        this.whitePin = [];
+        this.blackPin = [];
+    },
+    updateKingBegunAndPin: function (color, begunPin) {
+        var begun = begunPin.begun;
+        var pin = begunPin.pin;
+        if (color === COLOR.WHITE) {
+            !_.isEmpty(begun) && this.whiteKingBegunTrack.push(begun);
+            !_.isEmpty(pin) && this.whitePin.push(pin);
+        } else {
+            !_.isEmpty(begun) && this.blackKingBegunTrack.push(begun);
+            !_.isEmpty(pin) && this.blackPin.push(pin);
+        }
+    },
+    findColorKing: function (color) {
+        return Tools.ifWhiteElseIfBlack(color,this.kingsPosition.white,this.kingsPosition.black);
+    },
 });

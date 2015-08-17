@@ -11,7 +11,7 @@ var Game = Backbone.View.extend({
     eaten: new EatenView(),
     events: {
         "click": "handleClick",
-        "dblclick": "rollBack"
+        //"dblclick": "rollBack"
     },
     start: function () {
         var option = this.genOption || Gen.boardOptions.normalBoard;
@@ -32,10 +32,6 @@ var Game = Backbone.View.extend({
         var target = event.target;
         if ($(target).parents("#board")) {
             this.boardClick(target);
-        } else if ($(target).parents("#lst_coups")) {
-            this.movesclick(target);
-        } else if ($(target).parent("#eaten")) {
-            this.eatenClick(target);
         }
     },
     boardClick: function (target) {
@@ -56,37 +52,31 @@ var Game = Backbone.View.extend({
             this.switchTurn();
         }
     },
-    eatenClick: function (target) {
-        console.log(target);
-    },
-    movesclick: function (target) {
-        console.log(target);
-    },
     addMove: function (move) {
         this.moves.addMove(move);
     },
     addEaten: function (eatenObj) {
         this.eaten.addEaten(eatenObj);
     },
-    rollBack: function () {
-        var eat;
-        var lastMove = this.moves.rollBack();
-        eat = lastMove && lastMove.get("eat") && this.eaten.rollBack();
-        if (lastMove) {
-            var before = lastMove.get("to");
-            var after = lastMove.get("from");
-            this.board.chessBoard.moveFromTo(before, after, true);
-            if (eat) {
-                this.board.chessBoard.at(eat.get("lastPosition")).setCurrent(eat.get("piece"));
-            }
-            this.board.secondClickEnd();
-            this.numTurn--;
-            this.switchTurn();
-        }
-    },
     switchTurn: function () {
         this.turn = Tools.getInvertColor(this.turn);
-    }
+    },
+    /*rollBack: function () {
+     var eat;
+     var lastMove = this.moves.rollBack();
+     eat = lastMove && lastMove.get("eat") && this.eaten.rollBack();
+     if (lastMove) {
+     var before = lastMove.get("to");
+     var after = lastMove.get("from");
+     this.board.chessBoard.moveFromTo(before, after, true);
+     if (eat) {
+     this.board.chessBoard.at(eat.get("lastPosition")).setCurrent(eat.get("piece"));
+     }
+     this.board.secondClickEnd();
+     this.numTurn--;
+     this.switchTurn();
+     }
+     },*/
 });
 
 var Chess = function () {

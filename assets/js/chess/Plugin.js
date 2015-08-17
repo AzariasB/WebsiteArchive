@@ -1,5 +1,8 @@
 /* global Backbone, PIECES_CHAR, Tools, Move, COLOR */
 
+/**
+ * Model ion that save a move made during the game
+ */
 var Move = Backbone.Model.extend({
     defaults: {
         turn: -1,
@@ -42,7 +45,9 @@ var Move = Backbone.Model.extend({
     }
 });
 
-
+/**
+ *  A little model to get the eaten piece of the game
+ */
 var Eaten = Backbone.Model.extend({
     defaults: {
         turn: -1,
@@ -54,7 +59,9 @@ var Eaten = Backbone.Model.extend({
     }
 });
 
-
+/**
+ * Collection containing all the moves made during the game
+ */
 var Moves = Backbone.Collection.extend({
     model: Move,
     kingMoved: {
@@ -119,6 +126,9 @@ var Moves = Backbone.Collection.extend({
     }
 });
 
+/**
+ * Collection containing all the eaten piece of the game
+ */
 var Eatens = Backbone.Collection.extend({
     model: Eaten,
     addEaten: function (eat) {
@@ -132,6 +142,9 @@ var Eatens = Backbone.Collection.extend({
     }
 });
 
+/**
+ * View to display the moves made during the game
+ */
 var MoveView = Backbone.View.extend({
     el: '#lst_coups',
     moves: new Moves(),
@@ -155,6 +168,9 @@ var MoveView = Backbone.View.extend({
     }
 });
 
+/**
+ * View to display all the eaten pieces during the game
+ */
 var EatenView = Backbone.View.extend({
     el: '#eaten',
     eatens: new Eatens(),

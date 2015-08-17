@@ -1,64 +1,99 @@
 {% extends "base.html.twig" %}
 
 {% block head %}
-    <header>
-        <div class="col-xs-12 text-center" >
-            <h1>Echecs version 2</h1>
+    <header class="col-xs-12" >
+        <div class="col-xs-4">
+            <a href="{{ site_url('Accueil') }}" class="btn btn-default"><span class="glyphicon glyphicon-chevron-left" ></span> Accueil </a>
+        </div>
+        <div class="col-xs-4 text-center">
+            <h1>Jeux d'échecs</h1>
+        </div>
+        <div class="col-xs-4 text-right" >
+            <button ng-click="" type="button" data-toggle="modal" data-target="#myModal" class="btn btn-primary">Explications</button>
         </div>
     </header>
 {% endblock %}
 
-{% block main_part %}
-    <div class="row text-center" id="chess2" >
-        <div class="col-xs-3 text-center">
-            <h3> Pions mangés</h3>
-            <div id="eaten"></div>
+{% block body_definition %}
+    <body ng-app="chess" ng-controller="Explications as xp">
+    {% endblock %}
+    {% block main_part %}
+        <div class="row text-center" id="chess2" >
+            <div class="col-xs-3 text-center">
+                <h3> Pions mangés</h3>
+                <div id="eaten"></div>
+            </div>
+            <div class="col-xs-1" id="board" style="color : black;"  >Chargement ...</div>
+            <div class="col-xs-2 text-center">
+                <h3> Liste des mouvements</h3>
+                <div id="lst_coups"></div>
+            </div>
         </div>
-        <div class="col-xs-1" id="board" style="color : black;"  >Chargement ...</div>
-        <div class="col-xs-2 text-center">
-            <h3> Liste des mouvements</h3>
-            <div id="lst_coups"></div>
-        </div>
-    </div>
-    <!-- Modal pour pièces -->
-    <div data-backdrop="static"  class="modal fade" id="newpiece" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel" style="color : black;" >Que deviendra ton pion ?</h4>
-                </div>
-                <div class="modal-body" style="color: black;font-size: 4em;" >
-                    <div id="choose" >
-                        <div class="modal-close" id="queen" data-hex="2" >&#9819; Reine</div>
-                        <div class="modal-close" id="rook" data-hex="3" >&#9820; Tour </div>
-                        <div class="modal-close" id="knight" data-hex="4" >&#9822 Cavalier</div>
-                        <div class="modal-close" id="bishop" data-he="5" >&#9821 Fou</div>
+        <!-- Modal pour pièces -->
+        <div data-backdrop="static"  class="modal fade" id="newpiece" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title" id="myModalLabel" style="color : black;" >Que deviendra ton pion ?</h4>
+                    </div>
+                    <div class="modal-body" style="color: black;font-size: 4em;" >
+                        <div id="choose" >
+                            <div class="modal-close" id="queen" data-hex="2" >&#9819; Reine</div>
+                            <div class="modal-close" id="rook" data-hex="3" >&#9820; Tour </div>
+                            <div class="modal-close" id="knight" data-hex="4" >&#9822 Cavalier</div>
+                            <div class="modal-close" id="bishop" data-he="5" >&#9821 Fou</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal pour mat/pat -->
-    <div data-backdrop="static"  class="modal fade" id="winner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h2 class="modal-title" id="myModalLabel" style="color : black;" >Partie terminée</h2>
-                </div>
-                <div class="modal-body" style="color: black;" >
-                    <p id="patOrMat"></p>
-                </div>
-                <div class="modal-footer">
-                    <a class="btn btn-primary" href="/Echecs/seconde_v">Recommencer</a>
-                    <button data-dismiss="modal" class="btn btn-default">Fermer</button>
+        <!-- Modal pour mat/pat -->
+        <div data-backdrop="static"  class="modal fade" id="winner" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title" id="myModalLabel" style="color : black;" >Partie terminée</h2>
+                    </div>
+                    <div class="modal-body" style="color: black;" >
+                        <p id="patOrMat"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <a class="btn btn-primary" href="/Echecs/seconde_v">Recommencer</a>
+                        <button data-dismiss="modal" class="btn btn-default">Fermer</button>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+        <!-- Explications -->
+        <div ng-controller="Explications" class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true" ng-click="score.unpause();" >&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Explications</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div ng-repeat="button in xp.explications" class="col-md-2">
+                                <button class="col-md-12 btn btn-primary choice" ng-class="button.button_b ? 'active':''" id="button.button_name" type="button" ng-click="xp.change_button(button.button_name);">{{ '{{' }} button.button_text {{ '}}' }}</button>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-md-12" ng-repeat="explain in xp.explications" ng-show="explain.button_b" >
+                                <pre>{{ '{{' }} explain.ex_text | unsafe {{ '}}' }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="{{ js()~'chess/chess.js' }}"></script>
+        <script src="{{ js()~'chess/app.js' }}" ></script>
+    {% endblock %}
 
-    <script src="{{ js()~'chess/chess.js' }}"></script>
-    <script src="{{ js()~'chess/app.js' }}" ></script>
-{% endblock %}
-
-{% block footer %}
-{% endblock %}
+    {% block footer %}
+    {% endblock %}

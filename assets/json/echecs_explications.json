@@ -1,15 +1,31 @@
 {
     "explications" :{
-        "game" :{
-            "button" : "Le jeu",
+        "first" :{
+            "button" : "v1",
             "texte" :[
-                "Jeu d'échecs réalisé en jQuery/javascript",
+                "Jeu d'échecs réalisé en javascript avec jQuery",
                 "Tout est partis d'un petit projet scolaire pour apprendre à utiliser jQuery, et la gestion du drag'n drop",
                 "Ce projet avait pour but de réussir à faire déplacer les pions ... et puis c'était tout.",
                 "J'ai trouvé dommage qu'on aille pas plus loin dans la reflexion, et je me suis mis à aprofondir le sujet de mon côté",
-                "Au final, cette version permet d'effectuer tout les déplacements de base du jeu d'échecs",
-                "En revanche, aucune règles n'a été implémenté : le jeu ne détecte pas les 'pat' ou quand le roi est en échec ou la prise en passant, ou le roc ...",
-                "Cela sera le but de la seconde version : faire un jeu qui respecte toutes les règles des échecs"
+                "Au final, cette première version permettait d'effectuer tout les déplacements de base du jeu d'échecs"
+            ]
+        },
+        "second" : {
+            "button" : "v2",
+            "texte" : [
+                "Seconde version réalisée en javascript, avec Backbone.js cette fois-ci",
+                "Le but de cette seconde version est d'implémenter toutes les règles du jeu d'échec",
+                "De la possibilité de manger un pion, jusqu'au roque, ou encore la prise en passant",
+                "Cette seconde étais plus un défis algorithmique que visuel",
+                "/!\\ Cette version ne se joue plus en 'cliquant-déposant' les pièces, mais en cliquant une première fois",
+                "puis un cliquant une seconde fois sur les choix proposés",
+                "Normalement, si tout se passe bien, cette version devrait respecter TOUTES les règles du jeu d'échec"
+            ]
+        },
+        "trois" : {
+            "button" : "v3 ?",
+            "texte" : [
+                "Ajout d'une IA pour jouer contre le joueur, ou possibilité de jouer en réseau, contre d'autres joueurs ?"
             ]
         },
         "version" : {

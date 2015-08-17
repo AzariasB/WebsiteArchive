@@ -33,16 +33,11 @@ class Accueil extends MY_Controller {
             'accueil' => array(
                 'Projets personnels' => array('Cible' => 'projet_perso'),
                 'Projets scolaires' => array('Cible' => 'projet_scol'),
-                'Echecs' => array('Cible' => 'echecs'),
+                'Echecs' => array('Lien' => site_url('Echecs/v2')),
             ),
             'projet_scol' => array(
                 'CowGow' => array('Lien' => site_url('Projets_scolaires/CowGow')),
                 'GameJam' => array('Lien' => site_url('Projets_scolaires/GameJam')),
-                'Retour' => array('Cible_retour' => 'accueil')
-            ),
-            'echecs' => array(
-                'Version simple' => array('Lien' => site_url('Echecs/simple')),
-                'Seconde version' => array('Lien' => site_url('Echecs/seconde_v')),
                 'Retour' => array('Cible_retour' => 'accueil')
             ),
             'projet_perso' => array(

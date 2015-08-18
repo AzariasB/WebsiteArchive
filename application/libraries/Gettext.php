@@ -10,12 +10,15 @@
  * @link	https://github.com/Marko-M/codeigniter-gettext
  */
 class Gettext {
+
+    private $config;
+
     /**
      * Initialize gettext inside Codeigniter PHP framework.
      *
      * @param array $config Override default configuration
      */
-    public function __construct($config = array()) {
+    public function __construct($config = []) {
         $CI = &get_instance();
 
         // Merge $config and config/gettext.php $config

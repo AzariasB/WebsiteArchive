@@ -8,6 +8,9 @@ define('ASSETS', base_url('assets') . '/');
 
 
 
+/**
+ * PATH to differents assets
+ */
 if (!function_exists('images')) {
 
     function images() {
@@ -17,7 +20,7 @@ if (!function_exists('images')) {
 }
 
 if (!function_exists('js')) {
-    
+
     function js() {
         return ASSETS . 'js/';
     }
@@ -39,7 +42,8 @@ if (!function_exists('multi_screen')) {
     }
 
 }
-
+////////////////////////////////////////////////
+//Ecrire les liens css sur une page
 if (!function_exists('load_css')) {
 
     function load_css() {
@@ -54,6 +58,8 @@ if (!function_exists('load_css')) {
 
 }
 
+
+//Ecrire les liens js sur une page
 if (!function_exists('load_javascript')) {
 
     function load_javascript() {

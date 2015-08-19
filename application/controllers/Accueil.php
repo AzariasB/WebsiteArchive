@@ -11,8 +11,6 @@
  *
  * @author Azarias
  */
-
-
 class Accueil extends MY_Controller {
 
     //put your code here
@@ -29,51 +27,37 @@ class Accueil extends MY_Controller {
     }
 
     private function get_screens() {
-        return array(
-            'accueil' => array(
-                'Projets personnels' => array('Cible' => 'projet_perso'),
-                'Projets scolaires' => array('Cible' => 'projet_scol'),
-                'Echecs' => array('Lien' => site_url('Echecs/v2')),
-            ),
-            'projet_scol' => array(
-                'CowGow' => array('Lien' => site_url('Projets_scolaires/CowGow')),
-                'GameJam' => array('Lien' => site_url('Projets_scolaires/GameJam')),
-                'Retour' => array('Cible_retour' => 'accueil')
-            ),
-            'projet_perso' => array(
-                'Decodage' => array('Cible' => 'decodage'),
-                'Github' => array('Cible' => 'github'),
-                'Retour' => array('Cible_retour' => 'accueil')
-            ),
-            'retour_projet' => array(
-                'En cours...' => array('Cible_retour' => 'projet_perso'),
-                'Retour' => array('Cible_retour' => 'projet_perso')
-            ),
-            'decodage' => array(
-                'Morse' => array('Cible' => 'morse'),
-                'Semaphore' => array('Cible' => 'semaphore'),
-                'Crypter' => array('Lien' => 'Projets_perso/TicTacToe'),
-                'Retour' => array('Cible_retour' => 'projet_perso')
-            ),
-            'github' => array(
-                'Sort.js' => array('Lien' => site_url('Projets_perso/sortjs')),
-                'Euraka' => array('Lien' => site_url('Projets_perso/euraka')),
-                'Retour' => array('Cible_retour' => 'projet_perso')
-            ),
-            'morse' => array(
-//            'Apprendre le morse' => array('Cible' => 'retour_morse'),
-                'Decodage' => array('Lien' => site_url('Projets_perso/Morse_decodage')),
-                'Classement' => array('Lien' => site_url('Projets_perso/Morse_score')),
-//            'Codage' => array('Cible' => 'retour_morse'),
-                'Retour' => array('Cible_retour' => 'projet_perso')
-            ),
-            'semaphore' => array(
-//            'Apprendre' => array('Cible' => 'retour_sem'),
-                'Decodage' => array('Lien' => site_url('Projets_perso/Semaphore_decodage')),
-                'Classement' => array('Lien' => site_url('Projets_perso/Semaphore_score')),
-                'Retour' => array('Cible_retour' => 'projet_perso')
-            ),
-        );
+        $screens = array();
+        $absPath = array('Projet');
+        $root = APPPATH . 'views/Main/';
+        $this->get_names($screens, $root, $absPath, 'accueil');
+        return $screens;
     }
 
+    //Iterate over file and add array in consequence
+    private function get_names(&$screens, $dirName, $path, $curName, $predName = '') {
+        $iter = new DirectoryIterator($dirName);
+        $folder = [];
+
+        foreach ($iter as $file) {
+            if (!$file->isDot()) {
+                $name = $file->getFilename();
+                if ($file->isDir()) {
+                    $tmpPath = $path;
+                    $tmpPath[] = $name;
+                    $folder[$name] = array('Cible' => strtolower($name));
+                    $this->get_names($screens, $dirName . '/' . $name, $tmpPath, $name, $curName);
+                } else if ($file->isFile() && strpos($name, 'index.php') === false && strpos($name, '.php') !== false) {
+                    $name = str_replace('.php', '', $name);
+                    $folder[$name] = array('Lien' => site_url(join('/', $path) . '/' . $name));
+                }
+            }
+        }
+
+        if (!empty($predName)) {
+            $folder['Retour'] = array('Cible_retour' => strtolower($predName));
+        }
+
+        $screens[strtolower($curName)] = $folder;
+    }
 }

@@ -33,7 +33,7 @@
                                     <li><a class="ms-nav-link" data-ms-target="{{ cible.Cible }}" {{ multiS_right|raw }} {{ onclick|raw }} >{{ titre }}</a></li>
                                     {% elseif cible.Cible_retour is defined  %}
                                         {% set remove = ' ng-click="titreCtrl.removeLink(1);" '%}
-                                    <li><a class='ms-nav-link' data-ms-target="{{ cible.Cible_retour }}" {{ multiS_back|raw }} {{ remove|raw }}" ><span class="glyphicon glyphicon-chevron-left" ></span>{{ titre }}</a></li>
+                                    <li><a class='ms-nav-link' data-ms-target="{{ cible.Cible_retour }}" {{ multiS_back|raw }} {{ remove|raw }} ><span class="glyphicon glyphicon-chevron-left" ></span>{{ titre }}</a></li>
                                         {% elseif cible.Lien is defined %}
                                     <li><a href="{{ cible.Lien }}">{{ titre }}</a></li>
                                     {% else %}

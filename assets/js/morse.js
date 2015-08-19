@@ -116,9 +116,7 @@ morse.controller('ScoreBoard', function ($timeout, $http, $scope,$sce) {
     };
 
     this.send_score = function () {
-        var url = window.location.href;
-        url = url.slice(0, url.lastIndexOf('/'));
-        url = url + '/add_morse_score'
+        var url = '/Ajax/add_morse_score'
 
         $http({
             method: 'POST',

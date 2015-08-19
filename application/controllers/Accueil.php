@@ -49,6 +49,8 @@ class Accueil extends MY_Controller {
                     $this->get_names($screens, $dirName . '/' . $name, $tmpPath, $name, $curName);
                 } else if ($file->isFile() && strpos($name, 'index.php') === false && strpos($name, '.php') !== false) {
                     $name = str_replace('.php', '', $name);
+                    //Remplacer underscore pas espace
+                    $name = str_replace('_', ' ', $name);
                     $folder[$name] = array('Lien' => site_url(join('/', $path) . '/' . $name));
                 }
             }

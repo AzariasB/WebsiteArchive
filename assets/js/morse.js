@@ -116,7 +116,7 @@ morse.controller('ScoreBoard', function ($timeout, $http, $scope,$sce) {
     };
 
     this.send_score = function () {
-        var url = '/Ajax/add_morse_score'
+        var url = '/Ajax/add_morse_score';
 
         $http({
             method: 'POST',
@@ -337,7 +337,7 @@ morse.controller('Explications', function () {
     this.explications = new Array();
 
     try {
-        $.getJSON("../../assets/json/morse_explication.json", function (json) {
+        $.getJSON("/assets/json/morse_explication.json", function (json) {
             var ms = json['explications'];
             for (var i in ms) {
                 that.add_explain(ms[i], i);

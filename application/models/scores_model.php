@@ -25,7 +25,7 @@ class scores_model extends CI_Model {
         $this->db->select('*');
         $this->db->from('morse_score');
         $this->db->order_by('score', 'desc');
-
+        
         $result = $this->db->get()->result();
         return $result;
     }

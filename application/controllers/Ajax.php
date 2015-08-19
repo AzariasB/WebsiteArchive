@@ -55,4 +55,11 @@ class Ajax extends MY_Controller {
         }
     }
 
+    public function calcul_score($nbrquestions, $lettres, $chiffres, $ponctuation, $res, $temps) {
+        $numerateur = ($res / $nbrquestions) * 100 * log($nbrquestions) * (1 * ($lettres == 'true' ) + 1.5 * ($chiffres == 'true' ) + 2 * ($ponctuation == 'true'));
+        //           --------------------------------------------------------------------------------------------
+        $denominateur = $temps / $nbrquestions;
+        return $numerateur / $denominateur;
+    }
+
 }

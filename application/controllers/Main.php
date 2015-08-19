@@ -23,21 +23,27 @@ class Main extends MY_Controller {
             $mPath = array_slice($segs, 1, count($segs) - 2);
             $dir .= join('/', $mPath) . '/';
 
+            $fileName = urldecode($fileName);
+            $fileName = str_replace(' ', '_', $fileName);
             if (!is_dir(VPATH . $dir) || !file_exists(VPATH . $dir . $fileName . '.php')) {
                 show_404();
             }
 
             require_once VPATH . $dir . $fileName . '.php';
 
-            $data = [];
+            $data = isset($assets['data']) ? $assets['data'] : [];
             if (isset($assets['title'])) {
                 $this->set_title($data, $assets['title']);
-            }else{
+            } else {
                 $data['titre'] = $fileName;
             }
-            
-            $this->load_css($assets['css']);
-            $this->load_js($assets['js']);
+
+            if (isset($assets['css'])) {
+                $this->load_css($assets['css']);
+            }
+            if (isset($assets['js'])) {
+                $this->load_js($assets['js']);
+            }
             $this->twig->display($dir . $fileName . '.html.twig', $data);
         }
     }

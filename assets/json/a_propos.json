@@ -25,7 +25,7 @@
             "parties" : {
                 "Projets personnels ": "Tout les projets qui me sont venus à l'idée et que j'ai tenté de développer avec ma propre réflexion.Ils sont loin d'être parfaits et j'ai beaucoup d'améliorations à faire sur tous et chacun.<br/>-Le morse : Vous apprenez à coder/décoder des lettres ou des chiffres en morse.<br/>-Le sémaphore : pareil que pour le morse, mais avec du sémaphore (en cours de développement)<br/>-La vitesse de frappe. J'ai toujours aimé me tester à la vitesse de frappe, alors pourquoi ne pas voir comment cela fonctionne et essayer de développer mon propre test ? ",
                 "Projets scolaires" : "Beaucoup de projets plus ou moins grands ont été réalisés à l'IUT.<br/>Les projets qui ne concernent pas le web sont sur GitHub.Ainsi, vous pouvez télécharger les fichiers nécessaires et essayer d'exécuter le projet chez vous.<br/>Les projets qui ont un rapport avec le web ont soit été ajoutés directement au site, soit vous redirigent vers le site réalisé.",
-                "Echecs" : "Non, il ne s'agit pas des projets ratés, mais du jeu d'échec. La version actuelle est très (trop) simple et je compte bien l'améliorer. Pour le moment, seul les mouvements sont contraints. A l'avenir, j'aimera pouvoir intégere les règles du jeu de base : mise en échec, le roque, le coup en passant, ... etc."
+                "Echecs" : "Non, il ne s'agit pas des projets ratés, mais du jeu d'échec. La version actuelle respecte toutes les règles du jeu d'échec. Dans une version future j'aimerai intégrer une IA contre qui jouer, ou la possibilité de jouer contre d'autres joueurs, en réseau."
             }
         }
     ]

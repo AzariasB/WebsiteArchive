@@ -92,11 +92,7 @@ pre{
 }
 
 #lst_coups >p:first-child{
-    background-image:
-        linear-gradient(
-        black,
-        #f06d06
-        );
+    background: #2EACCF;
 }
 
 .chessbox{

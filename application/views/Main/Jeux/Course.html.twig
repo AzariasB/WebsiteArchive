@@ -1,0 +1,24 @@
+
+{% extends "base.html.twig" %}
+
+{% block head %} {% endblock %}
+
+{% block main_part %}
+    <script>
+        window.onload = function(){
+            /* global Phaser,Race */
+            var game = new Phaser.Game(window.width,window.heigt,Phaser.AUTO,'gameContainer');
+            
+            game.state.add('Boot',Race.Boot);
+            game.state.add('Preloader',Race.Preloader);
+            game.state.add('MainMenu',Race.MainMenu);
+            game.state.add('Game',Race.Game);
+            game.state.add('Credits',Race.Credits);
+            game.state.add('Options',Race.Options);
+            
+            game.state.start('Boot');
+        };
+    </script>
+{% endblock %}
+
+{% block footer %} {% endblock %}

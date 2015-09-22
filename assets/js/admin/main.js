@@ -5,8 +5,7 @@
 
 
 
-(function () {
-
+$(function () {
     var Documents = Backbone.View.extend({
         el: "#main",
         events: {
@@ -23,6 +22,7 @@
             var node = mTree.get_node(event.target);
             if (mTree.is_leaf(tar)) {
                 //Traiter feuille
+                mController.getFileInfo(node, mController.displayFileInfo);
             } else {
                 //Afficher infos sur dossier
                 var childs = node.children;
@@ -42,42 +42,35 @@
 
         },
         fileInfo: function (cssContent, jsContent) {
-
+            var $infos = $('#informations');
+            var template = _.template('<h3> <%= external %> du fichier : </h3><ul class="list-group"> <% _.each(file,function(file){\
+%>  <li class="list-group-item" > <%= file %></li><%}); %> </ul> ');
+            $infos.html(template({'external': 'Css', 'file': cssContent}) +
+                    template({'external': 'Js', 'file': jsContent}));
         },
-        launchModal: function (headTitle, inputValue, nodeToModify, toAdd) {
+        launchModal: function (headTitle, inputValue, callBack) {
             var self = this;
             $("#head_title").text(headTitle || "");
             $("#input_content").val(inputValue || "");
-            $("#form_change").submit(function (event) {
-                event.preventDefault();
-                var nwName = $("#input_content").val();
-                var changeName = function (data) {
-                    if (data.success) {
-                        nodeToModify && mTree.rename_node(nodeToModify, nwName + (toAdd || ""));
-                        $("#change").modal('hide');
-                        self.showPopup(data.message);
-                    } else {
-                        self.showPopup(data.message,true,4000);
-                    }
-                };
-                mController.changeName(nodeToModify, nwName, inputValue, changeName, !toAdd);
+            $("#form_change").submit(callBack);
+            $("#change").modal();
+            $('#change').on("shown.bs.modal",function(){
+                $("#input_content").focus();
             });
-            $("#change").modal({keyboard: false, backdrop: false});
+            
         },
-        showPopup : function(message,error,timeDisplay){
+        showPopup: function (message, error, timeDisplay) {
             timeDisplay = timeDisplay || 2000;
             var secondClass = error ? 'error' : 'success';
             $(".main-message").text(message);
             $(".main-message").addClass('show ' + secondClass);
-            setTimeout(function(){
+            setTimeout(function () {
                 $(".main-message").removeClass('show').removeClass(secondClass);
-            },timeDisplay);
+            }, timeDisplay);
         }
     });
 
-    var mDoc = new Documents();
 
-    var mTree;
     $('#jsContainer').jstree({
         "plugins": ["search", "wholerow", "contextmenu"],
         'core': {
@@ -104,22 +97,7 @@
                             "action": function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                         obj = inst.get_node(data.reference);
-
-                                var name = obj.text.substr(0, obj.text.length - 4);
-                                //Il s'agit forcément d'un fichier .php, donc on enlève les 4 dernière lettres
-                                mDoc.launchModal("Changer de nom", name, obj, ".php");
-                                //inst.edit(obj);
-                            }
-                        },
-                        "Supprimer": {
-                            "label": "Supprimer",
-                            "action": function (data) {
-                                var sel = tree.get_selected();
-                                if (!sel.length) {
-                                    return false;
-                                }
-                                tree.delete_node(sel);
-
+                                mController.alterName(obj);
                             }
                         },
                         "add": {
@@ -139,7 +117,18 @@
                                     }
                                 }
                             }
-                        }
+                        },
+                        "Supprimer": {
+                            "label": "Supprimer",
+                            "action": function (data) {
+                                var sel = tree.get_selected();
+                                if (!sel.length) {
+                                    return false;
+                                }
+                                tree.delete_node(sel);
+
+                            }
+                        },
                     };
                 } else {
                     return {
@@ -150,7 +139,8 @@
                                 "folder": {
                                     "label": "Dossier",
                                     "action": function (data) {
-
+                                        var node = tree.get_node(data.reference);
+                                        mController.addFolder(node);
                                     }
                                 },
                                 "file": {
@@ -187,7 +177,9 @@
             }
         },
     });
-    mTree = $('#jsContainer').jstree(true);
 
+
+    var mDoc = new Documents();
+    var mTree = $('#jsContainer').jstree(true);
     var mController = new Controller(mTree, mDoc);
-})();
+});

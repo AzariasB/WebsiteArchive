@@ -60,6 +60,48 @@ class Administration extends MY_Controller {
         echo json_encode($this->getNodes());
     }
 
+    public function createFolder(){
+        $this->form_validation->set_rules('folderName','nom du dossier','trim|required|xss_clean');
+        $this->form_validation->set_rules('path',"chemin d'accès",'trim|xss_clean');
+        
+        $message = array('success' => FALSE,'message' => "Une erreur s'est produite");
+        if($this->form_validation->run()){
+            $path = $this->input->post('path');
+            $folderName = $this->input->post('folderName');
+            $path = $this->getAbsPath($path);
+            
+            if(mkdir($path.'/'.$folderName)){
+                $message = array('success' => true,'message' => 'Le nouveau dossier a bien été créé');
+            }else{
+                $message['message'] = "Impossible de créer le dossier";
+            }
+        }
+        echo json_encode($message);
+    }
+
+
+    public function getFileInfo(){
+        $this->form_validation->set_rules('fileName','nom du fichier','trim|required|xss_clean');
+        $this->form_validation->set_rules('path',"chemin d'accès",'trim|xss_clean');
+        
+        $message = array('success' => false,'message' => "Une erreur s'est produite");
+        if($this->form_validation->run()){
+            $path = $this->input->post('path');
+            $fileName = $this->input->post('fileName');
+            
+            $absPath = $this->getAbsPath($path);
+            if(is_file($absPath.$fileName)){
+                //On supprime d'eventuel précédent appels
+                $this->deleteAssets();
+                require $absPath.$fileName;
+                $message = array('success' => true,'data' => $assets);
+            }else{
+                $message['message'] = "Le fichier en question n'existe pas";
+            }
+        }
+        echo json_encode($message);
+    }
+    
     public function changeName() {
         $this->form_validation->set_rules('oldName', 'ancien nom', 'trim|required|xss_clean');
         $this->form_validation->set_rules('nwName', 'nouveau nom', 'trim|required|xss_clean');
@@ -73,7 +115,7 @@ class Administration extends MY_Controller {
             $nwName = $this->input->post('nwName');
             $path = $this->input->post('path');
             $isFolder = $this->input->post('isFolder');
-            $path = (boolval($path) ? MPATH . $path . '/' : MPATH);
+            $path = $this->getAbsPath($path);
 
             if ($isFolder == 'true') {
                 $message = $this->renameFolder($path, $oldName, $nwName) ?
@@ -88,6 +130,12 @@ class Administration extends MY_Controller {
             $message['message'] = "Le nouveau nom ne peut pas être vide";
         }
         echo json_encode($message);
+    }
+    
+    private function deleteAssets(){
+        if(isset($assets)){
+            unset($assets);
+        }
     }
 
     private function renameFile($path, $oldName, $nwName) {
@@ -119,6 +167,10 @@ class Administration extends MY_Controller {
             }
         }
         return $files;
+    }
+    
+    private function getAbsPath($relPath){
+        return (boolval($relPath) ? MPATH . $relPath . '/' : MPATH);
     }
 
 }

@@ -13,6 +13,8 @@ table{
 
 #informations{
     color: #333333;
+    overflow-y: auto;
+    max-height: 100%;
 }
 
 .main-message {

@@ -38,5 +38,10 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 $twig_function = array('base_url','site_url','load_css','load_javascript');
 
+//Useful pathes
+define('VPATH', APPPATH . 'views/');
+define('MPATH', VPATH.'Main/');
+
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

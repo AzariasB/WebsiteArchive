@@ -1,12 +1,15 @@
 
 
-/* global Race, DATA */
+/* global Race, DATA, Phaser */
 
 Race.Game = function (game) {
 
 };
 
 Race.Game.prototype = {
+    preload: function () {
+        this.time.advancedTiming = true;
+    },
     create: function () {
         this.game.stage.backgroundColor = '#787878';
 
@@ -30,24 +33,21 @@ Race.Game.prototype = {
 
         // The player and its settings
         this.player = this.game.add.sprite(this.objects[0].x * this.layer.scale.x, this.objects[0].y * this.layer.scale.y, 'car');
-        this.player.scale.set(.2, .2);
+        this.player.scale.set(.5, .5);
         this.player.anchor.x = 0.5;
-        this.player.rotation = Math.PI / 2;
-
         this.player.anchor.y = 0.5;
 
 
         //  We need to enable physics on the player
         this.game.physics.arcade.enable(this.player);
 
-        //  Player physics properties. Give the little guy a slight bounce.
-        this.player.body.collideWorldBounds = true;
-        this.player.body.acceleration = 0;
+        with (this.player.body) {
+            collideWorldBounds = true;
+            acceleration.set(0);
+            traction = 500;
+            maxVelocity.set(500);
+        }
 
-        this.player.body.bounce = {
-            x: 0.1,
-            y: 0.1
-        };
 
 
 
@@ -66,47 +66,46 @@ Race.Game.prototype = {
         //  Reset the players velocity (movement)
         //player.body.velocity.x = 0;
 
-
-        if (this.cursors.left.isDown && this.player.body.acceleration !== 0) {
-            this.player.rotation -= DATA.ROTATION.processRotation(this.player.body.acceleration);
-        } else if (this.cursors.right.isDown && this.player.body.acceleration !== 0) {
-            this.player.rotation += DATA.ROTATION.processRotation(this.player.body.acceleration);
-        }
-
-        if (this.cursors.up.isDown && this.player.body.acceleration < DATA.MAX_ACC) {
-            this.player.body.acceleration += DATA.ACCELERATION;
-        } else if (this.cursors.down.isDown) {
-            this.player.body.acceleration -= DATA.ACCELERATION;
+        if (this.cursors.left.isDown && this.player.body.velocity.getMagnitude() !== 0) {
+            this.player.body.angularVelocity = -300;
+        } else if (this.cursors.right.isDown && this.player.body.velocity.getMagnitude() !== 0) {
+            this.player.body.angularVelocity = 300;
         } else {
-            this.reduceAcceleration();
+            this.player.body.angularVelocity = 0;
         }
 
-        with (this.player.body.velocity) {
-            x /= 2;
-            y /= 2;
-        }
-        this.player.body.velocity.x += Math.sin(this.player.rotation) * this.player.body.acceleration;
-        this.player.body.velocity.y -= Math.cos(this.player.rotation) * this.player.body.acceleration;
+        if (this.cursors.up.isDown) {
+            //var asteroidAcc = this.physics.arcade.accelerationFromRotation(this.player.rotation, 200);
+            this.player.body.acceleration.add(10,10);
+            
+        } else if (this.cursors.down.isDown) {
+            var carAcceleration = new Phaser.Point(DATA.ACCELERATION, DATA.ACCELERATION);
+            carAcceleration = Phaser.Point.negative(carAcceleration);
+            var asteroidAcc = this.physics.arcade.accelerationFromRotation(this.player.rotation, 200);
 
+
+        } else {
+            this.player.body.acceleration.set(0);
+            this.reduceSpeed();
+        }
+
+        /*with (this.player.body.velocity) {
+            x = Math.cos(this.player.rotation) * this.player.body.acceleration.x;
+            y = Math.sin(this.player.rotation) * this.player.body.acceleration.y;
+        }*/
 
         this.game.camera.update();
-        if (this.player.body.onWall()) {
-            this.reduceAcceleration();
-        }
     },
     render: function () {
-
+        DATA.isDebug() && this.game.debug.text(this.time.fps || '--', 2, 14, '#fff');
+        DATA.isDebug() && this.game.debug.text(this.time.suggestedFps || '--', 2, 30, '#fff');
     },
-    runOnGrass: function () {
-        console.log('Tu marches sur l\'herbes');
-    },
-    reduceAcceleration: function () {
-        var acc = this.player.body.acceleration;
-        if (acc < 2) {
-            acc = 0;
-        } else {
-            acc /= 1.05;
+    reduceSpeed: function () {
+        with (this.player.body.velocity) {
+            x /= 1.1;
+            y /= 1.1;
+            Math.abs(x) < 1 && (x = 0);
+            Math.abs(y) < 1 && (y = 0);
         }
-        this.player.body.acceleration = acc;
     }
 };

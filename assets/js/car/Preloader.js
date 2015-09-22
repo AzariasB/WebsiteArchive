@@ -5,14 +5,14 @@
  */
 
 
-/* global Race, imagePath, Phaser, soundPath, _ */
+/* global Race, imagePath, Phaser, soundPath, _, DATA */
 
 Race.Preloader = function (game) {
     this.backgroundColor = "#fff";
     this.preloadBar = null;
 
     this.ready = false;
-    
+
     var buttonHeight = 111;
     var buttonLength = 335;
     this.toLoad = {
@@ -20,8 +20,8 @@ Race.Preloader = function (game) {
             'star': 'star.png',
             'car': 'car.png',
             'main': 'mainScreen.png',
-            'sound' : 'speaker.png',
-            'no_sound' : 'no_speaker.png'
+            'sound': 'speaker.png',
+            'no_sound': 'no_speaker.png'
         },
         'spitesheets': [
             {
@@ -30,17 +30,17 @@ Race.Preloader = function (game) {
                 'width': buttonLength,
                 'height': buttonHeight
             }, {
-                'name' : 'options_button',
+                'name': 'options_button',
                 'source': 'options.png',
                 'width': buttonLength,
                 'height': buttonHeight
             }, {
-                'name' : 'credits_button',
+                'name': 'credits_button',
                 'source': 'credits.png',
                 'width': buttonLength,
                 'height': buttonHeight
             }, {
-                'name' : 'leave_button',
+                'name': 'leave_button',
                 'source': 'quitter.png',
                 'width': buttonLength,
                 'height': buttonHeight
@@ -86,7 +86,7 @@ Race.Preloader.prototype = {
         });
 
         //Images
-        _.each(this.toLoad.images, function (source,key) {
+        _.each(this.toLoad.images, function (source, key) {
             self.load.image(key, imagePath + source);
         });
 
@@ -112,7 +112,11 @@ Race.Preloader.prototype = {
         if (this.cache.isSoundDecoded('music') && this.ready === false)
         {
             this.ready = true;
-            this.state.start('MainMenu');
+            if (DATA.isDebug()) {
+                this.state.start('Game');
+            } else {
+                this.state.start('MainMenu');
+            }
         }
 
     }

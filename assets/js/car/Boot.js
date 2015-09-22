@@ -26,7 +26,7 @@ Race.Boot.prototype = {
 
         if (this.game.device.desktop) //if playing on desktop
         {
-            this.scale.scaleMode = Phaser.ScaleManager.EXACT_FIT; //always show whole game
+            this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL; //always show whole game
             this.scale.pageAlignHorizontally = true; //align horizontally
             this.scale.pageAlignVertically = true;
         }

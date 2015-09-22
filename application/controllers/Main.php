@@ -5,7 +5,6 @@
  *
  * @author root
  */
-define('VPATH', APPPATH . 'views/');
 
 class Main extends MY_Controller {
 

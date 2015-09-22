@@ -19,10 +19,14 @@ class Administration extends MY_Controller {
     }
 
     function index() {
-        $data = array('titre' => 'Administration');
-        $this->add_css('admin/admin.css');
-        $this->add_js('admin/login.js');
-        $this->twig->display('Admin/login.html.twig', $data);
+        if ($this->session->userdata('isConnected') != null and $this->session->userdata('isConnected')) {
+            redirect('Administration/menu');
+        } else {
+            $data = array('titre' => 'Administration');
+            $this->add_css('admin/admin.css');
+            $this->add_js('admin/login.js');
+            $this->twig->display('Admin/login.html.twig', $data);
+        }
     }
 
     function login() {
@@ -59,49 +63,68 @@ class Administration extends MY_Controller {
     public function jsTree() {
         echo json_encode($this->getNodes());
     }
-
-    public function createFolder(){
-        $this->form_validation->set_rules('folderName','nom du dossier','trim|required|xss_clean');
-        $this->form_validation->set_rules('path',"chemin d'accès",'trim|xss_clean');
+    
+    public function deleteFile(){
+        $this->form_validation->set_rules('fileName','','trim|required|xss_clean');
+        $this->form_validation->set_rules('path','','trim|xss_clean');
         
-        $message = array('success' => FALSE,'message' => "Une erreur s'est produite");
+        $message = array('success' => false,'message' => "Une erreur s'est produite");
         if($this->form_validation->run()){
+            $path = $this->getAbsPath($this->input->post('path'));
+            $fileName = $this->input->post('fileName');
+            if(!unlink($path.$fileName.'.php') or !  unlink($path.$fileName.'.html.twig')){
+                $message['message'] = "Le fichier n'a pas été effacé";
+            }else{
+                $message['success'] = true;
+                $message['message'] = "Le fichier a bien été supprimé";
+            }
+        }else{
+            $message['message'] = "Le nom du fichier ne peut pas être vide";
+        }
+        echo json_encode($message);
+    }
+
+    public function createFolder() {
+        $this->form_validation->set_rules('folderName', 'nom du dossier', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('path', "chemin d'accès", 'trim|xss_clean');
+
+        $message = array('success' => FALSE, 'message' => "Une erreur s'est produite");
+        if ($this->form_validation->run()) {
             $path = $this->input->post('path');
             $folderName = $this->input->post('folderName');
             $path = $this->getAbsPath($path);
-            
-            if(mkdir($path.'/'.$folderName)){
-                $message = array('success' => true,'message' => 'Le nouveau dossier a bien été créé');
-            }else{
+
+            if (mkdir($path . '/' . $folderName)) {
+                $message = array('success' => true, 'message' => 'Le nouveau dossier a bien été créé');
+            } else {
                 $message['message'] = "Impossible de créer le dossier";
             }
         }
         echo json_encode($message);
     }
 
+    public function getFileInfo() {
+        $this->form_validation->set_rules('fileName', 'nom du fichier', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('path', "chemin d'accès", 'trim|xss_clean');
 
-    public function getFileInfo(){
-        $this->form_validation->set_rules('fileName','nom du fichier','trim|required|xss_clean');
-        $this->form_validation->set_rules('path',"chemin d'accès",'trim|xss_clean');
-        
-        $message = array('success' => false,'message' => "Une erreur s'est produite");
-        if($this->form_validation->run()){
+        $message = array('success' => false, 'message' => "Une erreur s'est produite");
+        if ($this->form_validation->run()) {
             $path = $this->input->post('path');
             $fileName = $this->input->post('fileName');
-            
+
             $absPath = $this->getAbsPath($path);
-            if(is_file($absPath.$fileName)){
+            if (is_file($absPath . $fileName)) {
                 //On supprime d'eventuel précédent appels
                 $this->deleteAssets();
-                require $absPath.$fileName;
-                $message = array('success' => true,'data' => $assets);
-            }else{
+                require $absPath . $fileName;
+                $message = array('success' => true, 'data' => $assets);
+            } else {
                 $message['message'] = "Le fichier en question n'existe pas";
             }
         }
         echo json_encode($message);
     }
-    
+
     public function changeName() {
         $this->form_validation->set_rules('oldName', 'ancien nom', 'trim|required|xss_clean');
         $this->form_validation->set_rules('nwName', 'nouveau nom', 'trim|required|xss_clean');
@@ -131,9 +154,9 @@ class Administration extends MY_Controller {
         }
         echo json_encode($message);
     }
-    
-    private function deleteAssets(){
-        if(isset($assets)){
+
+    private function deleteAssets() {
+        if (isset($assets)) {
             unset($assets);
         }
     }
@@ -168,8 +191,8 @@ class Administration extends MY_Controller {
         }
         return $files;
     }
-    
-    private function getAbsPath($relPath){
+
+    private function getAbsPath($relPath) {
         return (boolval($relPath) ? MPATH . $relPath . '/' : MPATH);
     }
 

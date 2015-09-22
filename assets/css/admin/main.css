@@ -17,6 +17,12 @@ table{
     max-height: 100%;
 }
 
+#confirm_text{
+    color: #333333;
+    font-size: 1.3em;
+    font-family: sans-serif;
+}
+
 .main-message {
     position: absolute;
     background: #ffffff;

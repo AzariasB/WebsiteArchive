@@ -11,22 +11,51 @@ var Controller = function (tree, view) {
 };
 
 Controller.prototype = {
+    /*
+     * Delete a file :
+     *  - 1 ask confirmation if yes, we want to delete it
+     *  - 2 if yes, delete the 'real' folder
+     *  - 3 if real folder deleted, delete the node and display 'ok' message
+     */
+    deleteFile: function (node) {
+        var self = this;
+        this.view.confirmModal("Supprimer ce fichier ?", "Ce fichier ne pourra plus être récupéré",
+                function () {
+                    self.confirmDeleteFile(node, function (data) {
+                        if (data.success) {
+                            node && self.jsTree.delete_node(node);
+                            $("#confirm").modal('hide');
+                            self.view.showPopup(data.message);
+                        } else {
+                            self.view.showPopup(data.message, true);
+                        }
+                    });
+                });
+    },
+    confirmDeleteFile: function (node, callBack) {
+        var dataToSend = {
+            'fileName': node.text.substr(0,node.text.length - 4),
+            'path': this.getPath(node, true)
+        };
+        this.ajaxCall('deleteFile', dataToSend, callBack);
+    },
     alterName: function (node) {
-        var name = node.text.substr(0, node.text.length - 4);
+        var name = node.text.indexOf('.php') > -1 ? node.text.substr(0, node.text.length - 4) : node.text;
+        var isFolder = node.text.indexOf('.php') === -1;
         var self = this;
         var onSubmit = function (event) {
             event.preventDefault();
             var nwName = $("#input_content").val();
             var changeName = function (data) {
                 if (data.success) {
-                    node && self.jsTree.rename_node(node, nwName + ('.php' || ""));
+                    node && self.jsTree.rename_node(node, nwName + (isFolder ? "" : ".php"));
                     $("#change").modal('hide');
                     self.view.showPopup(data.message);
                 } else {
                     self.view.showPopup(data.message, true, 4000);
                 }
             };
-            self.changeName(node, nwName, name, changeName, !'.php');
+            self.changeName(node, nwName, name, changeName, isFolder);
         };
         //Il s'agit forcément d'un fichier .php, donc on enlève les 4 dernière lettres
         this.view.launchModal("Changer de nom", name, onSubmit);
@@ -42,10 +71,6 @@ Controller.prototype = {
         this.ajaxCall('changeName', dataToSend, callBack);
     },
     addFolder: function (node) {
-        console.log(node);
-        //Lancer le modal pour savoir le nom
-        //Créer le dossier en ajax
-        //Créer le dossier sur l'arbre
         var self = this;
         var onSubmit = function (event) {
             event.preventDefault();
@@ -59,17 +84,16 @@ Controller.prototype = {
                     self.view.showPopup(data.message, true, 4000);
                 }
             };
-            self.createFolder(nwName,node,createFolder);
+            self.createFolder(nwName, node, createFolder);
         };
         this.view.launchModal("Nom du nouveau dossier", "Nouveau", onSubmit);
     },
-    createFolder: function (folderName, parentNode,callBack) {
+    createFolder: function (folderName, parentNode, callBack) {
         var dataToSend = {
             'folderName': folderName,
             'path': this.getPath(parentNode, true) + '/' + parentNode.text
         };
-        console.log(dataToSend);
-        this.ajaxCall('createFolder',dataToSend,callBack);
+        this.ajaxCall('createFolder', dataToSend, callBack);
     },
     getFileInfo: function (node, callBack) {
         var dataToSend = {
@@ -91,7 +115,6 @@ Controller.prototype = {
             type: 'POST',
             data: data,
             success: function (data) {
-                console.log(data);
                 success(JSON.parse(data));
             },
             error: function (erreur) {

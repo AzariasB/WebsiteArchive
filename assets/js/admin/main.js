@@ -20,7 +20,7 @@ $(function () {
             var $target = $(event.target);
             var tar = event.target;
             var node = mTree.get_node(event.target);
-            if (mTree.is_leaf(tar)) {
+            if (mTree.is_leaf(tar) && node.text.indexOf('.php') > -1) {
                 //Traiter feuille
                 mController.getFileInfo(node, mController.displayFileInfo);
             } else {
@@ -49,15 +49,20 @@ $(function () {
                     template({'external': 'Js', 'file': jsContent}));
         },
         launchModal: function (headTitle, inputValue, callBack) {
-            var self = this;
             $("#head_title").text(headTitle || "");
             $("#input_content").val(inputValue || "");
             $("#form_change").submit(callBack);
             $("#change").modal();
-            $('#change').on("shown.bs.modal",function(){
+            $('#change').on("shown.bs.modal", function () {
                 $("#input_content").focus();
             });
-            
+
+        },
+        confirmModal : function(headTitle,textValue,callBack){
+            $('#confirm_title').text(headTitle || "");
+            $('#confirm_text').text(textValue || "");
+            $('#confirm_button').on("click",callBack);
+            $("#confirm").modal();
         },
         showPopup: function (message, error, timeDisplay) {
             timeDisplay = timeDisplay || 2000;
@@ -83,7 +88,7 @@ $(function () {
         "contextmenu": {
             "items": function (node) {
                 var tree = $("#jsContainer").jstree(true);
-                if (tree.is_leaf(node)) {
+                if (tree.is_leaf(node) && node.text.indexOf('.php') > -1) {
                     return {
                         "Renommer": {
                             /*
@@ -121,12 +126,8 @@ $(function () {
                         "Supprimer": {
                             "label": "Supprimer",
                             "action": function (data) {
-                                var sel = tree.get_selected();
-                                if (!sel.length) {
-                                    return false;
-                                }
-                                tree.delete_node(sel);
-
+                                var obj = tree.get_node(data.reference);
+                                mController.deleteFile(obj);
                             }
                         },
                     };
@@ -156,14 +157,11 @@ $(function () {
                             "action": function (data) {
                                 var inst = $.jstree.reference(data.reference),
                                         obj = inst.get_node(data.reference);
-
-                                //Il s'agit forcément d'un fichier .php, donc on enlève les 4 dernière lettres
-                                mDoc.launchModal("Changer de nom", obj.text, obj);
-                                //inst.edit(obj);
+                                mController.alterName(obj);
                             }
                         },
                         "Delete": {
-                            "label": "Delete",
+                            "label": "Supprimer",
                             "action": function (data) {
                                 var sel = tree.get_node(data.reference);
                                 if (!sel) {

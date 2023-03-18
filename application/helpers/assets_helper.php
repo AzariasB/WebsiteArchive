@@ -42,6 +42,19 @@ if (!function_exists('multi_screen')) {
     }
 
 }
+
+
+//Supprimer la varialbe 'assets', si celle-ci existe
+if (!function_exists('deleteAssets')) {
+
+    function deleteAssets() {
+        if (isset($assets)) {
+            unset($assets);
+        }
+    }
+}
+
+
 ////////////////////////////////////////////////
 //Ecrire les liens css sur une page
 if (!function_exists('load_css')) {

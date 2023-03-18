@@ -10,40 +10,9 @@
 
 {% block main_part %}
     <div class="main-message col-md-4 col-md-offset-4"></div>
-    <div class="container-fluid" id="main">
+    <div id="main" class="container-fluid">
         <div class="row">
-            <div class="col-md-10">
-                <table class="table table-bordered" >
-                    <thead>
-                        <tr>
-                            <th class="col-md-5 text-center" >Fichiers/Dosssier</th>
-                            <th class="col-md-5 text-center" >Contenu</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="col-md-5" >
-                                <div class="col-md-12" id="jsContainer"></div>
-                            </td>
-                            <td class="col-md-5" >
-                                <div class="col-md-12"id="informations" >
-                                </div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-2">
-                <button type="button" class="btn btn-primary btn-block">
-                    Ajouter Dossier
-                </button> 
-                <button type="button" class="btn btn-info btn-block">
-                    Ajouter fichier
-                </button> 
-                <button type="button" class="btn btn-warning btn-block">
-                    Supprimer
-                </button>
-
+            <div class="col-md-2 panel_container">
                 <form class="form-horizontal" id="search_form" >
                     <fieldset>
                         <div class="control-group">
@@ -60,7 +29,27 @@
                             </div>
                         </div>
                     </fieldset>
-                </form>
+                </form> 
+
+                <button type="button" id='update_tree' class="btn btn-primary btn-block">
+                    Mettre à jour l'arbre
+                </button> 
+                <button type="button" class="btn btn-info btn-block">
+                    Ajouter fichier
+                </button> 
+                <button type="button" class="btn btn-warning btn-block">
+                    Supprimer
+                </button>
+
+            </div>
+            <div class="col-md-10">
+                <div class="col-md-6 panel_container">
+                    <div id="jsContainer"></div>
+                </div>
+                <div class="col-md-6 panel_container">
+                    <div id="informations">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -105,7 +94,7 @@
 {% endblock %}
 
 {% block footer %}
-    <div class="text-center col-md-12" >
+    <div class="text-center col-md-12 footer" >
         <ul>
             <li>
                 <a href="#">Deconnexion</a>        

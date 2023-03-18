@@ -4,17 +4,48 @@
 */
 
 body{
-    background-color: #cccccc;
+    background-color: #A9BFBB;
 }
 
-table{
+#panel,.panel_container{
     height: 80vh;
+    padding-right : 0px;
 }
 
-#informations{
+.footer{
+    margin-top: 20px;
+}
+
+#informations,#jsContainer{
+    //Box-shadow
+    -moz-box-shadow: inset 0px 0px 40px 15px #BAC7BD;
+    -webkit-box-shadow: inset 0px 0px 40px 15px #BAC7BD;
+    -o-box-shadow: inset 0px 0px 40px 15px #BAC7BD;
+    box-shadow: inset 0px 0px 40px 15px #BAC7BD;
+
+    padding: 15px;
+    position: relative;
+    background-color: #E2FFFA;
     color: #333333;
     overflow-y: auto;
-    max-height: 100%;
+    overflow-x: hidden;
+    height: 100%;
+    border-radius: 1%;
+}
+
+div.information {
+    position : absolute;
+    width: 100%;
+    left: 100%;
+    height : 0;
+    padding : 0 20px 0 17px;
+    opacity : 0;
+    transition : all 200ms ease-in-out;
+}
+
+div.information.appear {
+    opacity: 1;
+    left: 0;
 }
 
 #confirm_text{
@@ -24,6 +55,7 @@ table{
 }
 
 .main-message {
+    z-index: 999;
     position: absolute;
     background: #ffffff;
     color: #999999;
@@ -46,4 +78,8 @@ table{
 }
 .main-message.error {
     border-left-color: #e74c3c;
+}
+
+#search_form{
+    margin-bottom: 5px;
 }

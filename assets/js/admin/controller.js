@@ -12,6 +12,63 @@ var Controller = function (tree, view) {
 
 Controller.prototype = {
     /*
+     * Create file
+     * 
+     * - ask the user the name of the file
+     * - create the 'real' file
+     * - create the node file
+     */
+    createFile: function (node) {
+        var self = this;
+        this.view.launchModal("Créer un fichier", "NewFile",
+                function (event, fileName) {
+                    event.preventDefault();
+                    var dataToSend = {
+                        'fileName': fileName,
+                        'path': self.getPath(node, true) + '/' + node.text
+                    };
+                    self.ajaxCall('createFile', dataToSend, function (data) {
+                        if (data.success) {
+                            var fileNode = {
+                                'text': fileName + '.php',
+                                'icon': 'glyphicon glyphicon-file'
+                            };
+                            node && self.jsTree.create_node(node, fileNode);
+                            $('#change').modal('hide');
+                            self.view.showPopup(data.message);
+                        } else {
+                            self.view.showPopup(data.message, true);
+                        }
+                    });
+                });
+    },
+    /*
+     * Delete a folder :
+     * ask user
+     * delete real folder
+     * delete node folder
+     * 
+     * @param {obj} node
+     */
+    deleteFolder: function (node) {
+        var self = this;
+        this.view.confirmModal("Supprimer ce dossier ?", "En supprimant ce dossier, tous le contenu du dossier est supprimé", function () {
+            var dataToSend = {
+                'folderName': node.text,
+                'path': self.getPath(node, true)
+            };
+            self.ajaxCall('deleteFolder', dataToSend, function (data) {
+                if (data.success) {
+                    node && self.jsTree.delete_node(node);
+                    $('#confirm').modal('hide');
+                    self.view.showPopup(data.message);
+                } else {
+                    self.view.showPopup(data.message, true);
+                }
+            });
+        });
+    },
+    /*
      * Delete a file :
      *  - 1 ask confirmation if yes, we want to delete it
      *  - 2 if yes, delete the 'real' folder
@@ -21,7 +78,11 @@ Controller.prototype = {
         var self = this;
         this.view.confirmModal("Supprimer ce fichier ?", "Ce fichier ne pourra plus être récupéré",
                 function () {
-                    self.confirmDeleteFile(node, function (data) {
+                    var dataToSend = {
+                        'fileName': node.text.substr(0, node.text.length - 4),
+                        'path': self.getPath(node, true)
+                    };
+                    self.ajaxCall('deleteFile', dataToSend, function (data) {
                         if (data.success) {
                             node && self.jsTree.delete_node(node);
                             $("#confirm").modal('hide');
@@ -32,50 +93,54 @@ Controller.prototype = {
                     });
                 });
     },
-    confirmDeleteFile: function (node, callBack) {
-        var dataToSend = {
-            'fileName': node.text.substr(0,node.text.length - 4),
-            'path': this.getPath(node, true)
-        };
-        this.ajaxCall('deleteFile', dataToSend, callBack);
-    },
+    /*
+     * Alter Name of file/folder
+     * - ask user new name
+     * - change real file/folder name
+     * - change node name
+     */
     alterName: function (node) {
         var name = node.text.indexOf('.php') > -1 ? node.text.substr(0, node.text.length - 4) : node.text;
         var isFolder = node.text.indexOf('.php') === -1;
         var self = this;
-        var onSubmit = function (event) {
+
+        this.view.launchModal("Changer de nom", name, function (event, nwName) {
             event.preventDefault();
-            var nwName = $("#input_content").val();
-            var changeName = function (data) {
+            var dataToSend = {
+                'oldName': name,
+                'nwName': nwName,
+                'path': self.getPath(node, true),
+                'isFolder': isFolder
+            };
+            self.ajaxCall('changeName', dataToSend, function (data) {
                 if (data.success) {
                     node && self.jsTree.rename_node(node, nwName + (isFolder ? "" : ".php"));
-                    $("#change").modal('hide');
+                    self.view.hidePromptModal();
                     self.view.showPopup(data.message);
                 } else {
                     self.view.showPopup(data.message, true, 4000);
                 }
-            };
-            self.changeName(node, nwName, name, changeName, isFolder);
-        };
-        //Il s'agit forcément d'un fichier .php, donc on enlève les 4 dernière lettres
-        this.view.launchModal("Changer de nom", name, onSubmit);
-        //inst.edit(obj);
+            });
+        });
     },
-    changeName: function (data, nwName, oldName, callBack, isFolder) {
-        var dataToSend = {
-            'oldName': oldName,
-            'nwName': nwName,
-            'path': this.getPath(data, true),
-            'isFolder': isFolder
-        };
-        this.ajaxCall('changeName', dataToSend, callBack);
-    },
+    /*
+     * Adding a folder :
+     * - ask user folder name
+     * - create real folder
+     * - create node folder
+     */
     addFolder: function (node) {
         var self = this;
-        var onSubmit = function (event) {
+
+        this.view.launchModal("Nom du nouveau dossier", "Nouveau", function (event, nwName) {
             event.preventDefault();
-            var nwName = $("#input_content").val();
-            var createFolder = function (data) {
+
+            var dataToSend = {
+                'folderName': nwName,
+                'path': self.getPath(node, true) + '/' + node.text
+            };
+            console.log(dataToSend);
+            self.ajaxCall('createFolder', dataToSend, function (data) {
                 if (data.success) {
                     node && self.jsTree.create_node(node, nwName);
                     $("#change").modal('hide');
@@ -83,31 +148,22 @@ Controller.prototype = {
                 } else {
                     self.view.showPopup(data.message, true, 4000);
                 }
-            };
-            self.createFolder(nwName, node, createFolder);
-        };
-        this.view.launchModal("Nom du nouveau dossier", "Nouveau", onSubmit);
+            });
+        });
     },
-    createFolder: function (folderName, parentNode, callBack) {
-        var dataToSend = {
-            'folderName': folderName,
-            'path': this.getPath(parentNode, true) + '/' + parentNode.text
-        };
-        this.ajaxCall('createFolder', dataToSend, callBack);
-    },
-    getFileInfo: function (node, callBack) {
+    getFileInfo: function (node) {
         var dataToSend = {
             'fileName': node.text,
             'path': this.getPath(node, true)
         };
-        this.ajaxCall('getFileInfo', dataToSend, $.proxy(callBack, this));
-    },
-    displayFileInfo: function (data) {
-        if (!data.success) {
-            this.view.showPopup(data.message, true, 4000);
-        } else {
-            this.view.fileInfo(data['data']['css'], data['data']['js']);
-        }
+        var self = this;
+        this.ajaxCall('getFileInfo', dataToSend, function (data) {
+            if (!data.success) {
+                self.view.showPopup(data.message, true, 4000);
+            } else {
+                self.view.fileInfo(data['data']['css'], data['data']['js']);
+            }
+        });
     },
     ajaxCall: function (funcName, data, success) {
         $.ajax({
@@ -115,7 +171,13 @@ Controller.prototype = {
             type: 'POST',
             data: data,
             success: function (data) {
-                success(JSON.parse(data));
+                try {
+                    success(JSON.parse(data));
+                } catch (ex) {
+                    console.error(data);
+                    console.error(ex);
+                }
+
             },
             error: function (erreur) {
                 console.error(erreur);
@@ -124,10 +186,10 @@ Controller.prototype = {
     },
     getPath: function (node, isFirst) {
         if (node.parent === '#') {
-            return isFirst ? "" : (node.original.text || node.text);
+            return isFirst ? "" : node.text;
         } else {
             var parent = this.jsTree.get_parent(node);
-            return this.getPath(this.jsTree.get_node(parent), false) + (isFirst ? "" : ("/" + (node.original.text || node.text)));
+            return this.getPath(this.jsTree.get_node(parent), false) + (isFirst ? "" : ("/" + node.text));
         }
     }
 };
